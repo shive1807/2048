@@ -7,7 +7,6 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public int chainSize = 0;
-    public int xyz = 0;
 
     private List<ElementController> chain;
 
@@ -15,33 +14,32 @@ public class GameController : MonoBehaviour
     void Start()
     {
         chain = new List<ElementController>();
-        xyz = 0;
-        Debug.Log(xyz);
+        chainSize = 0;
+        Debug.Log(chainSize);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("update " + xyz);
-
+        ClearChain();
     }
 
-    public void chaining(ElementController numElement)
+    public void Chaining(ElementController numElement)
     {
-        Debug.Log("chaining " + xyz);
+        Debug.Log("chaining " + chainSize);
 
         if (!numElement.selected)
         {
-            Debug.Log(chain.Count);
-            if (xyz == 0)
+            Debug.Log("Chain Count " + chain.Count);
+            if (chainSize == 0)
             {
                 chain.Add(numElement);
                 Debug.Log("added1");
             }
             else
             {
-                int x = chain[xyz - 1].rowIndex;
-                int y = chain[xyz - 1].colIndex;
+                int x = chain[chainSize - 1].rowIndex;
+                int y = chain[chainSize - 1].colIndex;
                 Debug.Log("added");
 
                 if ((numElement.rowIndex == x + 1 || numElement.rowIndex == x - 1) &&
@@ -50,7 +48,22 @@ public class GameController : MonoBehaviour
                     chain.Add(numElement);
                 }
             }
-            //xyz++;
+            chainSize++;
         }
+    }
+    public void ClearChain()
+    {
+        if(InputManager.released)
+        {
+            chain.Clear();
+            chainSize = 0;
+            InputManager.released = false;
+            Debug.Log("clear");
+        }
+    }
+    private void Reset()
+    {
+        chain.Clear();
+        chainSize = 0;
     }
 }

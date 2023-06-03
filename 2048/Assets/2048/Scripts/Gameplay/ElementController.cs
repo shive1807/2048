@@ -42,11 +42,11 @@ public class ElementController : MonoBehaviour, IPointerEnterHandler, IPointerDo
     }
     public void selectCheck(PointerEventData eventData)
     {
-        Debug.Log("selectCheck " + gameController.xyz);
+        Debug.Log("selectCheck " + gameController.chainSize);
 
         if (eventData.pointerCurrentRaycast.gameObject.CompareTag(this.tag))
         {
-            gameController.chaining(this);
+            gameController.Chaining(this);
 
         }
     }
