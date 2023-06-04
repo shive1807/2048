@@ -1,69 +1,109 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public int chainSize = 0;
+    public static GameController Instance;
 
-    private List<ElementController> chain;
+    public List<Element> chain;
+    public Element LastElement = null;
+    public Element SecondLastElement = null; 
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        Singleton();
+    }
     void Start()
     {
-        chain = new List<ElementController>();
-        chainSize = 0;
-        Debug.Log(chainSize);
+        chain = new List<Element>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        ClearChain();
+        ClearChain();  // to clear the chain when mouse button is released
     }
 
-    public void Chaining(ElementController numElement)
+    public void Chaining(Element numElement)
     {
-        Debug.Log("chaining " + chainSize);
-
-        if (!numElement.selected)
+        if (!numElement.selected && numElement != LastElement)
         {
-            Debug.Log("Chain Count " + chain.Count);
-            if (chainSize == 0)
+            if (chain.Count == 0)
             {
-                chain.Add(numElement);
-                Debug.Log("added1");
+                AddToChain(numElement);
             }
             else
             {
-                int x = chain[chainSize - 1].rowIndex;
-                int y = chain[chainSize - 1].colIndex;
-                Debug.Log("added");
+                int x = LastElement.rowIndex;
+                int y = LastElement.colIndex;
 
-                if ((numElement.rowIndex == x + 1 || numElement.rowIndex == x - 1) &&
-                   (numElement.colIndex == y + 1 || numElement.colIndex == y - 1))
+                if (numElement.rowIndex == x - 1 || numElement.rowIndex == x + 1 || numElement.rowIndex == x) 
                 {
-                    chain.Add(numElement);
+                    if(numElement.colIndex == y - 1 || numElement.colIndex == y + 1 || numElement.colIndex == y)
+                    {
+                        if (numElement.num == LastElement.num || numElement.num/LastElement.num == 2)
+                        {
+                            AddToChain(numElement);
+                        }
+                    }
                 }
             }
-            chainSize++;
+        }
+        else
+        {
+            if (numElement == SecondLastElement && chain.Count > 1)    // so that if there's only one element and if checking second last element because the current element
+            {                                                          // is the element on which cursor is currently on
+                RemoveFromChain(numElement);
+            }
         }
     }
+
+    private void RemoveFromChain(Element numElement)  // removing the last element from chain
+    {
+        chain.Remove(LastElement);
+        LastElement.selected = false;
+        LastElement = chain[chain.Count - 1];
+        if(chain.Count > 1)
+        {
+            SecondLastElement = chain[chain.Count - 2];
+        }
+
+        Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Removed");
+    }
+
+    private void AddToChain(Element numElement)       // adding element to chain
+    {
+        chain.Add(numElement);
+        numElement.selected = true;
+        LastElement = numElement;
+        if(chain.Count > 1)
+        {
+            SecondLastElement = chain[chain.Count - 2];
+        }
+
+        Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Added");
+    }   
+
     public void ClearChain()
     {
-        if(InputManager.released)
+        if(DependencyManager.Instance.inputManager.released)  // resetting the variables on mouse release
         {
             chain.Clear();
-            chainSize = 0;
-            InputManager.released = false;
+            LastElement = null;
+            SecondLastElement = null;
+            DependencyManager.Instance.inputManager.released = false;
+
             Debug.Log("clear");
         }
     }
-    private void Reset()
+    public void Singleton()
     {
-        chain.Clear();
-        chainSize = 0;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 }

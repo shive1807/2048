@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
@@ -16,13 +13,13 @@ public class GridController : MonoBehaviour
     public GameObject background;
     public Vector2 ElementfallOffset;
     public float ElementFallDuration;
-    // Start is called before the first frame update
+
     void Start()
     {
         gridSetup();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         
@@ -32,7 +29,7 @@ public class GridController : MonoBehaviour
     {
         NumElements = new GameObject[rows,cols];
 
-        for (int i = 0; i < rows; i++)
+        for (int i = 0; i < rows; i++)       // spawning the elements
         {
             for (int j = 0; j < cols; j++)
             {
@@ -49,7 +46,7 @@ public class GridController : MonoBehaviour
         NumElements[i, j] = element;
         element.transform.SetParent(this.transform, false);
 
-        element.GetComponent<ElementController>().elementSetup(i, j, element, pos, ElementfallOffset, ElementFallDuration);
+        element.GetComponent<Element>().ElementSetup(i, j, element, pos, ElementfallOffset, ElementFallDuration);
     }
     
 }

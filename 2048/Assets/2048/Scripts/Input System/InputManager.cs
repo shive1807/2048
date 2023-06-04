@@ -1,24 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static bool pressed;
-    public static bool released;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public bool pressed;
+    public bool released;
 
-    // Update is called once per frame
     void Update()
     {
-        mouseCheck();
+        MouseCheck();
     }
 
-    void mouseCheck()
+    void MouseCheck()
     {
         if(Input.GetMouseButton(0))
         {
