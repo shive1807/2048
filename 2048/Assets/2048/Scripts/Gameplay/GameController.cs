@@ -1,24 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : Singleton<GameController>
 {
-    public static GameController Instance;
-
     public List<Element> chain;
     public Element LastElement = null;
-    public Element SecondLastElement = null; 
+    public Element SecondLastElement = null;
 
-    private void Awake()
-    {
-        Singleton();
-    }
-    void Start()
+    private void Start()
     {
         chain = new List<Element>();
     }
 
-    void Update()
+    private void Update()
     {
         ClearChain();  // to clear the chain when mouse button is released
     }
@@ -36,11 +30,11 @@ public class GameController : MonoBehaviour
                 int x = LastElement.rowIndex;
                 int y = LastElement.colIndex;
 
-                if (numElement.rowIndex == x - 1 || numElement.rowIndex == x + 1 || numElement.rowIndex == x) 
+                if (numElement.rowIndex == x - 1 || numElement.rowIndex == x + 1 || numElement.rowIndex == x)
                 {
-                    if(numElement.colIndex == y - 1 || numElement.colIndex == y + 1 || numElement.colIndex == y)
+                    if (numElement.colIndex == y - 1 || numElement.colIndex == y + 1 || numElement.colIndex == y)
                     {
-                        if (numElement.num == LastElement.num || numElement.num/LastElement.num == 2)
+                        if (numElement.num == LastElement.num || numElement.num / LastElement.num == 2)
                         {
                             AddToChain(numElement);
                         }
@@ -62,7 +56,7 @@ public class GameController : MonoBehaviour
         chain.Remove(LastElement);
         LastElement.selected = false;
         LastElement = chain[chain.Count - 1];
-        if(chain.Count > 1)
+        if (chain.Count > 1)
         {
             SecondLastElement = chain[chain.Count - 2];
         }
@@ -75,35 +69,28 @@ public class GameController : MonoBehaviour
         chain.Add(numElement);
         numElement.selected = true;
         LastElement = numElement;
-        if(chain.Count > 1)
+        if (chain.Count > 1)
         {
             SecondLastElement = chain[chain.Count - 2];
         }
 
         Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Added");
-    }   
+    }
 
-    public void ClearChain()
+    private void ClearChain()
     {
-        if(DependencyManager.Instance.inputManager.released)  // resetting the variables on mouse release
+        if (DependencyManager.Instance.inputManager.released)  // resetting the variables on mouse release
         {
+            for(int i=0; i<chain.Count; i++)
+            {
+                Debug.Log(chain[i].num);
+            }
             chain.Clear();
             LastElement = null;
             SecondLastElement = null;
             DependencyManager.Instance.inputManager.released = false;
 
             Debug.Log("clear");
-        }
-    }
-    public void Singleton()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
         }
     }
 }
