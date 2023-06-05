@@ -85,9 +85,13 @@ public class GameController : MonoBehaviour
             {
                 for (int i = 0; i < chain.Count - 1; i++)
                 {
-                    DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
+                    //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
+                    //chain[i].selected = false;
+
+                    Destroy(chain[i].gameObject);
                 }
                 chain[chain.Count - 1].SetNum();
+                chain[chain.Count - 1].selected = false; 
             }
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;

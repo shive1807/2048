@@ -27,7 +27,9 @@ public class GridController : MonoBehaviour
         {
             for (int j = 0; j < cols; j++)
             {
-                GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
+                //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
+
+                GameObject element = Instantiate(NumElement) as GameObject;
                 Vector2 Pos = new Vector2((j * spacing) - 370, (i * spacing) - 520);  // calculating Pos with respect to anchors
                 
                 NumElementSetup(i, j, element, Pos);

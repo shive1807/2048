@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public bool pressed;
-    public bool released;
+    [HideInInspector]public bool pressed;
+    [HideInInspector]public bool released;
 
     void Update()
     {
