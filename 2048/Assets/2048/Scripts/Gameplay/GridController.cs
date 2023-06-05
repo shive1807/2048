@@ -7,6 +7,7 @@ public class GridController : MonoBehaviour
     [Header("Grid Settings")]
     public int rows = 8;
     public int cols = 6;
+
     [SerializeField] float spacing = 100;
 
     public GameObject NumElement;
@@ -14,18 +15,20 @@ public class GridController : MonoBehaviour
     public Vector2 ElementfallOffset;
     public float ElementFallDuration;
 
-    void Start()
+    private void Start() => GridSetup();
+
+    private void GridSetup()
     {
-        gridSetup();
+        NumElements = new GameObject[GameSettings.GRID_HEIGHT, GameSettings.GRID_WIDTH];
     }
 
     void gridSetup()
     {
         NumElements = new GameObject[rows,cols];
 
-        for (int i = 0; i < rows; i++)       // spawning the elements
+        for (int i = 0; i < GameSettings.GRID_HEIGHT; i++)       // spawning the elements
         {
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < GameSettings.GRID_WIDTH; j++)
             {
                 //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
 
@@ -36,6 +39,7 @@ public class GridController : MonoBehaviour
             }
         }
     }
+
     private void NumElementSetup(int i, int j, GameObject element, Vector2 pos)
     {
         NumElements[i, j] = element;
@@ -43,5 +47,4 @@ public class GridController : MonoBehaviour
 
         element.GetComponent<Element>().ElementSetup(i, j, element, pos, ElementfallOffset, ElementFallDuration);
     }
-    
 }
