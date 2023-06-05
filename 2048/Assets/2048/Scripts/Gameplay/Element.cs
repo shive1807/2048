@@ -2,6 +2,8 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.EventSystems;
+using System.Xml.Linq;
+
 [System.Serializable]
 
 public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
@@ -42,11 +44,10 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         element.name = "( " + (i + 1) + ", " + (j + 1) + ")";  // naming according to in-matrix position
 
         Element _element = element.GetComponent<Element>();
-        element.GetComponent<Element>().rowIndex = i + 1;   // to get in-matrix position of element
-        element.GetComponent<Element>().colIndex = j + 1;
+        _element.rowIndex = i + 1;   // to get in-matrix position of element
+        _element.colIndex = j + 1;
 
-        _element.num = NumGenerator();
-        _element.GetComponentInChildren<TextMeshProUGUI>().text = _element.num.ToString();
+        _element.SetNum();
     }
     IEnumerator MoveElement(RectTransform rectTransform, Vector2 targetPos, float duration)
     {
@@ -63,9 +64,10 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
     }
-    public int NumGenerator()
+    public void SetNum()
     {
         int x = random.Next(1, 11);
-        return (int)Mathf.Pow(2, x);
+        this.num = (int)Mathf.Pow(2, x);
+        this.GetComponentInChildren<TextMeshProUGUI>().text = this.num.ToString();
     }
 }

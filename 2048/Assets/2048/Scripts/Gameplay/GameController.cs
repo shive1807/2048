@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class GameController : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class GameController : MonoBehaviour
 
     public void Chaining(Element numElement)
     {
-        if (!numElement.selected && numElement != LastElement)
+        if (!numElement.selected)
         {
             if (chain.Count == 0)
             {
@@ -33,14 +34,14 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                int x = LastElement.rowIndex;
-                int y = LastElement.colIndex;
+                int x = chain[chain.Count - 1].rowIndex;
+                int y = chain[chain.Count - 1].colIndex;
 
                 if (numElement.rowIndex == x - 1 || numElement.rowIndex == x + 1 || numElement.rowIndex == x) 
                 {
                     if(numElement.colIndex == y - 1 || numElement.colIndex == y + 1 || numElement.colIndex == y)
                     {
-                        if (numElement.num == LastElement.num || numElement.num/LastElement.num == 2)
+                        if (numElement.num == chain[chain.Count - 1].num || numElement.num/chain[chain.Count - 1].num == 2)
                         {
                             AddToChain(numElement);
                         }
@@ -50,22 +51,20 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            if (numElement == SecondLastElement && chain.Count > 1)    // so that if there's only one element and if checking second last element because the current element
-            {                                                          // is the element on which cursor is currently on
-                RemoveFromChain(numElement);
+            if(chain.Count > 1)
+            {
+                if (numElement == chain[chain.Count - 2])    // so that if there's only one element and if checking second last element because the current element
+                {                                                               // is the element on which cursor is currently on
+                    RemoveFromChain(numElement);
+                }
             }
         }
     }
 
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
-        chain.Remove(LastElement);
-        LastElement.selected = false;
-        LastElement = chain[chain.Count - 1];
-        if(chain.Count > 1)
-        {
-            SecondLastElement = chain[chain.Count - 2];
-        }
+        chain[chain.Count - 1].selected = false;
+        chain.Remove(chain[chain.Count - 1]);
 
         Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Removed");
     }
@@ -74,11 +73,6 @@ public class GameController : MonoBehaviour
     {
         chain.Add(numElement);
         numElement.selected = true;
-        LastElement = numElement;
-        if(chain.Count > 1)
-        {
-            SecondLastElement = chain[chain.Count - 2];
-        }
 
         Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Added");
     }   
@@ -87,9 +81,15 @@ public class GameController : MonoBehaviour
     {
         if(DependencyManager.Instance.inputManager.released)  // resetting the variables on mouse release
         {
+            if(chain.Count > 1)
+            {
+                for (int i = 0; i < chain.Count - 1; i++)
+                {
+                    DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
+                }
+                chain[chain.Count - 1].SetNum();
+            }
             chain.Clear();
-            LastElement = null;
-            SecondLastElement = null;
             DependencyManager.Instance.inputManager.released = false;
 
             Debug.Log("clear");

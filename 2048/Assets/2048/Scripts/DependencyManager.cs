@@ -8,6 +8,7 @@ public class DependencyManager : MonoBehaviour
     public GameController gameController;
     public GridController gridController;
     public InputManager inputManager;
+    public Pooler pooler;
     private void Awake()
     {
         Singleton();

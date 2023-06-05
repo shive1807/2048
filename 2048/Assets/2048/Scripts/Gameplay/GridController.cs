@@ -5,8 +5,8 @@ public class GridController : MonoBehaviour
     GameObject[,] NumElements;
 
     [Header("Grid Settings")]
-    public static int rows = 8;
-    public static int cols = 6;
+    public int rows = 8;
+    public int cols = 6;
     [SerializeField] float spacing = 100;
 
     public GameObject NumElement;
@@ -19,12 +19,6 @@ public class GridController : MonoBehaviour
         gridSetup();
     }
 
-
-    void Update()
-    {
-        
-    }
-
     void gridSetup()
     {
         NumElements = new GameObject[rows,cols];
@@ -33,11 +27,10 @@ public class GridController : MonoBehaviour
         {
             for (int j = 0; j < cols; j++)
             {
-                GameObject element = Instantiate(NumElement) as GameObject;
+                GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
                 Vector2 Pos = new Vector2((j * spacing) - 370, (i * spacing) - 520);  // calculating Pos with respect to anchors
                 
                 NumElementSetup(i, j, element, Pos);
-
             }
         }
     }
