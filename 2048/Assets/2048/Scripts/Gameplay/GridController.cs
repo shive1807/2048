@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    GameObject[,] NumElements;
+    Element[,] NumElements;
 
     [Header("Grid Settings")]
     public int rows = 8;
@@ -15,16 +16,11 @@ public class GridController : MonoBehaviour
     public Vector2 ElementfallOffset;
     public float ElementFallDuration;
 
-    private void Start() => GridSetup();
-
-    private void GridSetup()
-    {
-        NumElements = new GameObject[GameSettings.GRID_HEIGHT, GameSettings.GRID_WIDTH];
-    }
+    private void Start() => gridSetup();
 
     void gridSetup()
     {
-        NumElements = new GameObject[rows,cols];
+        NumElements = new Element[GameSettings.GRID_HEIGHT, GameSettings.GRID_WIDTH];
 
         for (int i = 0; i < GameSettings.GRID_HEIGHT; i++)       // spawning the elements
         {
@@ -39,12 +35,30 @@ public class GridController : MonoBehaviour
             }
         }
     }
+    public void GridRefill(List<Element> chain)
+    {
+        for(int i = 0; i < chain.Count - 1; i++)
+        {
+            Element element = chain[i];
+            GameObject _element =  Instantiate(NumElement) as GameObject;
+            Vector2 Pos = new Vector2((element.colIndex * spacing) - 370, (GameSettings.GRID_HEIGHT * spacing) - 520);
 
+            NumElementSetup(GameSettings.GRID_HEIGHT - 1, element.colIndex - 1, _element, Pos);
+
+            for (int j = element.rowIndex; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                NumElements[j - 1 , element.colIndex - 1] = NumElements[j, element.colIndex - 1];
+                Vector2 _Pos = new Vector2(element.transform.position.x, element.transform.position.y);
+                StartCoroutine(NumElements[j - 1, element.colIndex - 1].MoveElement(NumElements[j, element.colIndex - 1].rectTransform, _Pos, ElementFallDuration));
+            }
+            NumElements[GameSettings.GRID_HEIGHT - 1, element.colIndex - 1] = _element.GetComponent<Element>();
+        }
+    }
     private void NumElementSetup(int i, int j, GameObject element, Vector2 pos)
     {
-        NumElements[i, j] = element;
+        NumElements[i, j] = element.GetComponent<Element>();
         element.transform.SetParent(this.transform, false);
 
-        element.GetComponent<Element>().ElementSetup(i, j, element, pos, ElementfallOffset, ElementFallDuration);
+        NumElements[i,j].ElementSetup(i, j, element, pos, ElementfallOffset, ElementFallDuration);
     }
 }

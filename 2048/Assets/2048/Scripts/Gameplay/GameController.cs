@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class GameController : Singleton<GameController>
 {
-    public static GameController Instance;
-
     private LineRenderer lineRenderer;
         
     public List<Element> chain;
-    private void Awake()
+    private void Start()
     {
         chain = new List<Element>();
         lineRenderer= GetComponent<LineRenderer>();
@@ -88,28 +86,30 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
+    public int ChangeNum()
+    {
+        int sum = 0;
+        int s = 2;
+        foreach(Element element in chain)
+        {
+            sum += element.num;
+        }
 
+        while (s < sum)
+        {
+            s *= 2;
+        }
+        return s;
+    }
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
-        //chain.Remove(LastElement);
-        //LastElement.selected = false;
-        //LastElement = chain[chain.Count - 1];
-        //if (chain.Count > 1)
-        //{
-        //    SecondLastElement = chain[chain.Count - 2];
-        //}
     }
     private void AddToChain(Element numElement)       // adding element to chain
     {
         chain.Add(numElement);
         numElement.selected = true;
-        //LastElement = numElement;
-        //if (chain.Count > 1)
-        //{
-        //    SecondLastElement = chain[chain.Count - 2];
-        //}
 
         Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Added");
     }   
@@ -120,6 +120,8 @@ public class GameController : Singleton<GameController>
         {
             if(chain.Count > 1)
             {
+                //DependencyManager.Instance.gridController.GridRefill(chain);
+
                 for (int i = 0; i < chain.Count - 1; i++)
                 {
                     //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
@@ -127,9 +129,9 @@ public class GameController : Singleton<GameController>
 
                     Destroy(chain[i].gameObject);
                 }
-                chain[chain.Count - 1].SetNum();
-                chain[chain.Count - 1].selected = false; 
+                chain[chain.Count - 1].SetNum(ChangeNum());
             }
+            chain[chain.Count - 1].selected = false;
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;
 

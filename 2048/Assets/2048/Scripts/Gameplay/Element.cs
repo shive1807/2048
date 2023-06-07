@@ -15,12 +15,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public int rowIndex;
     [HideInInspector] public int colIndex;
 
-    private RectTransform rectTransform;
+    public RectTransform rectTransform;
     [HideInInspector] public Vector3 elementPos;
 
     private void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
+        rectTransform = this.gameObject.GetComponent<RectTransform>();
     }
     void Update()
     {
@@ -65,7 +65,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         _element.SetNum();
     }
-    IEnumerator MoveElement(RectTransform rectTransform, Vector2 targetPos, float duration)
+    public IEnumerator MoveElement(RectTransform rectTransform, Vector2 targetPos, float duration)
     {
         Vector2 initialPos = rectTransform.anchoredPosition;
         float elapsedTime = 0f; 
