@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    [HideInInspector]public bool pressed;
-    [HideInInspector]public bool released;
+    [HideInInspector] public bool pressed;
+    [HideInInspector] public bool released;
+    [HideInInspector] public Vector2 mousePos;
 
     void Update()
     {
         MouseCheck();
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     void MouseCheck()

@@ -1,21 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class GameController : Singleton<GameController>
 {
-    public List<Element> chain;
-    public Element LastElement = null;
-    public Element SecondLastElement = null;
+    public static GameController Instance;
 
-    private void Start()
+    private LineRenderer lineRenderer;
+        
+    public List<Element> chain;
+    private void Awake()
     {
         chain = new List<Element>();
+        lineRenderer= GetComponent<LineRenderer>();
     }
 
     private void Update()
     {
         ClearChain();  // to clear the chain when mouse button is released
+        LineMatching();
     }
 
     public void Chaining(Element numElement)
@@ -35,10 +37,21 @@ public class GameController : Singleton<GameController>
                 {
                     if (numElement.colIndex == y - 1 || numElement.colIndex == y + 1 || numElement.colIndex == y)
                     {
-                        if (numElement.num == chain[chain.Count - 1].num || numElement.num/chain[chain.Count - 1].num == 2)
+                        if(chain.Count == 1)
                         {
-                            AddToChain(numElement);
+                            if (numElement.num == chain[chain.Count - 1].num)
+                            {
+                                AddToChain(numElement);
+                            }
                         }
+                        else
+                        {
+                            if (numElement.num == chain[chain.Count - 1].num || numElement.num/chain[chain.Count - 1].num == 2)
+                            {
+                                AddToChain(numElement);
+                            }
+                        }
+                        
                     }
                 }
             }
@@ -54,6 +67,27 @@ public class GameController : Singleton<GameController>
             }
         }
     }
+    public void LineMatching()
+    {
+        if (DependencyManager.Instance.inputManager.pressed)
+        {
+            lineRenderer.enabled = true;
+            lineRenderer.positionCount = chain.Count + 2;
+
+            for (int i = 0; i < chain.Count; i++)
+            {
+                lineRenderer.SetPosition(i, chain[i].elementPos);
+            }
+
+            // Set the position of the end of the line to follow the mouse cursor
+            Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
+            lineRenderer.SetPosition(chain.Count + 1, new Vector3(mousePos.x, mousePos.y, 3));
+        }
+        else
+        {
+            lineRenderer.enabled = false;
+        }
+    }
 
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
@@ -67,7 +101,6 @@ public class GameController : Singleton<GameController>
         //    SecondLastElement = chain[chain.Count - 2];
         //}
     }
-
     private void AddToChain(Element numElement)       // adding element to chain
     {
         chain.Add(numElement);
@@ -79,9 +112,9 @@ public class GameController : Singleton<GameController>
         //}
 
         Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Added");
-    }
+    }   
 
-    private void ClearChain()
+    public void ClearChain()
     {
         if (DependencyManager.Instance.inputManager.released)  // resetting the variables on mouse release
         {
@@ -96,9 +129,6 @@ public class GameController : Singleton<GameController>
                 }
                 chain[chain.Count - 1].SetNum();
                 chain[chain.Count - 1].selected = false; 
-            //for(int i=0; i<chain.Count; i++)
-            //{
-            //    Debug.Log(chain[i].num);
             }
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;

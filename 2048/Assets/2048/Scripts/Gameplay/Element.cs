@@ -15,6 +15,22 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public int rowIndex;
     [HideInInspector] public int colIndex;
 
+    private RectTransform rectTransform;
+    [HideInInspector] public Vector3 elementPos;
+
+    private void Start()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+    void Update()
+    {
+        // Example anchored position
+        Vector2 anchoredPosition = new Vector2(0, 0);
+
+        // Convert anchored position to transform position
+        elementPos = rectTransform.TransformPoint(anchoredPosition);
+
+    }
     public void OnPointerEnter(PointerEventData eventData)  // to get element when mouse button is already pressed and being dragged on the other
     {
         if (DependencyManager.Instance.inputManager.pressed)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
@@ -64,10 +80,18 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
     }
-    public void SetNum()
+    public void SetNum(int num = 0)
     {
-        int x = random.Next(1, 11);
-        this.num = (int)Mathf.Pow(2, x);
+        int x = 0;
+        if(num == 0)
+        {
+            x = (int)Mathf.Pow(2, random.Next(1, 11));
+        }
+        else
+        {
+            x = num;
+        }
+        this.num = x;
         this.GetComponentInChildren<TextMeshProUGUI>().text = this.num.ToString();
     }
 }
