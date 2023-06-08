@@ -700,9 +700,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd439a3a523dbcb4b927caeaface4fcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputManager: {fileID: 385307057}
   gameController: {fileID: 49264406}
   gridController: {fileID: 663069475}
-  inputManager: {fileID: 385307057}
   pooler: {fileID: 1729794871}
 --- !u!1 &2015289977
 GameObject:

@@ -1,18 +1,22 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Pooler : MonoBehaviour
 {
-    public List<GameObject> pool;
-    public GameObject element;
     private int poolCount = 0;
 
-    void Start()
+    private GameObject          element;
+    private List<GameObject>    pool;
+
+    private void Start()
     {
-        poolCount = DependencyManager.Instance.gridController.rows * DependencyManager.Instance.gridController.cols;
-        pool = new List<GameObject>();
+        pool        = new List<GameObject>();
+        element     = Resources.Load<GameObject>(Assets.numElement);
+        poolCount   = GameSettings.GRID_HEIGHT * GameSettings.GRID_WIDTH;
+
         Initialize();
     }
+
     private void Initialize()
     {
         for(int i = 0; i < poolCount; i++)
@@ -22,6 +26,7 @@ public class Pooler : MonoBehaviour
             pool.Add(_element);
         }
     }
+
     public GameObject SpawnfromPool(Vector2 Pos = default)
     {
         foreach(GameObject element in pool)
@@ -35,6 +40,7 @@ public class Pooler : MonoBehaviour
         }
         return null;
     }
+
     public void Deactivate(GameObject element)
     {
         element.SetActive(false);
