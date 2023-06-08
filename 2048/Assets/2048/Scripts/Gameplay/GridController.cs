@@ -3,22 +3,29 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    Element[,] NumElements;
+    private Element[,] NumElements;
+    private GameObject NumElement;
 
-    [Header("Grid Settings")]
-    public int rows = 8;
-    public int cols = 6;
+    //HACK :- this should be at a larger level, try using game settings for constants.
+    //[Header("Grid Settings")]
+    //public int rows = 8;
+    //public int cols = 6;
 
-    [SerializeField] float spacing = 100;
+    [SerializeField] float spacing = 100; // TODO lets move this to game settings.
 
-    public GameObject NumElement;
     public GameObject background;
     public Vector2 ElementfallOffset;
     public float ElementFallDuration;
 
-    private void Start() => gridSetup();
+    private void Awake()
+    {
+        NumElement = Resources.Load<GameObject>(Assets.numElement);
+        //TODO :- this code is copied too many times will create a dependency injector and will push it into the same.
+    }
 
-    void gridSetup()
+    private void Start() => GridSetup();
+
+    private void GridSetup()
     {
         NumElements = new Element[GameSettings.GRID_HEIGHT, GameSettings.GRID_WIDTH];
 
@@ -35,6 +42,7 @@ public class GridController : MonoBehaviour
             }
         }
     }
+
     public void GridRefill(List<Element> chain)
     {
         for(int i = 0; i < chain.Count - 1; i++)
@@ -47,13 +55,14 @@ public class GridController : MonoBehaviour
 
             for (int j = element.rowIndex; j < GameSettings.GRID_HEIGHT; j++)
             {
-                NumElements[j - 1 , element.colIndex - 1] = NumElements[j, element.colIndex - 1];
+                NumElements[j - 1, element.colIndex - 1] = NumElements[j, element.colIndex - 1];
                 Vector2 _Pos = new Vector2(element.transform.position.x, element.transform.position.y);
                 StartCoroutine(NumElements[j - 1, element.colIndex - 1].MoveElement(NumElements[j, element.colIndex - 1].rectTransform, _Pos, ElementFallDuration));
             }
             NumElements[GameSettings.GRID_HEIGHT - 1, element.colIndex - 1] = _element.GetComponent<Element>();
         }
     }
+
     private void NumElementSetup(int i, int j, GameObject element, Vector2 pos)
     {
         NumElements[i, j] = element.GetComponent<Element>();

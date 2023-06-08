@@ -22,15 +22,16 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     {
         rectTransform = this.gameObject.GetComponent<RectTransform>();
     }
-    void Update()
+
+    private void Update()
     {
         // Example anchored position
         Vector2 anchoredPosition = new Vector2(0, 0);
 
         // Convert anchored position to transform position
         elementPos = rectTransform.TransformPoint(anchoredPosition);
-
     }
+
     public void OnPointerEnter(PointerEventData eventData)  // to get element when mouse button is already pressed and being dragged on the other
     {
         if (DependencyManager.Instance.inputManager.pressed)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
@@ -38,10 +39,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             SelectCheck(eventData);
         }
     }
+
     public void OnPointerDown(PointerEventData eventData) // to get the element when the mouse button gets pressed while on the element
     {
         SelectCheck(eventData);
     }
+
     public void SelectCheck(PointerEventData eventData)
     {
         if (eventData.pointerCurrentRaycast.gameObject.CompareTag(this.tag)) // so that it only gets called when the cursor is on the element button nor on any button
@@ -65,6 +68,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         _element.SetNum();
     }
+
     public IEnumerator MoveElement(RectTransform rectTransform, Vector2 targetPos, float duration)
     {
         Vector2 initialPos = rectTransform.anchoredPosition;
