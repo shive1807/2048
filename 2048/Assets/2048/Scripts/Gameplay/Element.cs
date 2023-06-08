@@ -2,9 +2,6 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.EventSystems;
-using System.Xml.Linq;
-
-[System.Serializable]
 
 public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 {
