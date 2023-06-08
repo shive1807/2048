@@ -28,12 +28,12 @@ public class GameController : Singleton<GameController>
             }
             else
             {
-                int x = chain[chain.Count - 1].rowIndex;
-                int y = chain[chain.Count - 1].colIndex;
+                int x = chain[chain.Count - 1].x;
+                int y = chain[chain.Count - 1].y;
 
-                if (numElement.rowIndex == x - 1 || numElement.rowIndex == x + 1 || numElement.rowIndex == x)
+                if (numElement.x == x - 1 || numElement.x == x + 1 || numElement.x == x)
                 {
-                    if (numElement.colIndex == y - 1 || numElement.colIndex == y + 1 || numElement.colIndex == y)
+                    if (numElement.y == y - 1 || numElement.y == y + 1 || numElement.y == y)
                     {
                         if(chain.Count == 1)
                         {
@@ -106,36 +106,28 @@ public class GameController : Singleton<GameController>
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
     }
+
     private void AddToChain(Element numElement)       // adding element to chain
     {
         chain.Add(numElement);
         numElement.selected = true;
 
-        Debug.Log("(" + numElement.rowIndex + "," + numElement.colIndex + ") Added");
+        Debug.Log("(" + numElement.x + "," + numElement.y + ") Added");
     }   
 
-    public void ClearChain()
+    private void ClearChain()
     {
         if (DependencyManager.Instance.inputManager.released)  // resetting the variables on mouse release
         {
             if(chain.Count > 1)
             {
-                DependencyManager.Instance.gridController.GridRefill(chain);
-
-                for (int i = 0; i < chain.Count - 1; i++)
-                {
-                    //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
-                    //chain[i].selected = false;
-
-                    Destroy(chain[i].gameObject);
-                }
                 chain[chain.Count - 1].SetNum(ChangeNum());
+
+                DependencyManager.Instance.gridController.GridRefill(chain);
             }
             chain[chain.Count - 1].selected = false;
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;
-
-            Debug.Log("clear");
         }
     }
 }

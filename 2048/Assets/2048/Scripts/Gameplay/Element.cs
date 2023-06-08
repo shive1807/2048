@@ -9,15 +9,17 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
     [HideInInspector] public int num;
     [HideInInspector] public bool selected = false;
-    [HideInInspector] public int rowIndex;
-    [HideInInspector] public int colIndex;
+    [HideInInspector] public int y;
+    [HideInInspector] public int x;
 
-    public RectTransform rectTransform;
     [HideInInspector] public Vector3 elementPos;
+    public RectTransform rectTransform;
+    private Element element;
 
     private void Start()
     {
-        rectTransform = this.gameObject.GetComponent<RectTransform>();
+        element         = this.gameObject.GetComponent<Element>();
+        rectTransform   = this.gameObject.GetComponent<RectTransform>();
     }
 
     private void Update()
@@ -50,26 +52,37 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         }
     }
     
-    public void ElementSetup(int i, int j, GameObject element, Vector2 targetPos, Vector2 elementMoveOffset = default, float elementMoveDuration = default)
+    public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveDuration = default)
     {
-        RectTransform rectTransform = element.GetComponent<RectTransform>();
-        
+        if (element == null || rectTransform == null)
+            Start();
+
+        Vector2 targetPos = new Vector2((i * GameSettings.SPACING) - 370, (j * GameSettings.SPACING) - 520);  // calculating Pos with respect to anchors
+
+        rectTransform = transform.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(targetPos.x + elementMoveOffset.x, targetPos.y + elementMoveOffset.y);  // spawning the element a bit up to make room for drop animatio
-        StartCoroutine(MoveElement(rectTransform, targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
+        transform.name = "("+ i + ", " + j + ")";  // naming according to in-matrix position
         
-        element.name = "( " + (i + 1) + ", " + (j + 1) + ")";  // naming according to in-matrix position
+        //TO GET IN MATRIX POSTION OF THE ELEMENTS.
+        element.x = i;
+        element.y = j;
+        element.SetNum();
 
-        Element _element = element.GetComponent<Element>();
-        _element.rowIndex = i + 1;   // to get in-matrix position of element
-        _element.colIndex = j + 1;
-
-        _element.SetNum();
+        StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }
 
-    public IEnumerator MoveElement(RectTransform rectTransform, Vector2 targetPos, float duration)
+    public IEnumerator MoveElement(Vector2 targetPos, float duration)
     {
-        Vector2 initialPos = rectTransform.anchoredPosition;
-        float elapsedTime = 0f; 
+        yield return null;
+
+        if(rectTransform == null)
+        {
+            Debug.LogError("rectTransform is null");
+            yield break;
+        }
+
+        Vector2 initialPos  = rectTransform.anchoredPosition;
+        float elapsedTime   = 0f; 
 
         while (elapsedTime < duration)               // moving the element down gradually
         {
@@ -78,15 +91,15 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
     }
+
     public void SetNum(int num = 0)
     {
         int x = 0;
         if(num == 0)
         {
-            x = (int)Mathf.Pow(2, random.Next(1, 11));
+            x = (int)Mathf.Pow(2, random.Next(1, 1));
         }
         else
         {
