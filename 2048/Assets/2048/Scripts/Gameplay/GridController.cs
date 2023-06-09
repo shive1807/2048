@@ -145,9 +145,16 @@ public class GridController : MonoBehaviour
 
         for(int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
-            int blocksToAdd = deductions[i, GameSettings.GRID_HEIGHT - 1];
+            int blocksToAdd = 0;
+            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            {                         
+                if (deductions[i, j] == -1)
+                {
+                    blocksToAdd++;
+                }
+            }
 
-            for(int j = GameSettings.GRID_HEIGHT - blocksToAdd; j < GameSettings.GRID_HEIGHT; j++)
+            for (int j = GameSettings.GRID_HEIGHT - blocksToAdd; j < GameSettings.GRID_HEIGHT; j++)
             {
                 GenerateBlock(i, j);
             }
