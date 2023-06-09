@@ -67,24 +67,24 @@ public class GameController : Singleton<GameController>
     }
     public void LineMatching()
     {
-        //if (DependencyManager.Instance.inputManager.pressed)
-        //{
-        //    lineRenderer.enabled = true;
-        //    lineRenderer.positionCount = chain.Count + 2;
+        if (DependencyManager.Instance.inputManager.pressed)
+        {
+            lineRenderer.enabled = true;
+            lineRenderer.positionCount = chain.Count + 2;
 
-        //    for (int i = 0; i < chain.Count; i++)
-        //    {
-        //        lineRenderer.SetPosition(i, chain[i].elementPos);
-        //    }
+            for (int i = 0; i < chain.Count; i++)
+            {
+                lineRenderer.SetPosition(i, chain[i].elementPos);
+            }
 
-        //    // Set the position of the end of the line to follow the mouse cursor
-        //    Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
-        //    lineRenderer.SetPosition(chain.Count + 1, new Vector3(mousePos.x, mousePos.y, 3));
-        //}
-        //else
-        //{
-        //    lineRenderer.enabled = false;
-        //}
+            // Set the position of the end of the line to follow the mouse cursor
+            Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
+            lineRenderer.SetPosition(chain.Count + 1, new Vector3(mousePos.x, mousePos.y, 3));
+        }
+        else
+        {
+            lineRenderer.enabled = false;
+        }
     }
     public int ChangeNum()
     {
@@ -117,7 +117,7 @@ public class GameController : Singleton<GameController>
 
     private void ClearChain()
     {
-        if (DependencyManager.Instance.inputManager.released)  // resetting the variables on mouse release
+        if (DependencyManager.Instance.inputManager.released && chain.Count > 0)  // resetting the variables on mouse release
         {
             if(chain.Count > 1)
             {
