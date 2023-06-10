@@ -96,7 +96,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
     public void SetNum(int num = 0)
     {
-        int x = 0;
+        int x;
         if(num == 0)
         {
             x = (int)Mathf.Pow(2, random.Next(1, 1));

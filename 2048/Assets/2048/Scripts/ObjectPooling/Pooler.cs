@@ -5,8 +5,8 @@ public class Pooler : MonoBehaviour
 {
     private int poolCount = 0;
 
-    private GameObject          element;
-    private List<GameObject>    pool;
+    private GameObject element;
+    private List<GameObject> pool;
 
     private void Start()
     {
