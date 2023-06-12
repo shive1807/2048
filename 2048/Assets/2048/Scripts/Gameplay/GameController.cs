@@ -4,12 +4,16 @@ using UnityEngine;
 public class GameController : Singleton<GameController>
 {
     private LineRenderer lineRenderer;
-        
+    private GameObject line;
+
     public List<Element> chain;
     private void Start()
     {
         chain = new List<Element>();
         lineRenderer= GetComponent<LineRenderer>();
+        lineRenderer.positionCount = 2;
+
+        line = Resources.Load<GameObject>(Assets.line);
     }
 
     private void Update()
@@ -49,7 +53,6 @@ public class GameController : Singleton<GameController>
                                 AddToChain(numElement);
                             }
                         }
-                        
                     }
                 }
             }
@@ -70,21 +73,32 @@ public class GameController : Singleton<GameController>
         if (DependencyManager.Instance.inputManager.pressed)
         {
             lineRenderer.enabled = true;
-            lineRenderer.positionCount = chain.Count + 2;
+            //lineRenderer.positionCount = chain.Count + 2;
 
-            for (int i = 0; i < chain.Count; i++)
-            {
-                lineRenderer.SetPosition(i, chain[i].elementPos);
-            }
+            //for (int i = 0; i < chain.Count; i++)
+            //{
+            //    lineRenderer.SetPosition(i, chain[i].elementPos);
+            //}
 
-            // Set the position of the end of the line to follow the mouse cursor
+            //// Set the position of the end of the line to follow the mouse cursor
+
+
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
-            lineRenderer.SetPosition(chain.Count + 1, new Vector3(mousePos.x, mousePos.y, 3));
+            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
+            lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
         }
         else
         {
             lineRenderer.enabled = false;
         }
+    }
+    public void CreateLine(Element e1, Element e2)
+    {
+        GameObject _line = Instantiate(line) as GameObject;
+        _line.transform.SetParent(e1.transform.root);
+        Vector2 pos = e1.elementPos - e2.elementPos;
+        Debug.Log(pos);
+        _line.GetComponent<RectTransform>().anchoredPosition = pos;
     }
     public int ChangeNum()
     {
@@ -106,15 +120,17 @@ public class GameController : Singleton<GameController>
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
     }
-
     private void AddToChain(Element numElement)       // adding element to chain
     {
         chain.Add(numElement);
         numElement.selected = true;
+        if(chain.Count > 1)
+        {
+            CreateLine(chain[chain.Count - 2], numElement);
+        }
 
         Debug.Log("(" + numElement.x + "," + numElement.y + ") Added");
     }   
-
     private void ClearChain()
     {
         if (DependencyManager.Instance.inputManager.released && chain.Count > 0)  // resetting the variables on mouse release

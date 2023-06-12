@@ -22,6 +22,7 @@ public class Pooler : MonoBehaviour
         for(int i = 0; i < poolCount; i++)
         {
             GameObject _element = Instantiate(element);
+            _element.transform.SetParent(this.transform, false);
             _element.SetActive(false);
             pool.Add(_element);
         }

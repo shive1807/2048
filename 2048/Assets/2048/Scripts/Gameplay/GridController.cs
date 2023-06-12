@@ -4,16 +4,11 @@ using System.Text;
 
 public class GridController : MonoBehaviour
 {
-    private enum BLOCK
-    {
-        
-    }
-
     private Element[,]  Grid;
     private GameObject  block;
-    private Vector2     ElementfallOffset;
+    public Vector2     ElementfallOffset;
 
-    private float ElementFallDuration;
+    public float ElementFallDuration;
 
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
@@ -138,6 +133,9 @@ public class GridController : MonoBehaviour
                     continue;
 
                 temp[i, j - depth] = Grid[i, j];
+                //temp[i, j - depth].x = i;
+                temp[i, j - depth].y = j - depth;
+
             }
         }
 
