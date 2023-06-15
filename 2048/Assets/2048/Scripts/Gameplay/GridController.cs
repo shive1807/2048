@@ -6,7 +6,7 @@ public class GridController : MonoBehaviour
 {
     private Element[,]  Grid;
     private GameObject  block;
-    public Vector2     ElementfallOffset;
+    public Vector2      ElementfallOffset;
 
     public float ElementFallDuration;
 
@@ -95,8 +95,6 @@ public class GridController : MonoBehaviour
   
         return deductions;
     }
-
-
     public void GridRefill(List<Element> chain)
     {
         int[,]  deductions = GetDestroyedBlocks(chain);

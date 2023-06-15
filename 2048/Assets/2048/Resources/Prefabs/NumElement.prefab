@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2887385791809043295}
   - component: {fileID: 6217658720878846499}
   - component: {fileID: 5505270997409246852}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: NumElement
   m_TagString: Num Element
   m_Icon: {fileID: 0}
@@ -136,10 +136,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d14c80e385f411840a1e53d7306606c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  num: 0
   selected: 0
-  rowIndex: 0
-  colIndex: 0
-  gameController: {fileID: 4928144427676950457, guid: 6c8f79c96bde1ae4a95dafe876dd7bdd, type: 3}
+  y: 0
+  x: 0
+  elementPos: {x: 0, y: 0, z: 0}
+  rectTransform: {fileID: 0}
 --- !u!61 &5505270997409246852
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -177,7 +179,7 @@ GameObject:
   - component: {fileID: 999535325533863287}
   - component: {fileID: 7137700557378784304}
   - component: {fileID: 1045245130716327306}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Num Element
   m_Icon: {fileID: 0}

@@ -21,7 +21,6 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         element         = this.gameObject.GetComponent<Element>();
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
     }
-
     private void Update()
     {
         // Example anchored position
@@ -30,13 +29,13 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         // Convert anchored position to transform position
         elementPos = rectTransform.TransformPoint(anchoredPosition);
     }
-
     public void OnPointerEnter(PointerEventData eventData)  // to get element when mouse button is already pressed and being dragged on the other
     {
         if (DependencyManager.Instance.inputManager.pressed)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
         {
             SelectCheck(eventData);
         }
+        
     }
 
     public void OnPointerDown(PointerEventData eventData) // to get the element when the mouse button gets pressed while on the element
@@ -48,10 +47,20 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     {
         if (eventData.pointerCurrentRaycast.gameObject.CompareTag(this.tag)) // so that it only gets called when the cursor is on the element button nor on any button
         {
-            GameController.Instance.Chaining(this);
+            if (DependencyManager.Instance.gameController.smashing)
+            {
+                DependencyManager.Instance.gameController.SmashBlock(this);
+            }
+            else if (DependencyManager.Instance.gameController.swaping)
+            {
+                //DependencyManager.Instance.gameController.SwapBlock(this);
+            }
+            else
+            {
+                GameController.Instance.Chaining(this);
+            }
         }
     }
-    
     public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveDuration = default)
     {
         if (element == null || rectTransform == null)
@@ -70,7 +79,6 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }
-
     public IEnumerator MoveElement(Vector2 targetPos, float duration)
     {
         yield return null;
@@ -93,7 +101,6 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         }
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
     }
-
     public void SetNum(int num = 0)
     {
         int x;

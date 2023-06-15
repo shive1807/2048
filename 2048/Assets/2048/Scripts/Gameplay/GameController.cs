@@ -1,10 +1,16 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameController : Singleton<GameController>
 {
     private LineRenderer lineRenderer;
     private GameObject line;
+    private List<GameObject> lines;
+
+    [HideInInspector] public bool swaping = false;
+    private float swapDuration = 1f;
+    [HideInInspector] public bool smashing = false;
 
     public List<Element> chain;
     private void Start()
@@ -92,13 +98,35 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
+    public void SwapBlock(Element e1, Element e2)
+    {
+        Vector2 e1Pos = e1.GetComponent<RectTransform>().anchoredPosition;
+        Vector2 e2Pos = e2.GetComponent<RectTransform>().anchoredPosition;
+        StartCoroutine(e1.MoveElement(e2Pos, swapDuration));
+        StartCoroutine(e2.MoveElement(e1Pos, swapDuration));
+        swaping = false;
+    }
+    public void SmashBlock(Element e)
+    {
+        chain.Add(e);
+        DependencyManager.Instance.gridController.GridRefill(chain);
+        smashing = false;
+    }
     public void CreateLine(Element e1, Element e2)
     {
         GameObject _line = Instantiate(line) as GameObject;
-        _line.transform.SetParent(e1.transform.root);
-        Vector2 pos = e1.elementPos - e2.elementPos;
-        Debug.Log(pos);
+        _line.transform.SetParent(e1.transform.parent);
+        _line.transform.SetParent(e1.transform.parent.transform.Find("Lines"), false);  // for keeping the lines below the Numelements
+
+        // Calculate the position
+        Vector2 pos = (e1.GetComponent<RectTransform>().anchoredPosition + e2.GetComponent<RectTransform>().anchoredPosition) / 2f;
         _line.GetComponent<RectTransform>().anchoredPosition = pos;
+
+        // Calculate the rotation
+        Vector2 dir = e1.GetComponent<RectTransform>().anchoredPosition - e2.GetComponent<RectTransform>().anchoredPosition;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        _line.GetComponent<RectTransform>().rotation = Quaternion.Euler(0f, 0f, angle);
+        //lines.Add(_line);
     }
     public int ChangeNum()
     {
@@ -139,8 +167,10 @@ public class GameController : Singleton<GameController>
             {
                 chain[chain.Count - 1].SetNum(ChangeNum());
 
-                DependencyManager.Instance.gridController.GridRefill(chain);
+                //lines.Clear();
             }
+            DependencyManager.Instance.gridController.GridRefill(chain);
+
             chain[chain.Count - 1].selected = false;
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;
