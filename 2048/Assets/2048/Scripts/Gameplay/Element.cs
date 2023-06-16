@@ -31,16 +31,18 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     }
     public void OnPointerEnter(PointerEventData eventData)  // to get element when mouse button is already pressed and being dragged on the other
     {
-        if (DependencyManager.Instance.inputManager.pressed)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
+        if (DependencyManager.Instance.inputManager.pressed && !DependencyManager.Instance.gameController.smashing && !DependencyManager.Instance.gameController.swaping)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
         {
             SelectCheck(eventData);
+            Debug.Log("run drag");
         }
-        
     }
 
     public void OnPointerDown(PointerEventData eventData) // to get the element when the mouse button gets pressed while on the element
     {
         SelectCheck(eventData);
+        Debug.Log("run down");
+
     }
 
     public void SelectCheck(PointerEventData eventData)
@@ -50,10 +52,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             if (DependencyManager.Instance.gameController.smashing)
             {
                 DependencyManager.Instance.gameController.SmashBlock(this);
+                Debug.Log("smashing run");
             }
             else if (DependencyManager.Instance.gameController.swaping)
             {
-                //DependencyManager.Instance.gameController.SwapBlock(this);
+                DependencyManager.Instance.gameController.SwapBlock(this);
+                Debug.Log("swaping run");
             }
             else
             {

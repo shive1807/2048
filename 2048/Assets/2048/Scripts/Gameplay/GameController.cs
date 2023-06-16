@@ -8,17 +8,22 @@ public class GameController : Singleton<GameController>
     private GameObject line;
     private List<GameObject> lines;
 
+
+    private List<Element> swapElements;
     [HideInInspector] public bool swaping = false;
     private float swapDuration = 1f;
+
+
     [HideInInspector] public bool smashing = false;
 
     public List<Element> chain;
     private void Start()
     {
         chain = new List<Element>();
-        lineRenderer= GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 2;
+        swapElements = new List<Element>();
 
+        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.positionCount = 2;
         line = Resources.Load<GameObject>(Assets.line);
     }
 
@@ -76,7 +81,7 @@ public class GameController : Singleton<GameController>
     }
     public void LineMatching()
     {
-        if (DependencyManager.Instance.inputManager.pressed)
+        if (DependencyManager.Instance.inputManager.pressed && !swaping && !smashing)
         {
             lineRenderer.enabled = true;
             //lineRenderer.positionCount = chain.Count + 2;
@@ -90,27 +95,73 @@ public class GameController : Singleton<GameController>
 
 
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
-            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
-            lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
+            //lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
+            //lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
         }
         else
         {
             lineRenderer.enabled = false;
         }
     }
-    public void SwapBlock(Element e1, Element e2)
+    public void SwapBlock(Element e)
     {
-        Vector2 e1Pos = e1.GetComponent<RectTransform>().anchoredPosition;
-        Vector2 e2Pos = e2.GetComponent<RectTransform>().anchoredPosition;
-        StartCoroutine(e1.MoveElement(e2Pos, swapDuration));
-        StartCoroutine(e2.MoveElement(e1Pos, swapDuration));
-        swaping = false;
+        swapElements.Add(e);
+        if(swapElements.Count == 1)
+        {
+            Debug.Log("only 1 element");
+            return;
+        }
+        else if(swapElements.Count == 2)
+        {
+            Element e1 = swapElements[0];
+            Element e2 = swapElements[1];
+
+            Vector2 e1Pos = e1.GetComponent<RectTransform>().anchoredPosition;
+            Vector2 e2Pos = e2.GetComponent<RectTransform>().anchoredPosition;
+
+            //--------------------------------------------------------Bug here--------------------------------------------------------
+            // clear is getting called on 2nd element select after swapping
+
+            int _temp = 0;
+            _temp = e1.num;
+            e1.SetNum(e2.num);
+            e2.SetNum(_temp);
+
+            //StartCoroutine(e1.MoveElement(e2Pos, swapDuration));
+            //StartCoroutine(e2.MoveElement(e1Pos, swapDuration));
+            //Vector2 temp = new Vector2(0, 0);
+            //temp.x = e1.x;
+            //temp.y = e1.y;
+            //e1.x = e2.x;
+            //e1.y = e2.y;
+            //e2.x = (int)temp.x;
+            //e2.y = (int)temp.y;
+
+            swapElements.Clear();
+            swaping = false;
+            Debug.Log("swapping element");
+        }
     }
     public void SmashBlock(Element e)
     {
         chain.Add(e);
         DependencyManager.Instance.gridController.GridRefill(chain);
-        smashing = false;
+
+        // ----------------------------------------Bug here---------------------------------------------------------------------
+        //not getting called on 1st time(click) gets called when click second element and 'e' isn't changing its the same which gets clicked 1st
+        //time hence it throws an errror when click 3rd element
+        //chain.Clear();
+        //smashing = false;
+    }
+    public void SetSmash()
+    {
+        smashing = true;
+        Debug.Log("smahing " + smashing);
+    }
+    public void SetSwap()
+    {
+        swaping = true;
+        Debug.Log("swaping " + swaping);
     }
     public void CreateLine(Element e1, Element e2)
     {
@@ -161,7 +212,7 @@ public class GameController : Singleton<GameController>
     }   
     private void ClearChain()
     {
-        if (DependencyManager.Instance.inputManager.released && chain.Count > 0)  // resetting the variables on mouse release
+        if (DependencyManager.Instance.inputManager.released && chain.Count > 0 && !smashing && !swaping)  // resetting the variables on mouse release
         {
             if(chain.Count > 1)
             {
@@ -174,6 +225,7 @@ public class GameController : Singleton<GameController>
             chain[chain.Count - 1].selected = false;
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;
+            Debug.Log("clear");
         }
     }
 }
