@@ -135,8 +135,7 @@ public class GridController : MonoBehaviour
 
                     temp[i, j - depth] = Grid[i, j];
                     //temp[i, j - depth].x = i;
-                    temp[i, j - depth].y = j - depth;
-
+                    temp[i, j - depth].SetElementCoord(i, j - depth);
                 }
             }
 
@@ -161,15 +160,42 @@ public class GridController : MonoBehaviour
         }
         else if (DependencyManager.Instance.gameController.smashing)
         {
-            //Element e = chain[0];
-            //int j = e.y;
-            //for(int i = j + 1; i < GameSettings.GRID_HEIGHT; i++)
-            //{
-            //    Vector2 targetPos = Grid[i, j - 1].gameObject.GetComponent<RectTransform>().anchoredPosition;
-            //    Grid[i, j].MoveElement(targetPos, ElementFallDuration);
-            //    Grid[i, j - 1] = Grid[i, j];
-            //}
-            //Destroy(e);
+            Element e = chain[0];
+            int j = e.y;
+            for (int i = j + 1; i < GameSettings.GRID_HEIGHT; i++)
+            {
+                Vector2 targetPos = Grid[e.x, i - 1].GetComponent<RectTransform>().anchoredPosition;
+
+                //-----------------------------------------bug here------------------------------------------------------
+                // elements not moving down
+
+                Grid[e.x, i].MoveElement(targetPos, ElementFallDuration);
+
+                //--------------------------------------------------------------------------------------------------------
+                Grid[e.x, i].SetElementCoord(e.x, i - 1);
+            }
+            Debug.Log("sw");
+            Destroy(e.gameObject);
+            GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
+        }
+    }
+    private void GameEndCheck()
+    {
+        for(int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                int x = Grid[i, j].x;
+                int y = Grid[i, j].y;
+
+                //if (Grid[i, j].x == x - 1 || numElement.x == x + 1 || numElement.x == x)
+                //{
+                //    if (numElement.y == y - 1 || numElement.y == y + 1 || numElement.y == y)
+                //    {
+
+                //    }
+                //}
+            }
         }
     }
 }

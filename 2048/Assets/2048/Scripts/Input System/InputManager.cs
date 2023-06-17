@@ -17,6 +17,7 @@ public class InputManager : MonoBehaviour
         if(Input.GetMouseButton(0))
         {
             pressed = true;
+            released = false;
         }
         else
         {
@@ -25,6 +26,10 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             released = true;
+        }
+        else
+        {
+            released = false;
         }
     }
 }

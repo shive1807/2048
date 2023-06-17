@@ -9,8 +9,8 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
     [HideInInspector] public int num;
     [HideInInspector] public bool selected = false;
-    [HideInInspector] public int y;
-    [HideInInspector] public int x;
+    /*[HideInInspector]*/ public int y;
+    /*[HideInInspector]*/ public int x;
 
     [HideInInspector] public Vector3 elementPos;
     public RectTransform rectTransform;
@@ -56,7 +56,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             }
             else if (DependencyManager.Instance.gameController.swaping)
             {
-                DependencyManager.Instance.gameController.SwapBlock(this);
+                StartCoroutine(DependencyManager.Instance.gameController.SwapBlock(this));
                 Debug.Log("swaping run");
             }
             else
@@ -74,15 +74,22 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         rectTransform = transform.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(targetPos.x + elementMoveOffset.x, targetPos.y + elementMoveOffset.y);  // spawning the element a bit up to make room for drop animatio
-        transform.name = "("+ i + ", " + j + ")";  // naming according to in-matrix position
-        
+        SetElementCoord(i, j);  // naming according to in-matrix position
+
         //TO GET IN MATRIX POSTION OF THE ELEMENTS.
-        element.x = i;
-        element.y = j;
+        
         element.SetNum();
 
         StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }
+
+    public void SetElementCoord(int i, int j)
+    {
+        element.x = i;
+        element.y = j;
+        transform.name = "(" + i + ", " + j + ")";
+    }
+
     public IEnumerator MoveElement(Vector2 targetPos, float duration)
     {
         yield return null;
@@ -94,8 +101,8 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         }
 
         Vector2 initialPos  = rectTransform.anchoredPosition;
-        float elapsedTime   = 0f; 
-
+        float elapsedTime   = 0f;
+        Debug.Log("moving");
         while (elapsedTime < duration)               // moving the element down gradually
         {
             float t = elapsedTime / duration;

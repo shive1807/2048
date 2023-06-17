@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -103,13 +104,13 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-    public void SwapBlock(Element e)
+    public IEnumerator SwapBlock(Element e)
     {
         swapElements.Add(e);
         if(swapElements.Count == 1)
         {
             Debug.Log("only 1 element");
-            return;
+            yield return null;
         }
         else if(swapElements.Count == 2)
         {
@@ -119,23 +120,17 @@ public class GameController : Singleton<GameController>
             Vector2 e1Pos = e1.GetComponent<RectTransform>().anchoredPosition;
             Vector2 e2Pos = e2.GetComponent<RectTransform>().anchoredPosition;
 
-            //--------------------------------------------------------Bug here--------------------------------------------------------
-            // clear is getting called on 2nd element select after swapping
+            StartCoroutine(e1.MoveElement(e2Pos, swapDuration));
+            StartCoroutine(e2.MoveElement(e1Pos, swapDuration));
 
+            yield return new WaitForSeconds(swapDuration + .2f);
+
+            e1.GetComponent<RectTransform>().anchoredPosition = e1Pos;
+            e2.GetComponent<RectTransform>().anchoredPosition = e2Pos;
             int _temp = 0;
             _temp = e1.num;
             e1.SetNum(e2.num);
             e2.SetNum(_temp);
-
-            //StartCoroutine(e1.MoveElement(e2Pos, swapDuration));
-            //StartCoroutine(e2.MoveElement(e1Pos, swapDuration));
-            //Vector2 temp = new Vector2(0, 0);
-            //temp.x = e1.x;
-            //temp.y = e1.y;
-            //e1.x = e2.x;
-            //e1.y = e2.y;
-            //e2.x = (int)temp.x;
-            //e2.y = (int)temp.y;
 
             swapElements.Clear();
             swaping = false;
@@ -146,12 +141,8 @@ public class GameController : Singleton<GameController>
     {
         chain.Add(e);
         DependencyManager.Instance.gridController.GridRefill(chain);
-
-        // ----------------------------------------Bug here---------------------------------------------------------------------
-        //not getting called on 1st time(click) gets called when click second element and 'e' isn't changing its the same which gets clicked 1st
-        //time hence it throws an errror when click 3rd element
-        //chain.Clear();
-        //smashing = false;
+        chain.Clear();
+        smashing = false;
     }
     public void SetSmash()
     {
@@ -224,6 +215,7 @@ public class GameController : Singleton<GameController>
 
             chain[chain.Count - 1].selected = false;
             chain.Clear();
+            Debug.Log(DependencyManager.Instance.inputManager.released);
             DependencyManager.Instance.inputManager.released = false;
             Debug.Log("clear");
         }
