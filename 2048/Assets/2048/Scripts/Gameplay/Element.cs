@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.EventSystems;
+using System.Diagnostics;
 
 public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 {
@@ -11,6 +12,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public bool selected = false;
     /*[HideInInspector]*/ public int y;
     /*[HideInInspector]*/ public int x;
+    [HideInInspector] public bool onElement = false;
 
     [HideInInspector] public Vector3 elementPos;
     public RectTransform rectTransform;
@@ -33,16 +35,17 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     {
         if (DependencyManager.Instance.inputManager.pressed && !DependencyManager.Instance.gameController.smashing && !DependencyManager.Instance.gameController.swaping)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
         {
+            onElement = true;
             SelectCheck(eventData);
-            Debug.Log("run drag");
+            //Debug.Log("run drag");
         }
     }
 
     public void OnPointerDown(PointerEventData eventData) // to get the element when the mouse button gets pressed while on the element
     {
+        onElement = true;
         SelectCheck(eventData);
-        Debug.Log("run down");
-
+        //Debug.Log("run down");
     }
 
     public void SelectCheck(PointerEventData eventData)
@@ -52,12 +55,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             if (DependencyManager.Instance.gameController.smashing)
             {
                 DependencyManager.Instance.gameController.SmashBlock(this);
-                Debug.Log("smashing run");
+                //Debug.Log("smashing run");
             }
             else if (DependencyManager.Instance.gameController.swaping)
             {
                 StartCoroutine(DependencyManager.Instance.gameController.SwapBlock(this));
-                Debug.Log("swaping run");
+                //Debug.Log("swaping run");
             }
             else
             {
@@ -96,13 +99,13 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         if(rectTransform == null)
         {
-            Debug.LogError("rectTransform is null");
+            //Debug.LogError("  rectTransform is null");
             yield break;
         }
 
         Vector2 initialPos  = rectTransform.anchoredPosition;
         float elapsedTime   = 0f;
-        Debug.Log("moving");
+        //Debug.Log("moving");
         while (elapsedTime < duration)               // moving the element down gradually
         {
             float t = elapsedTime / duration;

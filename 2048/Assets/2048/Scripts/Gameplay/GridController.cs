@@ -104,7 +104,7 @@ public class GridController : MonoBehaviour
             for (int i = 0; i < chain.Count - 1; i++)
             {
                 Destroy(chain[i].gameObject);
-                Debug.Log("refil");
+                //Debug.Log("refil");
             }
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -166,15 +166,11 @@ public class GridController : MonoBehaviour
             {
                 Vector2 targetPos = Grid[e.x, i - 1].GetComponent<RectTransform>().anchoredPosition;
 
-                //-----------------------------------------bug here------------------------------------------------------
-                // elements not moving down
-
-                Grid[e.x, i].MoveElement(targetPos, ElementFallDuration);
-
-                //--------------------------------------------------------------------------------------------------------
+                StartCoroutine(Grid[e.x, i].MoveElement(targetPos, ElementFallDuration));
+                Grid[e.x, i - 1] = Grid[e.x, i];
                 Grid[e.x, i].SetElementCoord(e.x, i - 1);
             }
-            Debug.Log("sw");
+            //Debug.Log("sw");
             Destroy(e.gameObject);
             GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
         }

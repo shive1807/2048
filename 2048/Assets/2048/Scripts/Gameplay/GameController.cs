@@ -7,7 +7,7 @@ public class GameController : Singleton<GameController>
 {
     private LineRenderer lineRenderer;
     private GameObject line;
-    private List<GameObject> lines;
+    public List<GameObject> lines;
 
 
     private List<Element> swapElements;
@@ -82,7 +82,11 @@ public class GameController : Singleton<GameController>
     }
     public void LineMatching()
     {
-        if (DependencyManager.Instance.inputManager.pressed && !swaping && !smashing)
+        if(smashing || swaping || chain.Count == 0)
+        {
+            return;
+        }
+        if (DependencyManager.Instance.inputManager.pressed)
         {
             lineRenderer.enabled = true;
             //lineRenderer.positionCount = chain.Count + 2;
@@ -96,8 +100,8 @@ public class GameController : Singleton<GameController>
 
 
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
-            //lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
-            //lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
+            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
+            lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
         }
         else
         {
@@ -147,12 +151,12 @@ public class GameController : Singleton<GameController>
     public void SetSmash()
     {
         smashing = true;
-        Debug.Log("smahing " + smashing);
+        //Debug.Log("smahing " + smashing);
     }
     public void SetSwap()
     {
         swaping = true;
-        Debug.Log("swaping " + swaping);
+        //Debug.Log("swaping " + swaping);
     }
     public void CreateLine(Element e1, Element e2)
     {
@@ -168,7 +172,25 @@ public class GameController : Singleton<GameController>
         Vector2 dir = e1.GetComponent<RectTransform>().anchoredPosition - e2.GetComponent<RectTransform>().anchoredPosition;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         _line.GetComponent<RectTransform>().rotation = Quaternion.Euler(0f, 0f, angle);
-        //lines.Add(_line);
+        lines.Add(_line);
+    }
+    public void DestroyLine(GameObject _line = default)
+    {
+        if (_line != null)
+        {
+            lines.Remove(_line);
+
+            Destroy(_line.gameObject);
+        }
+        else
+        {
+            foreach (GameObject line in lines)
+            {
+                Destroy(line);
+            }
+            lines.Clear();
+        }
+        
     }
     public int ChangeNum()
     {
@@ -189,6 +211,7 @@ public class GameController : Singleton<GameController>
     {
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
+        DestroyLine(lines[lines.Count - 1]);
     }
     private void AddToChain(Element numElement)       // adding element to chain
     {
@@ -199,7 +222,7 @@ public class GameController : Singleton<GameController>
             CreateLine(chain[chain.Count - 2], numElement);
         }
 
-        Debug.Log("(" + numElement.x + "," + numElement.y + ") Added");
+        //Debug.Log("(" + numElement.x + "," + numElement.y + ") Added");
     }   
     private void ClearChain()
     {
@@ -208,16 +231,14 @@ public class GameController : Singleton<GameController>
             if(chain.Count > 1)
             {
                 chain[chain.Count - 1].SetNum(ChangeNum());
-
-                //lines.Clear();
+                DestroyLine();
             }
             DependencyManager.Instance.gridController.GridRefill(chain);
 
             chain[chain.Count - 1].selected = false;
             chain.Clear();
-            Debug.Log(DependencyManager.Instance.inputManager.released);
             DependencyManager.Instance.inputManager.released = false;
-            Debug.Log("clear");
+            //Debug.Log("clear");
         }
     }
 }
