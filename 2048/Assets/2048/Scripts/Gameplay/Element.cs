@@ -118,9 +118,14 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     public void SetNum(int num = 0)
     {
         int x;
-        if(num == 0)
+        int max = 10;
+        if(max > 10)
         {
-            x = (int)Mathf.Pow(2, random.Next(1, 1));
+            max = DependencyManager.Instance.gameController.maxPower;
+        }
+        if (num == 0)
+        {
+            x = (int)Mathf.Pow(2, random.Next(max - 9, max));
         }
         else
         {

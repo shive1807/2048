@@ -5,19 +5,21 @@ using UnityEngine;
 
 public class GameController : Singleton<GameController>
 {
+    public List<Element> chain;
+
     private LineRenderer lineRenderer;
     private GameObject line;
     public List<GameObject> lines;
-
 
     private List<Element> swapElements;
     [HideInInspector] public bool swaping = false;
     private float swapDuration = 1f;
 
-
     [HideInInspector] public bool smashing = false;
 
-    public List<Element> chain;
+    /*[HideInInspector]*/ public int maxElement = 2;
+    [HideInInspector] public int maxPower = 1;
+
     private void Start()
     {
         chain = new List<Element>();
@@ -89,15 +91,6 @@ public class GameController : Singleton<GameController>
         if (DependencyManager.Instance.inputManager.pressed)
         {
             lineRenderer.enabled = true;
-            //lineRenderer.positionCount = chain.Count + 2;
-
-            //for (int i = 0; i < chain.Count; i++)
-            //{
-            //    lineRenderer.SetPosition(i, chain[i].elementPos);
-            //}
-
-            //// Set the position of the end of the line to follow the mouse cursor
-
 
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
             lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
@@ -106,6 +99,18 @@ public class GameController : Singleton<GameController>
         else
         {
             lineRenderer.enabled = false;
+        }
+    }
+    public void maxElementCheck(int num)
+    {
+        if(maxElement < num)
+        {
+            maxElement = num;
+            while (maxElement > 1)
+            {
+                num /= 2;
+                maxPower++;
+            }
         }
     }
     public IEnumerator SwapBlock(Element e)
@@ -205,6 +210,7 @@ public class GameController : Singleton<GameController>
         {
             s *= 2;
         }
+        maxElementCheck(s);
         return s;
     }
     private void RemoveFromChain(Element numElement)  // removing the last element from chain

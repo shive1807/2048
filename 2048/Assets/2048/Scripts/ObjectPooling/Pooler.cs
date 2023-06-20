@@ -8,7 +8,7 @@ public class Pooler : MonoBehaviour
     private GameObject element;
     private List<GameObject> pool;
 
-    private void Start()
+    private void Awake()
     {
         pool        = new List<GameObject>();
         element     = Resources.Load<GameObject>(Assets.numElement);
@@ -16,13 +16,17 @@ public class Pooler : MonoBehaviour
 
         Initialize();
     }
+    private void Start()
+    {
+        
+    }
 
     private void Initialize()
     {
         for(int i = 0; i < poolCount; i++)
         {
             GameObject _element = Instantiate(element);
-            _element.transform.SetParent(this.transform, false);
+            _element.transform.SetParent(this.transform, true);
             _element.SetActive(false);
             pool.Add(_element);
         }
@@ -46,5 +50,6 @@ public class Pooler : MonoBehaviour
     {
         element.SetActive(false);
         element.transform.position = Vector2.zero;
+
     }
 }

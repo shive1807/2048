@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Text;
+using System;
 
 public class GridController : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class GridController : MonoBehaviour
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
                 GenerateBlock(i, j);
+
+                // checking max num in grid
+                DependencyManager.Instance.gameController.maxElementCheck(Grid[i, j].num);
             }
         }
     }
@@ -30,10 +34,12 @@ public class GridController : MonoBehaviour
     private void GenerateBlock(int i, int j)
     {
         GameObject element = Instantiate(block) as GameObject;
+        //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
 
         element.transform.SetParent(this.transform, false);
         Grid[i, j] = element.GetComponent<Element>();
         Grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
+
     }
 
     //HACK :- REFERENCE GRID
@@ -104,6 +110,8 @@ public class GridController : MonoBehaviour
             for (int i = 0; i < chain.Count - 1; i++)
             {
                 Destroy(chain[i].gameObject);
+                //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
+
                 //Debug.Log("refil");
             }
 
@@ -175,23 +183,42 @@ public class GridController : MonoBehaviour
             GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
         }
     }
-    private void GameEndCheck()
+    private bool GameEndCheck()  // to be called in grid refill
     {
-        for(int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
                 int x = Grid[i, j].x;
                 int y = Grid[i, j].y;
 
-                //if (Grid[i, j].x == x - 1 || numElement.x == x + 1 || numElement.x == x)
-                //{
-                //    if (numElement.y == y - 1 || numElement.y == y + 1 || numElement.y == y)
-                //    {
-
-                //    }
-                //}
+                for (int a = x - 1; a <= x + 1; a++)
+                {
+                    for (int b = y - 1; b <= y + 1; b++)
+                    {
+                        if (Grid[a, b].num == Grid[i, j].num || Grid[a, b].num / Grid[i, j].num == 2 || Grid[i, j].num / Grid[a, b].num == 2)
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
+        }
+        return false;
+    }
+
+    public void ElementRe_shuffle(int MaxNum)
+    {
+        int num = (int)(DependencyManager.Instance.gameController.maxElement / Math.Pow(2, DependencyManager.Instance.gameController.maxPower - 1));
+        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for(int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                if (Grid[i, j].num == num)
+                {
+                    Grid[i, j].SetNum((int)(DependencyManager.Instance.gameController.maxElement / Math.Pow(2, DependencyManager.Instance.gameController.maxPower - 2)));
+                }
+            } // keep in mind call this only when maxPower > 10
         }
     }
 }
