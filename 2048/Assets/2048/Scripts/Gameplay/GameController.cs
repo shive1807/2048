@@ -105,8 +105,9 @@ public class GameController : Singleton<GameController>
     {
         if(maxElement < num)
         {
+            maxPower = 0;
             maxElement = num;
-            while (maxElement > 1)
+            while (num > 1)
             {
                 num /= 2;
                 maxPower++;

@@ -40,6 +40,7 @@ public class GridController : MonoBehaviour
         Grid[i, j] = element.GetComponent<Element>();
         Grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
 
+        DependencyManager.Instance.gameController.maxElementCheck(Grid[i, j].num);
     }
 
     //HACK :- REFERENCE GRID
@@ -182,8 +183,9 @@ public class GridController : MonoBehaviour
             Destroy(e.gameObject);
             GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
         }
+        GameEndCheck();
     }
-    private bool GameEndCheck()  // to be called in grid refill
+    private bool GameEndCheck()
     {
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
@@ -192,20 +194,24 @@ public class GridController : MonoBehaviour
                 int x = Grid[i, j].x;
                 int y = Grid[i, j].y;
 
-                for (int a = x - 1; a <= x + 1; a++)
-                {
-                    for (int b = y - 1; b <= y + 1; b++)
-                    {
-                        if (Grid[a, b].num == Grid[i, j].num || Grid[a, b].num / Grid[i, j].num == 2 || Grid[i, j].num / Grid[a, b].num == 2)
-                        {
-                            return false;
-                        }
-                    }
-                }
+                //for (int a = x - 1; a <= x + 1; a++)
+                //{
+                //    for (int b = y - 1; b <= y + 1; b++)
+                //    {
+                //        if (a >= 0 && a < GameSettings.GRID_WIDTH && b >= 0 && b < GameSettings.GRID_HEIGHT &&
+                //            (a != x || b != y) && (Grid[a, b].num == Grid[i, j].num || Grid[a, b].num / Grid[i, j].num == 2 || Grid[i, j].num / Grid[a, b].num == 2))
+                //        {
+                //            return false; // Found a match, game has not ended
+                //        }
+                //    }
+                //}
+
+
             }
         }
-        return false;
+        return true; // No match found, game has ended
     }
+
 
     public void ElementRe_shuffle(int MaxNum)
     {
