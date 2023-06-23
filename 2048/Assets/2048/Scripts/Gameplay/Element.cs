@@ -117,17 +117,20 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         }
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
     }
-    public void SetNum(int val = default)
+    public void SetNum(int val = default, Num _num = null)
     {
-        if (val == 0)
+        if (val == 0 && _num == null)
         {
            Num.NumSetup(ref num);
         }
-        else
+        else if(val != 0)
         {
             Num.NumSetup(ref num, val);
         }
-
+        else if(_num != null)
+        {
+            this.num = _num;
+        }
         this.numVal = num.numVal;
 
         this.GetComponentInChildren<TextMeshProUGUI>().text = num.txt;

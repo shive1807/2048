@@ -17,7 +17,7 @@ public class GameController : Singleton<GameController>
 
     [HideInInspector] public bool smashing = false;
 
-    /*[HideInInspector]*/ public int maxElement = 2;
+    /*[HideInInspector]*/ public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
     [HideInInspector] public int maxPower = 1;
 
     private void Start()
@@ -62,7 +62,8 @@ public class GameController : Singleton<GameController>
                         }
                         else
                         {
-                            if (numElement.numVal == chain[chain.Count - 1].numVal || numElement.numVal /chain[chain.Count - 1].numVal == 2)
+                            if (numElement.numVal == chain[chain.Count - 1].numVal || numElement.numVal /chain[chain.Count - 1].numVal == 2 
+                                || (numElement.numVal == 1 && chain[chain.Count - 1].numVal == 512)) // special case: when the decimal changes it wasn't adding to chain
                             {
                                 AddToChain(numElement);
                             }
@@ -101,18 +102,10 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-    public void maxElementCheck(int num)
+    public void maxElementCheck(Num num)
     {
-        if(maxElement < num)
-        {
-            maxPower = 0;
-            maxElement = num;
-            while (num > 1)
-            {
-                num /= 2;
-                maxPower++;
-            }
-        }
+        maxElement = Num.Compare(maxElement, num);
+        Debug.Log(maxElement.txt);
     }
     public IEnumerator SwapBlock(Element e)
     {
@@ -137,11 +130,12 @@ public class GameController : Singleton<GameController>
 
             e1.GetComponent<RectTransform>().anchoredPosition = e1Pos;
             e2.GetComponent<RectTransform>().anchoredPosition = e2Pos;
-            int _temp = 0;
-            _temp = e1.numVal;
-            e1.SetNum(e2.numVal);
-            e2.SetNum(_temp);
-
+            //-------------------bug here--------------------------------------------------------
+            Num _temp ;
+            _temp = e1.num;
+            e1.num = e2.num;    // num isn't changing, gets back to the original
+            e2.num = _temp;
+            //-----------------------------------------------------------------------------------
             swapElements.Clear();
             swaping = false;
             Debug.Log("swapping element");
@@ -198,21 +192,11 @@ public class GameController : Singleton<GameController>
         }
         
     }
-    public int ChangeNum()
+    public Num ChangeNum()
     {
-        int sum = 0;
-        int s = 2;
-        foreach(Element element in chain)
-        {
-            sum += element.numVal;
-        }
-
-        while (s < sum)
-        {
-            s *= 2;
-        }
-        maxElementCheck(s);
-        return s;
+        Num num = Num.Add(chain);
+        maxElementCheck(num);
+        return num;
     }
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
@@ -237,7 +221,7 @@ public class GameController : Singleton<GameController>
         {
             if(chain.Count > 1)
             {
-                chain[chain.Count - 1].SetNum(ChangeNum());
+                chain[chain.Count - 1].SetNum(0, ChangeNum());
                 DestroyLine();
             }
             DependencyManager.Instance.gridController.GridRefill(chain);

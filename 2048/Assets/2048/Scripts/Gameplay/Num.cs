@@ -12,10 +12,37 @@ public class Num
     public string txt;
     public static char[] Dec = { ' ', 'K', 'M', 'B', 'Q' };
 
+    public static Num Compare(Num num1, Num num2)
+    {
+        if(Array.IndexOf(Dec, num1.dec) == Array.IndexOf(Dec, num2.dec))
+        {
+            if(num1.numVal >= num2.numVal)
+            {
+                return num1;
+            }
+            else
+            {
+                Debug.Log("normal num2");
+                return num2;
+            }
+        }
+        else
+        {
+            Debug.Log("run");
 
+            if (Array.IndexOf(Dec, num1.dec) > Array.IndexOf(Dec, num2.dec))
+            {
+                return num1;
+            }
+            else
+            {
+                return num2;
+            }
+        }
+    }
     public static Num Add(List<Element> chain)
     {
-        int sum = 0;
+        float sum = 0;
         int s = 1;
         char initialDec = chain[0].num.dec;
         int initialInd = Array.IndexOf(Dec, initialDec);
@@ -32,20 +59,27 @@ public class Num
                 }
                 else if(Array.IndexOf(Dec, element.num.dec) != currentInd)
                 {
-                    //int ind = currentInd - Array.IndexOf(Dec, element.num.dec);
-                    //sum += (int)(element.numVal / MathF.Pow(1000, ind));
+                    int ind = currentInd - Array.IndexOf(Dec, element.num.dec);
+                    sum += (element.numVal / MathF.Pow(1000, ind));
                 }
             }
             else
             {
-                sum = sum % 1000;
+                sum = 1;
                 currentInd++;
             }
         }
-        while (s < sum)
+        do
         {
             s *= 2;
+        } while (s < sum);
+
+        if( s == 1024)
+        {
+            s = 1; // for the bug when sum = 1024 then it isn't setting itself to 1k
+            currentInd++;
         }
+
         Num num = new Num();
         num.numVal = s;
         num.dec = Dec[currentInd];
@@ -58,7 +92,7 @@ public class Num
 
         int x;
         int max = 10;
-        int min = 1;
+        int min = 9;
 
         if (numeric == 0)
         {
@@ -72,7 +106,7 @@ public class Num
         num = new Num()
         {
             numVal = x,
-            dec = 'O',
+            dec = ' ',
             txt = $"{x}"
         };
     }
