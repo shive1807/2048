@@ -8,7 +8,9 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 {
     System.Random random = new System.Random();
 
-    [HideInInspector] public int num;
+    [HideInInspector] public int numVal;
+    [HideInInspector] public Num num;
+
     [HideInInspector] public bool selected = false;
     /*[HideInInspector]*/ public int y;
     /*[HideInInspector]*/ public int x;
@@ -115,23 +117,19 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         }
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
     }
-    public void SetNum(int num = 0)
+    public void SetNum(int val = default)
     {
-        int x;
-        int max = 10;
-        if(max > 10)
+        if (val == 0)
         {
-            max = DependencyManager.Instance.gameController.maxPower;
-        }
-        if (num == 0)
-        {
-            x = (int)Mathf.Pow(2, random.Next(max - 9, max));
+           Num.NumSetup(ref num);
         }
         else
         {
-            x = num;
+            Num.NumSetup(ref num, val);
         }
-        this.num = x;
-        this.GetComponentInChildren<TextMeshProUGUI>().text = this.num.ToString();
+
+        this.numVal = num.numVal;
+
+        this.GetComponentInChildren<TextMeshProUGUI>().text = num.txt;
     }
 }

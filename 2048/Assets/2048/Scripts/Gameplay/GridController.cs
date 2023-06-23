@@ -26,7 +26,7 @@ public class GridController : MonoBehaviour
                 GenerateBlock(i, j);
 
                 // checking max num in grid
-                DependencyManager.Instance.gameController.maxElementCheck(Grid[i, j].num);
+                DependencyManager.Instance.gameController.maxElementCheck(Grid[i, j].numVal);
             }
         }
     }
@@ -40,7 +40,7 @@ public class GridController : MonoBehaviour
         Grid[i, j] = element.GetComponent<Element>();
         Grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
 
-        DependencyManager.Instance.gameController.maxElementCheck(Grid[i, j].num);
+        DependencyManager.Instance.gameController.maxElementCheck(Grid[i, j].numVal);
     }
 
     //HACK :- REFERENCE GRID
@@ -220,7 +220,7 @@ public class GridController : MonoBehaviour
         {
             for(int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
-                if (Grid[i, j].num == num)
+                if (Grid[i, j].numVal == num)
                 {
                     Grid[i, j].SetNum((int)(DependencyManager.Instance.gameController.maxElement / Math.Pow(2, DependencyManager.Instance.gameController.maxPower - 2)));
                 }

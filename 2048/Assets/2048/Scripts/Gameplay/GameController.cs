@@ -62,7 +62,7 @@ public class GameController : Singleton<GameController>
                         }
                         else
                         {
-                            if (numElement.num == chain[chain.Count - 1].num || numElement.num/chain[chain.Count - 1].num == 2)
+                            if (numElement.num == chain[chain.Count - 1].num || numElement.numVal /chain[chain.Count - 1].numVal == 2)
                             {
                                 AddToChain(numElement);
                             }
@@ -138,8 +138,8 @@ public class GameController : Singleton<GameController>
             e1.GetComponent<RectTransform>().anchoredPosition = e1Pos;
             e2.GetComponent<RectTransform>().anchoredPosition = e2Pos;
             int _temp = 0;
-            _temp = e1.num;
-            e1.SetNum(e2.num);
+            _temp = e1.numVal;
+            e1.SetNum(e2.numVal);
             e2.SetNum(_temp);
 
             swapElements.Clear();
@@ -204,7 +204,7 @@ public class GameController : Singleton<GameController>
         int s = 2;
         foreach(Element element in chain)
         {
-            sum += element.num;
+            sum += element.numVal;
         }
 
         while (s < sum)
