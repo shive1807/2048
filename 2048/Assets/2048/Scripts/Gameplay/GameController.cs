@@ -55,14 +55,14 @@ public class GameController : Singleton<GameController>
                     {
                         if(chain.Count == 1)
                         {
-                            if (numElement.num == chain[chain.Count - 1].num)
+                            if (numElement.numVal == chain[chain.Count - 1].numVal)
                             {
                                 AddToChain(numElement);
                             }
                         }
                         else
                         {
-                            if (numElement.num == chain[chain.Count - 1].num || numElement.numVal /chain[chain.Count - 1].numVal == 2)
+                            if (numElement.numVal == chain[chain.Count - 1].numVal || numElement.numVal /chain[chain.Count - 1].numVal == 2)
                             {
                                 AddToChain(numElement);
                             }
