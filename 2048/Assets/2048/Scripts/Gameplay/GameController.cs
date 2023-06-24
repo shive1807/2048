@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -17,8 +18,11 @@ public class GameController : Singleton<GameController>
 
     [HideInInspector] public bool smashing = false;
 
-    /*[HideInInspector]*/ public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
-    [HideInInspector] public int maxPower = 1;
+    [HideInInspector] public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
+    [HideInInspector] public Num minElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
+
+    /*[HideInInspector]*/
+    public int maxPower = 0;
 
     private void Start()
     {
@@ -104,8 +108,23 @@ public class GameController : Singleton<GameController>
     }
     public void maxElementCheck(Num num)
     {
-        maxElement = Num.Compare(maxElement, num);
-        Debug.Log(maxElement.txt);
+        minElement = Num.Min(minElement, num);
+
+        if (Num.Max(maxElement, num) == maxElement)
+        {
+            return;
+        }
+
+        maxElement = Num.Max(maxElement, num);
+
+        DependencyManager.Instance.gridController.ElementRe_shuffle(maxElement, minElement);
+        //int i = 1;
+        //while (i < maxElement.numVal)
+        //{
+        //    i *= 2;
+        //    maxPower++;
+        //}
+        //maxPower += (int)math.pow(10, Num.CurrentDec(maxElement));
     }
     public IEnumerator SwapBlock(Element e)
     {

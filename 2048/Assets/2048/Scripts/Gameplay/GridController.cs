@@ -11,6 +11,9 @@ public class GridController : MonoBehaviour
 
     public float ElementFallDuration;
 
+    /*[HideInInspector]*/ public int ElementMaxLimit = 8;
+    /*[HideInInspector]*/ public int ElementMinLimit = 1;
+    [HideInInspector] public int DecInd = 0;
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
     private void Start() => GridSetup();
@@ -187,44 +190,60 @@ public class GridController : MonoBehaviour
     }
     private void GameEndCheck()
     {
-        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-        {
-            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
-            {
-                int x = Grid[i, j].x;
-                int y = Grid[i, j].y;
+        //for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        //{
+        //    for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+        //    {
+        //        int x = Grid[i, j].x;
+        //        int y = Grid[i, j].y;
 
-                for (int a = x - 1; a <= x + 1; a++)
-                {
-                    for (int b = y - 1; b <= y + 1; b++)
-                    {
-                        if (a >= 0 && a < GameSettings.GRID_WIDTH && b >= 0 && b < GameSettings.GRID_HEIGHT &&
-                            (a != x || b != y) && (Grid[a, b].num.numVal == Grid[i, j].num.numVal || Grid[a, b].num.numVal / Grid[i, j].num.numVal == 2 || Grid[i, j].num.numVal / Grid[a, b].num.numVal == 2) 
-                            || (Grid[a, b].num.numVal == 1 && Grid[i, j].num.numVal == 512))
-                        {
-                            return; // Found a match, game has not ended
-                        }
-                    }
-                }
-            }
-        }
-        DependencyManager.Instance.gameManager.LoadScene("MainMenu");
-        //return true; // No match found, game has ended
+        //        for (int a = x - 1; a <= x + 1; a++)
+        //        {
+        //            for (int b = y - 1; b <= y + 1; b++)
+        //            {
+        //                if (a >= 0 && a < GameSettings.GRID_WIDTH && b >= 0 && b < GameSettings.GRID_HEIGHT &&
+        //                    (a != x || b != y) && (Grid[a, b].num.numVal == Grid[i, j].num.numVal || Grid[a, b].num.numVal / Grid[i, j].num.numVal == 2 || Grid[i, j].num.numVal / Grid[a, b].num.numVal == 2) 
+        //                    || (Grid[a, b].num.numVal == 1 && Grid[i, j].num.numVal == 512))
+        //                {
+        //                    return; // Found a match, game has not ended
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+        //DependencyManager.Instance.gameManager.LoadScene("MainMenu");
+        ////return true; // No match found, game has ended
     }
 
 
-    public void ElementRe_shuffle(int MaxNum)
+    public void ElementRe_shuffle(Num MaxNum, Num MinNum)
     {
-        //int num = (int)(DependencyManager.Instance.gameController.maxElement / Math.Pow(2, DependencyManager.Instance.gameController.maxPower - 1));
-        //for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-        //{
-        //    for(int j = 0; j < GameSettings.GRID_HEIGHT; j++)
-        //    {
-        //        if (Grid[i, j].numVal == num)
-        //        {
-        //            Grid[i, j].SetNum((int)(DependencyManager.Instance.gameController.maxElement / Math.Pow(2, DependencyManager.Instance.gameController.maxPower - 2)));
-        //        }
-        //    } // keep in mind call this only when maxPower > 10
-        //}
+        if(Num.CurrentDec(MaxNum) > 0)
+        {
+            List<Element> list = new List<Element>();
+
+            if (ElementMinLimit < 10)
+            {
+                ElementMinLimit++;
+                ElementMaxLimit = ElementMinLimit + 7;
+            }
+            else if(ElementMinLimit >= 10)
+            {
+                ElementMinLimit = 1;
+                DecInd++;
+            }
+
+            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+            {
+                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                {
+                    if (Grid[i, j].num.numVal == MinNum.numVal && Grid[i, j].num.dec == MinNum.dec)
+                    {
+                        list.Add(Grid[i, j]);
+                    }
+                }
+            }
+            GridRefill(list);
+        }
     }
 }

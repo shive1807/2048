@@ -4,17 +4,23 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Num
 {
+    public static char[] Dec = { ' ', 'K', 'M', 'B', 'T', 'q', 'Q', 's', 'S', 'O', 'N', 'D' };
+
     public int numVal;
     public char dec;
     public string txt;
-    public static char[] Dec = { ' ', 'K', 'M', 'B', 'Q' };
 
-    public static Num Compare(Num num1, Num num2)
+    public static int CurrentDec(Num num)
     {
-        if(Array.IndexOf(Dec, num1.dec) == Array.IndexOf(Dec, num2.dec))
+        return (Array.IndexOf(Dec, num.dec));
+    }
+    public static Num Max(Num num1, Num num2)
+    {
+        if(CurrentDec(num1) == CurrentDec(num2))
         {
             if(num1.numVal >= num2.numVal)
             {
@@ -22,21 +28,43 @@ public class Num
             }
             else
             {
-                Debug.Log("normal num2");
                 return num2;
             }
         }
         else
         {
-            Debug.Log("run");
-
-            if (Array.IndexOf(Dec, num1.dec) > Array.IndexOf(Dec, num2.dec))
+            if (CurrentDec(num1) > CurrentDec(num2))
             {
                 return num1;
             }
             else
             {
                 return num2;
+            }
+        }
+    }
+    public static Num Min(Num num1, Num num2)
+    {
+        if (CurrentDec(num1) == CurrentDec(num2))
+        {
+            if (num1.numVal >= num2.numVal)
+            {
+                return num2;
+            }
+            else
+            {
+                return num1;
+            }
+        }
+        else
+        {
+            if (CurrentDec(num1) > CurrentDec(num2))
+            {
+                return num2;
+            }
+            else
+            {
+                return num1;
             }
         }
     }
@@ -90,24 +118,39 @@ public class Num
     {
         System.Random random = new System.Random();
 
-        int x;
-        int max = 10;
-        int min = 9;
+        int x = 2;
+        int y = 1;
+        int i = DependencyManager.Instance.gridController.DecInd;
+
+        int min  = DependencyManager.Instance.gridController.ElementMinLimit;
+        int max  = DependencyManager.Instance.gridController.ElementMaxLimit;
 
         if (numeric == 0)
         {
-            x = (int)Mathf.Pow(2, random.Next(min, max));
+            y = random.Next(7, 9);
+
+            // if y > 10 means the max has exceeded the 1024 therefore we are setting it to our num system
+
+            if (y >= 10)
+            {
+                y -= 10;
+                i++;
+            }
+
+            x = (int)Mathf.Pow(2, y);
         }
         else
         {
             x = numeric;
         }
 
+        char dec = Dec[i];
+
         num = new Num()
         {
             numVal = x,
-            dec = ' ',
-            txt = $"{x}"
+            dec = dec,
+            txt = $"{x}{dec}"
         };
     }
 }
