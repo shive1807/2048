@@ -106,8 +106,10 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-    public void MaxElementCheck()
+    public IEnumerator MaxElementCheck()
     {
+
+        yield return new WaitForSeconds(2f);
 
         Num num = DependencyManager.Instance.gridController.GetMaxElement();
 
@@ -115,7 +117,7 @@ public class GameController : Singleton<GameController>
 
         if (Num.Max(maxElement, num) == maxElement)
         {
-            return;
+            yield break;
         }
 
         maxElement = Num.Max(maxElement, num);
@@ -255,8 +257,6 @@ public class GameController : Singleton<GameController>
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;
             //Debug.Log("clear");
-
-            
         }
     }
 }

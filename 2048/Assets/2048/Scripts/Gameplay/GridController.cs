@@ -188,16 +188,8 @@ public class GridController : MonoBehaviour
             GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
         }
 
-        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-        {
-            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
-            {
-                
-            }
-        }
-
-        DependencyManager.Instance.gameController.MaxElementCheck();
-
+        StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
+            
         GameEndCheck();
     }
 
