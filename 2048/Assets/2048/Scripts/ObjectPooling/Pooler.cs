@@ -10,15 +10,14 @@ public class Pooler : MonoBehaviour
 
     private void Awake()
     {
-        pool        = new List<GameObject>();
+        //LOAD ELEMENT
         element     = Resources.Load<GameObject>(Assets.numElement);
+
+        //INIT POOL
+        pool        = new List<GameObject>();
         poolCount   = GameSettings.GRID_HEIGHT * GameSettings.GRID_WIDTH;
 
         Initialize();
-    }
-    private void Start()
-    {
-        
     }
 
     private void Initialize()

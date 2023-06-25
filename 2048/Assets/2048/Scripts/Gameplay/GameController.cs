@@ -106,8 +106,11 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-    public void maxElementCheck(Num num)
+    public void MaxElementCheck()
     {
+
+        Num num = DependencyManager.Instance.gridController.GetMaxElement();
+
         minElement = Num.Min(minElement, num);
 
         if (Num.Max(maxElement, num) == maxElement)
@@ -117,7 +120,7 @@ public class GameController : Singleton<GameController>
 
         maxElement = Num.Max(maxElement, num);
 
-        DependencyManager.Instance.gridController.ElementRe_shuffle(maxElement, minElement);
+        DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
         //int i = 1;
         //while (i < maxElement.numVal)
         //{
@@ -214,15 +217,18 @@ public class GameController : Singleton<GameController>
     public Num ChangeNum()
     {
         Num num = Num.Add(chain);
-        maxElementCheck(num);
+
+        //StartCoroutine(maxElementCheck(num));
         return num;
     }
+
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
         DestroyLine(lines[lines.Count - 1]);
     }
+
     private void AddToChain(Element numElement)       // adding element to chain
     {
         chain.Add(numElement);
@@ -249,6 +255,8 @@ public class GameController : Singleton<GameController>
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;
             //Debug.Log("clear");
+
+            
         }
     }
 }

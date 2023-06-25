@@ -18,6 +18,7 @@ public class Num
     {
         return (Array.IndexOf(Dec, num.dec));
     }
+
     public static Num Max(Num num1, Num num2)
     {
         if(CurrentDec(num1) == CurrentDec(num2))
@@ -127,7 +128,7 @@ public class Num
 
         if (numeric == 0)
         {
-            y = random.Next(7, 9);
+            y = random.Next(min, max);
 
             // if y > 10 means the max has exceeded the 1024 therefore we are setting it to our num system
 
