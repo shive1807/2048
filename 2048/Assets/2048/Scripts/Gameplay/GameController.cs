@@ -139,18 +139,25 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-    public void Max_MinElementCheck(Num num)
+
+    public IEnumerator MaxElementCheck()
+
     {
+
+        yield return new WaitForSeconds(2f);
+
+        Num num = DependencyManager.Instance.gridController.GetMaxElement();
+
         minElement = Num.Min(minElement, num);
 
         if (Num.Max(maxElement, num) == maxElement)
         {
-            return;
+            yield break;
         }
 
         maxElement = Num.Max(maxElement, num);
 
-        DependencyManager.Instance.gridController.ElementRe_shuffle(maxElement, minElement);
+        DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
         //int i = 1;
         //while (i < maxElement.numVal)
         //{
@@ -247,15 +254,16 @@ public class GameController : Singleton<GameController>
     public Num ChangeNum()
     {
         Num num = Num.Add(chain);
-        Max_MinElementCheck(num);
         return num;
     }
+
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
         DestroyLine(lines[lines.Count - 1]);
     }
+
     private void AddToChain(Element numElement)       // adding element to chain
     {
         chain.Add(numElement);

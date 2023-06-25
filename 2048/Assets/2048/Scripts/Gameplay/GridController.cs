@@ -14,6 +14,7 @@ public class GridController : MonoBehaviour
     /*[HideInInspector]*/ public int ElementMaxLimit = 8;
     /*[HideInInspector]*/ public int ElementMinLimit = 1;
     [HideInInspector] public int DecInd = 0;
+
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
     private void Start() => GridSetup();
@@ -28,8 +29,6 @@ public class GridController : MonoBehaviour
             {
                 GenerateBlock(i, j);
 
-                // checking max num in grid
-                DependencyManager.Instance.gameController.Max_MinElementCheck(Grid[i, j].num);
             }
         }
     }
@@ -42,8 +41,6 @@ public class GridController : MonoBehaviour
         element.transform.SetParent(this.transform, false);
         Grid[i, j] = element.GetComponent<Element>();
         Grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
-
-        //DependencyManager.Instance.gameController.Max_MinElementCheck(Grid[i, j].num);
     }
 
     //HACK :- REFERENCE GRID
@@ -186,8 +183,26 @@ public class GridController : MonoBehaviour
             Destroy(e.gameObject);
             GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
         }
+
+        StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
+            
         GameEndCheck();
     }
+
+    public Num GetMaxElement()
+    {
+        Num tempMax = Grid[0, 0].num;
+
+        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                tempMax = Num.Max(Grid[i, j].num, tempMax);
+            }
+        }
+        return tempMax;
+    }
+
     private void GameEndCheck()
     {
         //for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -216,7 +231,7 @@ public class GridController : MonoBehaviour
     }
 
 
-    public void ElementRe_shuffle(Num MaxNum, Num MinNum)
+    public void ElementReShuffle(Num MaxNum, Num MinNum)
     {
         if(Num.CurrentDec(MaxNum) > 0)
         {

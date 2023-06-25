@@ -18,6 +18,7 @@ public class Num
     {
         return (Array.IndexOf(Dec, num.dec));
     }
+
     public static Num Max(Num num1, Num num2)
     {
         if(CurrentDec(num1) == CurrentDec(num2))
