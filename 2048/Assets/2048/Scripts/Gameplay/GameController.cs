@@ -7,6 +7,8 @@ using UnityEngine;
 public class GameController : Singleton<GameController>
 {
     public List<Element> chain;
+    public bool upChain = false;
+    public bool downChain = false;
 
     private LineRenderer lineRenderer;
     private GameObject line;
@@ -64,10 +66,18 @@ public class GameController : Singleton<GameController>
                                 AddToChain(numElement);
                             }
                         }
-                        else
+                        else if(downChain)
                         {
-                            if (numElement.numVal == chain[chain.Count - 1].numVal || numElement.numVal /chain[chain.Count - 1].numVal == 2 
-                                || (numElement.numVal == 1 && chain[chain.Count - 1].numVal == 512)) // special case: when the decimal changes it wasn't adding to chain
+                            if (numElement.numVal == chain[chain.Count - 1].numVal ||  chain[chain.Count - 1].numVal / numElement.numVal == 2
+                                || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1)) // special case: when the decimal changes it wasn't adding to chain
+                            {
+                                AddToChain(numElement);
+                            }
+                        }
+                        else if (upChain)
+                        {
+                            if (numElement.numVal == chain[chain.Count - 1].numVal || chain[chain.Count - 1].numVal / numElement.numVal == 2
+                                || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))
                             {
                                 AddToChain(numElement);
                             }
@@ -106,7 +116,7 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-    public void maxElementCheck(Num num)
+    public void Max_MinElementCheck(Num num)
     {
         minElement = Num.Min(minElement, num);
 
@@ -214,7 +224,7 @@ public class GameController : Singleton<GameController>
     public Num ChangeNum()
     {
         Num num = Num.Add(chain);
-        maxElementCheck(num);
+        Max_MinElementCheck(num);
         return num;
     }
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
