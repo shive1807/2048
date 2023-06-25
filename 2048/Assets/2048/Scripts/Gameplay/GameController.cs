@@ -66,18 +66,22 @@ public class GameController : Singleton<GameController>
                                 AddToChain(numElement);
                             }
                         }
+                        else if(chain.Count > 1 && !upChain && !downChain)
+                        {
+                            ChainCheck(numElement);
+                        }
                         else if(downChain)
                         {
-                            if (numElement.numVal == chain[chain.Count - 1].numVal ||  chain[chain.Count - 1].numVal / numElement.numVal == 2
-                                || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1)) // special case: when the decimal changes it wasn't adding to chain
+                            if (numElement.numVal == chain[chain.Count - 1].numVal || chain[chain.Count - 1].numVal / numElement.numVal == 2
+                                 || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))
                             {
                                 AddToChain(numElement);
                             }
                         }
                         else if (upChain)
                         {
-                            if (numElement.numVal == chain[chain.Count - 1].numVal || chain[chain.Count - 1].numVal / numElement.numVal == 2
-                                || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))
+                            if (numElement.numVal == chain[chain.Count - 1].numVal || numElement.numVal / chain[chain.Count - 1].numVal == 2
+                                 || (numElement.numVal == 1 && chain[chain.Count - 1].numVal == 512))
                             {
                                 AddToChain(numElement);
                             }
@@ -95,6 +99,25 @@ public class GameController : Singleton<GameController>
                     RemoveFromChain(numElement);
                 }
             }
+        }
+    }
+    void ChainCheck(Element numElement)
+    {
+        if (numElement.numVal / chain[chain.Count - 1].numVal == 2 || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))    // special case: when the decimal changes it wasn't adding to chain
+        {
+            upChain = true;
+            downChain = false;
+            AddToChain(numElement);
+        }
+        else if (chain[chain.Count - 1].numVal / numElement.numVal == 2 || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))
+        {
+            downChain = true;
+            upChain = false;
+            AddToChain(numElement);
+        }
+        else if(numElement.numVal == chain[chain.Count - 1].numVal)
+        {
+            AddToChain(numElement);
         }
     }
     public void LineMatching()
@@ -254,6 +277,9 @@ public class GameController : Singleton<GameController>
                 DestroyLine();
             }
             DependencyManager.Instance.gridController.GridRefill(chain);
+
+            upChain = false;
+            downChain = false;
 
             chain[chain.Count - 1].selected = false;
             chain.Clear();
