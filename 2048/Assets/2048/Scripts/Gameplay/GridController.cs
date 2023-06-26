@@ -205,29 +205,31 @@ public class GridController : MonoBehaviour
 
     private void GameEndCheck()
     {
-        //for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-        //{
-        //    for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
-        //    {
-        //        int x = Grid[i, j].x;
-        //        int y = Grid[i, j].y;
+        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                int x = Grid[i, j].x;
+                int y = Grid[i, j].y;
 
-        //        for (int a = x - 1; a <= x + 1; a++)
-        //        {
-        //            for (int b = y - 1; b <= y + 1; b++)
-        //            {
-        //                if (a >= 0 && a < GameSettings.GRID_WIDTH && b >= 0 && b < GameSettings.GRID_HEIGHT &&
-        //                    (a != x || b != y) && (Grid[a, b].num.numVal == Grid[i, j].num.numVal || Grid[a, b].num.numVal / Grid[i, j].num.numVal == 2 || Grid[i, j].num.numVal / Grid[a, b].num.numVal == 2) 
-        //                    || (Grid[a, b].num.numVal == 1 && Grid[i, j].num.numVal == 512))
-        //                {
-        //                    return; // Found a match, game has not ended
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-        //DependencyManager.Instance.gameManager.LoadScene("MainMenu");
-        ////return true; // No match found, game has ended
+                for (int a = x - 1; a <= x + 1; a++)
+                {
+                    for (int b = y - 1; b <= y + 1; b++)
+                    {
+                        if (a >= 0 && a < GameSettings.GRID_WIDTH && b >= 0 && b < GameSettings.GRID_HEIGHT &&
+                            (a != x || b != y))
+                        {
+                            if(Grid[a, b].num.txt == Grid[i, j].num.txt)
+                            {
+                                return; // Found a match, game has not ended
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        DependencyManager.Instance.gameManager.LoadScene("MainMenu");
+        //return true; // No match found, game has ended
     }
 
 
