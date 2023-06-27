@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -18,7 +19,59 @@ public class Num
     {
         return (Array.IndexOf(Dec, num.dec));
     }
+    public static Num Increment(Num Num, int i)
+    {
+        List<Num> list = new List<Num>();
 
+        for(int j = 0; j <= i; j++)
+        {
+            list.Add(Num);
+        }
+
+        float sum = 0;
+        int s = 1;
+        char initialDec = list[0].dec;
+        int initialInd = Array.IndexOf(Dec, initialDec);
+        int currentInd = initialInd;
+
+
+        foreach (Num _num in list)
+        {
+            if (sum < 1000)
+            {
+                if (Array.IndexOf(Dec, _num.dec) == currentInd)
+                {
+                    sum += _num.numVal;
+                }
+                else if (Array.IndexOf(Dec, _num.dec) != currentInd)
+                {
+                    int ind = currentInd - Array.IndexOf(Dec, _num.dec);
+                    sum += (_num.numVal / MathF.Pow(1000, ind));
+                }
+            }
+            else
+            {
+                sum = 1;
+                currentInd++;
+            }
+        }
+        do
+        {
+            s *= 2;
+        } while (s < sum);
+
+        if (s == 1024)
+        {
+            s = 1; // for the bug when sum = 1024 then it isn't setting itself to 1k
+            currentInd++;
+        }
+
+        Num num = new Num();
+        num.numVal = s;
+        num.dec = Dec[currentInd];
+        num.txt = $"{s}{Dec[currentInd]}";
+        return num;
+    }
     public static Num Max(Num num1, Num num2)
     {
         if(CurrentDec(num1) == CurrentDec(num2))
@@ -69,7 +122,7 @@ public class Num
             }
         }
     }
-    public static Num Add(List<Element> chain)
+    public static Num AddElement(List<Element> chain)
     {
         float sum = 0;
         int s = 1;
@@ -80,16 +133,17 @@ public class Num
 
         foreach (Element element in chain)
         {
+            Num _num = element.num;
             if (sum < 1000)
             {
-                if(Array.IndexOf(Dec, element.num.dec) == currentInd)
+                if(Array.IndexOf(Dec, _num.dec) == currentInd)
                 {
-                    sum += element.numVal;
+                    sum += _num.numVal;
                 }
-                else if(Array.IndexOf(Dec, element.num.dec) != currentInd)
+                else if(Array.IndexOf(Dec, _num.dec) != currentInd)
                 {
-                    int ind = currentInd - Array.IndexOf(Dec, element.num.dec);
-                    sum += (element.numVal / MathF.Pow(1000, ind));
+                    int ind = currentInd - Array.IndexOf(Dec, _num.dec);
+                    sum += (_num.numVal / MathF.Pow(1000, ind));
                 }
             }
             else

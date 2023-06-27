@@ -8,13 +8,14 @@ public class GridController : MonoBehaviour
     private Element[,]  Grid;
     private GameObject  block;
     public Vector2      ElementfallOffset;
+    int index;
 
     public float ElementFallDuration;
 
     /*[HideInInspector]*/ public int ElementMaxLimit = 8;
     /*[HideInInspector]*/ public int ElementMinLimit = 1;
     [HideInInspector] public int DecInd = 0;
-
+    private bool reShuffling = false;
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
     private void Start() => GridSetup();
@@ -58,7 +59,7 @@ public class GridController : MonoBehaviour
     {
         int[,] deductions = new int[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
-        for(int i = 0; i < chain.Count - 1; i++)
+        for(int i = 0; i < index; i++)
         {
             deductions[chain[i].x, chain[i].y]++;
         }
@@ -83,7 +84,7 @@ public class GridController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < chain.Count - 1; i++)
+        for (int i = 0; i < index; i++)
         {
             deductions[chain[i].x, chain[i].y] = -1;
         }
@@ -104,11 +105,19 @@ public class GridController : MonoBehaviour
     }
     public void GridRefill(List<Element> chain)
     {
+        if (reShuffling)
+        {
+            index = chain.Count;
+        }
+        else
+        {
+            index = chain.Count - 1;
+        }
         if(!DependencyManager.Instance.gameController.smashing)
         {
             int[,] deductions = GetDestroyedBlocks(chain);
 
-            for (int i = 0; i < chain.Count - 1; i++)
+            for (int i = 0; i < index; i++)
             {
                 Destroy(chain[i].gameObject);
                 //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
@@ -231,12 +240,11 @@ public class GridController : MonoBehaviour
         DependencyManager.Instance.gameManager.LoadScene("MainMenu");
         //return true; // No match found, game has ended
     }
-
-
     public void ElementReShuffle(Num MaxNum, Num MinNum)
     {
         if(Num.CurrentDec(MaxNum) > 0)
         {
+            reShuffling = true;
             List<Element> list = new List<Element>();
 
             if (ElementMinLimit < 10)
@@ -261,6 +269,9 @@ public class GridController : MonoBehaviour
                 }
             }
             GridRefill(list);
+            DependencyManager.Instance.gameController.minElement = Num.Increment(MinNum, 1);
+            reShuffling = false;
+            Debug.Log(DependencyManager.Instance.gameController.minElement.txt);
         }
     }
 }

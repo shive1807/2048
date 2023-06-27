@@ -34,6 +34,8 @@ public class GameController : Singleton<GameController>
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         line = Resources.Load<GameObject>(Assets.line);
+
+        Debug.Log(minElement.txt);
     }
 
     private void Update()
@@ -141,14 +143,10 @@ public class GameController : Singleton<GameController>
     }
 
     public IEnumerator MaxElementCheck()
-
     {
-
         yield return new WaitForSeconds(2f);
 
         Num num = DependencyManager.Instance.gridController.GetMaxElement();
-
-        minElement = Num.Min(minElement, num);
 
         if (Num.Max(maxElement, num) == maxElement)
         {
@@ -158,13 +156,6 @@ public class GameController : Singleton<GameController>
         maxElement = Num.Max(maxElement, num);
 
         DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
-        //int i = 1;
-        //while (i < maxElement.numVal)
-        //{
-        //    i *= 2;
-        //    maxPower++;
-        //}
-        //maxPower += (int)math.pow(10, Num.CurrentDec(maxElement));
     }
     public IEnumerator SwapBlock(Element e)
     {
@@ -253,17 +244,15 @@ public class GameController : Singleton<GameController>
     }
     public Num ChangeNum()
     {
-        Num num = Num.Add(chain);
+        Num num = Num.AddElement(chain);
         return num;
     }
-
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
         DestroyLine(lines[lines.Count - 1]);
     }
-
     private void AddToChain(Element numElement)       // adding element to chain
     {
         chain.Add(numElement);
