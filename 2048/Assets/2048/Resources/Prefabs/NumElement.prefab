@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2887385791809043295}
   - component: {fileID: 6217658720878846499}
   - component: {fileID: 5505270997409246852}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: NumElement
   m_TagString: Num Element
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ RectTransform:
   m_GameObject: {fileID: 1571332759876071706}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
+  m_LocalScale: {x: 1.1000001, y: 1.1000001, z: 1.1000001}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 999535325533863287}
@@ -70,8 +70,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -136,10 +136,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d14c80e385f411840a1e53d7306606c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  num: 0
   selected: 0
-  rowIndex: 0
-  colIndex: 0
-  gameController: {fileID: 4928144427676950457, guid: 6c8f79c96bde1ae4a95dafe876dd7bdd, type: 3}
+  y: 0
+  x: 0
+  onElement: 0
+  elementPos: {x: 0, y: 0, z: 0}
+  rectTransform: {fileID: 0}
 --- !u!61 &5505270997409246852
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -177,7 +180,7 @@ GameObject:
   - component: {fileID: 999535325533863287}
   - component: {fileID: 7137700557378784304}
   - component: {fileID: 1045245130716327306}
-  m_Layer: 5
+  m_Layer: 3
   m_Name: Text (TMP)
   m_TagString: Num Element
   m_Icon: {fileID: 0}
@@ -236,15 +239,15 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2f31cddff8709e546b425823a629ff5f, type: 2}
+  m_sharedMaterial: {fileID: -5459494690638424981, guid: 2f31cddff8709e546b425823a629ff5f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4281348144
+  m_fontColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -261,8 +264,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
