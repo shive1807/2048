@@ -1,29 +1,23 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Popup : MonoBehaviour
+public class Popup
 {
-    private List<Element> reshuffleList;
-    private Action reshuffleCallback;
-
-    public void ShowReshuffleConfirmation(List<Element> list, Action callback)
+    public bool buttonPressed = false;
+    public IEnumerator PopupConfirmation(Action function , GameObject popup)
     {
-        reshuffleList = list;
-        reshuffleCallback = callback;
+        popup.SetActive(true);
+        yield return new WaitUntil (() => buttonPressed);
+        popup.SetActive(false);
 
-        // Show the reshuffle confirmation popup
-        // Set up UI elements, buttons, etc.
+        function.Invoke();
     }
 
     public void OnConfirmButtonPressed()
     {
-        // Hide the reshuffle confirmation popup
-
-        // Invoke the reshuffle callback to perform the reshuffle logic
-        reshuffleCallback?.Invoke();
-
-        // Clear the callback reference
-        reshuffleCallback = null;
+        buttonPressed = true;
     }
 }

@@ -152,10 +152,12 @@ public class GameController : Singleton<GameController>
         {
             yield break;
         }
-
+        
         maxElement = Num.Max(maxElement, num);
+        // brake here
 
-        DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
+        //StartCoroutine(Popup.PopupConfirmation(DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement),
+                                                           //DependencyManager.Instance.newBlockPopup));
     }
     public IEnumerator SwapBlock(Element e)
     {

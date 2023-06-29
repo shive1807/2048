@@ -10,4 +10,5 @@ public class DependencyManager : Singleton<DependencyManager>
     public GridController   gridController;
     public Pooler           pooler;
     public Popup            popup;
+    public GameObject       newBlockPopup;
 }

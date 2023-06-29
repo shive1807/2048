@@ -33,7 +33,6 @@ public class GridController : MonoBehaviour
             }
         }
     }
-
     private void GenerateBlock(int i, int j)
     {
         GameObject element = Instantiate(block) as GameObject;
@@ -54,7 +53,6 @@ public class GridController : MonoBehaviour
     // 0 0 0 0 0 0  // HEIGHT
     // 0 0 0 0 0 0
     // ====> WIDTH
-
     private int[,] GetDestroyedBlocks(List<Element> chain)
     {
         int[,] deductions = new int[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
@@ -211,7 +209,6 @@ public class GridController : MonoBehaviour
         }
         return tempMax;
     }
-
     private void GameEndCheck()
     {
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -271,7 +268,6 @@ public class GridController : MonoBehaviour
             GridRefill(list);
             DependencyManager.Instance.gameController.minElement = Num.Increment(MinNum, 1);
             reShuffling = false;
-            Debug.Log(DependencyManager.Instance.gameController.minElement.txt);
         }
     }
 }
