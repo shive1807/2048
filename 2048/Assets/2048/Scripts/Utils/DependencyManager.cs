@@ -8,5 +8,6 @@ public class DependencyManager : Singleton<DependencyManager>
     public InputManager     inputManager;
     public GameController   gameController;
     public GridController   gridController;
-    public Pooler pooler;
+    public Pooler           pooler;
+    public Popup            popup;
 }
