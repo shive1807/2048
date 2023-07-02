@@ -16,6 +16,8 @@ public class GridController : MonoBehaviour
     /*[HideInInspector]*/ public int ElementMinLimit = 1;
     [HideInInspector] public int DecInd = 0;
     private bool reShuffling = false;
+    public int reShuffleOffset = 0;
+    private int reShuffleThresh = 0;
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
     private void Start() => GridSetup();
@@ -239,8 +241,13 @@ public class GridController : MonoBehaviour
     }
     public void ElementReShuffle(Num MaxNum, Num MinNum)
     {
-        if(Num.CurrentDec(MaxNum) > 0)
+        reShuffleOffset++;
+        Debug.Log("called");
+
+        if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
         {
+            ADTest.Instance.LoadInterstitialAd();
+            reShuffleOffset = 0;
             reShuffling = true;
             List<Element> list = new List<Element>();
 

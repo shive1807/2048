@@ -1,19 +1,19 @@
 using UnityEngine;
 
-public class ADTest : MonoBehaviour
+public class ADTest : Singleton<ADTest>
 {
     void Start()
     {
-        AdManager.instanceAdManager.RequestInterstitial();
-        AdManager.instanceAdManager.RequestRewardedAd();
-        AdManager.instanceAdManager.RequestBanner();
+        AdManager.Instance.RequestInterstitial();
+        AdManager.Instance.RequestRewardedAd();
+        AdManager.Instance.RequestBanner();
     }
     public void LoadInterstitialAd()
     {
-        AdManager.instanceAdManager.ShowInterstitial();
+        AdManager.Instance.ShowInterstitial();
     }
     public void LoadRewardedAd()
     {
-        AdManager.instanceAdManager.ShowRewardedAd();
-    }
+        AdManager.Instance.ShowRewardedAd();
+    }   
 }

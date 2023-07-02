@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
-public class AdManager : MonoBehaviour
+public class AdManager : Singleton<AdManager> 
 {
-    public static AdManager instanceAdManager;
-    
     private BannerView bannerAd;
     private InterstitialAd interstitialAd;
     private RewardedAd rewardedAd;
@@ -19,11 +17,6 @@ public class AdManager : MonoBehaviour
     [SerializeField] private string rewardedUnitId = "ca-app-pub-3940256099942544/5224354917";
 
 
-    private void Awake()
-    {
-        if (instanceAdManager == null)
-            instanceAdManager = this;
-    }
     private void Start()
     {
         MobileAds.Initialize(InitializationStatus => { });
