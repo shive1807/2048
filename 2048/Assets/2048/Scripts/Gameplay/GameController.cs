@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : Singleton<GameController>
 {
-    public List<Element> chain;
-    public bool upChain = false;
-    public bool downChain = false;
+    private List<Element> chain;
+    private bool upChain = false;
+    private bool downChain = false;
 
     private LineRenderer lineRenderer;
     private GameObject line;
-    public List<GameObject> lines;
+    private List<GameObject> lines;
 
     private List<Element> swapElements;
     [HideInInspector] public bool swaping = false;
@@ -23,8 +22,9 @@ public class GameController : Singleton<GameController>
     [HideInInspector] public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
     [HideInInspector] public Num minElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
 
-    /*[HideInInspector]*/
-    public int maxPower = 0;
+    [HideInInspector] public int maxPower = 0;
+
+    [HideInInspector] public GraphicRaycaster raycaster;
 
     private void Start()
     {
@@ -35,15 +35,14 @@ public class GameController : Singleton<GameController>
         lineRenderer.positionCount = 2;
         line = Resources.Load<GameObject>(Assets.line);
 
+        raycaster = transform.parent.root.gameObject.GetComponent<GraphicRaycaster>();
         Debug.Log(minElement.txt);
     }
-
     private void Update()
     {
         ClearChain();  // to clear the chain when mouse button is released
         LineMatching();
     }
-
     public void Chaining(Element numElement)
     {
         if (!numElement.selected)
@@ -103,7 +102,7 @@ public class GameController : Singleton<GameController>
             }
         }
     }
-    void ChainCheck(Element numElement)
+    private void ChainCheck(Element numElement)
     {
         if (numElement.numVal / chain[chain.Count - 1].numVal == 2 || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))    // special case: when the decimal changes it wasn't adding to chain
         {
@@ -122,10 +121,11 @@ public class GameController : Singleton<GameController>
             AddToChain(numElement);
         }
     }
-    public void LineMatching()
+    private void LineMatching()
     {
         if(smashing || swaping || chain.Count == 0)
         {
+            lineRenderer.enabled = false;
             return;
         }
         if (DependencyManager.Instance.inputManager.pressed)
@@ -141,7 +141,6 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-
     public IEnumerator MaxElementCheck()
     {
         yield return new WaitForSeconds(2f);
@@ -200,17 +199,17 @@ public class GameController : Singleton<GameController>
         chain.Clear();
         smashing = false;
     }
-    public void SetSmash()
+    private void SetSmash()
     {
         smashing = true;
         //Debug.Log("smahing " + smashing);
     }
-    public void SetSwap()
+    private void SetSwap()
     {
         swaping = true;
         //Debug.Log("swaping " + swaping);
     }
-    public void CreateLine(Element e1, Element e2)
+    private void CreateLine(Element e1, Element e2)
     {
         GameObject _line = Instantiate(line) as GameObject;
         _line.transform.SetParent(e1.transform.parent);
@@ -226,7 +225,7 @@ public class GameController : Singleton<GameController>
         _line.GetComponent<RectTransform>().rotation = Quaternion.Euler(0f, 0f, angle);
         lines.Add(_line);
     }
-    public void DestroyLine(GameObject _line = default)
+    private void DestroyLine(GameObject _line = default)
     {
         if (_line != null)
         {
@@ -244,7 +243,7 @@ public class GameController : Singleton<GameController>
         }
         
     }
-    public Num ChangeNum()
+    private Num ChangeNum()
     {
         Num num = Num.AddElement(chain);
         return num;

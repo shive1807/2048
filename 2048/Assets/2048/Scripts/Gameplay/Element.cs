@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.EventSystems;
-using System.Diagnostics;
+using UnityEngine.UI;
 
 public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 {
@@ -12,12 +12,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public Num num;
 
     [HideInInspector] public bool selected = false;
-    /*[HideInInspector]*/ public int y;
-    /*[HideInInspector]*/ public int x;
+    [HideInInspector] public int y;
+    [HideInInspector] public int x;
     [HideInInspector] public bool onElement = false;
 
     [HideInInspector] public Vector3 elementPos;
-    public RectTransform rectTransform;
+    [HideInInspector] public RectTransform rectTransform;
     private Element element;
 
     private void Start()
@@ -49,8 +49,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         SelectCheck(eventData);
         //Debug.Log("run down");
     }
-
-    public void SelectCheck(PointerEventData eventData)
+    private void SelectCheck(PointerEventData eventData)
     {
         if (eventData.pointerCurrentRaycast.gameObject.CompareTag(this.tag)) // so that it only gets called when the cursor is on the element button nor on any button
         {
@@ -87,14 +86,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }
-
     public void SetElementCoord(int i, int j)
     {
         element.x = i;
         element.y = j;
         transform.name = "(" + i + ", " + j + ")";
     }
-
     public IEnumerator MoveElement(Vector2 targetPos, float duration)
     {
         yield return null;
@@ -104,6 +101,8 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             //Debug.LogError("  rectTransform is null");
             yield break;
         }
+
+        DependencyManager.Instance.gameController.raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.All;
 
         Vector2 initialPos  = rectTransform.anchoredPosition;
         float elapsedTime   = 0f;
@@ -116,6 +115,8 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             yield return null;
         }
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
+
+        DependencyManager.Instance.gameController.raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
     }
     public void SetNum(int val = default, Num _num = null)
     {

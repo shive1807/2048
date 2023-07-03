@@ -11,7 +11,6 @@ public class InputManager : MonoBehaviour
         MouseCheck();
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
-
     void MouseCheck()
     {
         if(Input.GetMouseButton(0))

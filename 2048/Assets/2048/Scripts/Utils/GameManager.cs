@@ -8,12 +8,10 @@ public class GameManager : Singleton<GameManager>
     {
         SceneManager.LoadScene(scene);
     }
-
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
     public void QuitGame()
     {
         #if UNITY_EDITOR

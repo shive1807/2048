@@ -1,14 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Text;
-using System;
 
 public class GridController : MonoBehaviour
 {
     private Element[,]  Grid;
     private GameObject  block;
     public Vector2      ElementfallOffset;
-    int index;
+
+    private int index;
 
     public float ElementFallDuration;
 
@@ -19,9 +18,7 @@ public class GridController : MonoBehaviour
     public int reShuffleOffset = 0;
     private int reShuffleThresh = 0;
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
-
     private void Start() => GridSetup();
-
     private void GridSetup()
     {
         Grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
@@ -197,7 +194,6 @@ public class GridController : MonoBehaviour
             
         GameEndCheck();
     }
-
     public Num GetMaxElement()
     {
         Num tempMax = Grid[0, 0].num;
