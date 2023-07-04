@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,7 @@ public class GameController : Singleton<GameController>
     [HideInInspector] public Num minElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
 
     [HideInInspector] public int maxPower = 0;
+    [HideInInspector] public int HighScore = 0;
 
     [HideInInspector] public GraphicRaycaster raycaster;
 
@@ -31,6 +33,7 @@ public class GameController : Singleton<GameController>
         chain = new List<Element>();
         swapElements = new List<Element>();
 
+        lines = new List<GameObject>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         line = Resources.Load<GameObject>(Assets.line);
@@ -60,18 +63,18 @@ public class GameController : Singleton<GameController>
                 {
                     if (numElement.y == y - 1 || numElement.y == y + 1 || numElement.y == y)
                     {
-                        if(chain.Count == 1)
+                        if (chain.Count == 1)
                         {
                             if (numElement.numVal == chain[chain.Count - 1].numVal)
                             {
                                 AddToChain(numElement);
                             }
                         }
-                        else if(chain.Count > 1 && !upChain && !downChain)
+                        else if (chain.Count > 1 && !upChain && !downChain)
                         {
                             ChainCheck(numElement);
                         }
-                        else if(downChain)
+                        else if (downChain)
                         {
                             if (numElement.numVal == chain[chain.Count - 1].numVal || chain[chain.Count - 1].numVal / numElement.numVal == 2
                                  || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))
@@ -93,7 +96,7 @@ public class GameController : Singleton<GameController>
         }
         else
         {
-            if(chain.Count > 1)
+            if (chain.Count > 1)
             {
                 if (numElement == chain[chain.Count - 2])    // so that if there's only one element and if checking second last element because the current element
                 {                                                               // is the element on which cursor is currently on
@@ -116,14 +119,14 @@ public class GameController : Singleton<GameController>
             upChain = false;
             AddToChain(numElement);
         }
-        else if(numElement.numVal == chain[chain.Count - 1].numVal)
+        else if (numElement.numVal == chain[chain.Count - 1].numVal)
         {
             AddToChain(numElement);
         }
     }
     private void LineMatching()
     {
-        if(smashing || swaping || chain.Count == 0)
+        if (smashing || swaping || chain.Count == 0)
         {
             lineRenderer.enabled = false;
             return;
@@ -141,6 +144,10 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
+    private void HighScoreUpdate()
+    {
+        
+    }
     public IEnumerator MaxElementCheck()
     {
         yield return new WaitForSeconds(2f);
@@ -153,10 +160,13 @@ public class GameController : Singleton<GameController>
         }
         
         maxElement = Num.Max(maxElement, num);
-        // brake here
+
+        //Action<Num, Num> action = DependencyManager.Instance.gridController.ElementReShuffle;
+
+        //StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ElementReShuffle,
+        //DependencyManager.Instance.newBlockPopup, maxElement, minElement));
+
         DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
-        //StartCoroutine(Popup.PopupConfirmation(DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement),
-                                                           //DependencyManager.Instance.newBlockPopup));
     }
     public IEnumerator SwapBlock(Element e)
     {

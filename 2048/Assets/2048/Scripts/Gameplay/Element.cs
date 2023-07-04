@@ -69,7 +69,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             }
         }
     }
-    public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveDuration = default)
+    public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveDuration = default, Num num = default)
     {
         if (element == null || rectTransform == null)
             Start();
@@ -82,7 +82,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         //TO GET IN MATRIX POSTION OF THE ELEMENTS.
         
-        element.SetNum();
+        element.SetNum(0, num);
 
         StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }

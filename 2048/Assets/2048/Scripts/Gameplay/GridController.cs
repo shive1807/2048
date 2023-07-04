@@ -11,8 +11,8 @@ public class GridController : MonoBehaviour
 
     public float ElementFallDuration;
 
-    /*[HideInInspector]*/ public int ElementMaxLimit = 8;
-    /*[HideInInspector]*/ public int ElementMinLimit = 1;
+    [HideInInspector] public int ElementMaxLimit = 8;
+    [HideInInspector] public int ElementMinLimit = 1;
     [HideInInspector] public int DecInd = 0;
     private bool reShuffling = false;
     public int reShuffleOffset = 0;
@@ -38,20 +38,19 @@ public class GridController : MonoBehaviour
         //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
 
         element.transform.SetParent(this.transform, false);
-        Grid[i, j] = element.GetComponent<Element>();
-        Grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
-    }
 
-    //HACK :- REFERENCE GRID
-    // 0 0 0 0 0 0
-    // 0 0 0 0 0 0
-    // 0 0 0 0 0 0
-    // 0 0 0 0 0 0     /\
-    // 0 0 0 0 0 0  // ||
-    // 0 0 0 0 0 0  // ||
-    // 0 0 0 0 0 0  // HEIGHT
-    // 0 0 0 0 0 0
-    // ====> WIDTH
+        GameData gameData = SaveSystem.LoadGame();
+
+        if(gameData == null)
+        {
+            Grid[i, j] = element.GetComponent<Element>();
+            Grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
+        }
+        else
+        {
+            Grid[i, j] = gameData.SavedGrid[i, j];
+        }
+    }
     private int[,] GetDestroyedBlocks(List<Element> chain)
     {
         int[,] deductions = new int[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
@@ -242,35 +241,39 @@ public class GridController : MonoBehaviour
 
         if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
         {
-            ADTest.Instance.LoadInterstitialAd();
-            reShuffleOffset = 0;
-            reShuffling = true;
-            List<Element> list = new List<Element>();
+            StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ReShuffleContinued, DependencyManager.Instance.newBlockPopup, MinNum));
+        }
+    }
+    private void ReShuffleContinued(Num MinNum)
+    {
+        ADTest.Instance.LoadInterstitialAd();
+        reShuffleOffset = 0;
+        reShuffling = true;
+        List<Element> list = new List<Element>();
 
-            if (ElementMinLimit < 10)
-            {
-                ElementMinLimit++;
-                ElementMaxLimit = ElementMinLimit + 7;
-            }
-            else if(ElementMinLimit >= 10)
-            {
-                ElementMinLimit = 1;
-                DecInd++;
-            }
+        if (ElementMinLimit < 10)
+        {
+            ElementMinLimit++;
+            ElementMaxLimit = ElementMinLimit + 7;
+        }
+        else if (ElementMinLimit >= 10)
+        {
+            ElementMinLimit = 1;
+            DecInd++;
+        }
 
-            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
-                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                if (Grid[i, j].num.numVal == MinNum.numVal && Grid[i, j].num.dec == MinNum.dec)
                 {
-                    if (Grid[i, j].num.numVal == MinNum.numVal && Grid[i, j].num.dec == MinNum.dec)
-                    {
-                        list.Add(Grid[i, j]);
-                    }
+                    list.Add(Grid[i, j]);
                 }
             }
-            GridRefill(list);
-            DependencyManager.Instance.gameController.minElement = Num.Increment(MinNum, 1);
-            reShuffling = false;
         }
+        GridRefill(list);
+        DependencyManager.Instance.gameController.minElement = Num.Increment(MinNum, 1);
+        reShuffling = false;
     }
 }

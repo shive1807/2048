@@ -1,17 +1,18 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Popup
+public class Popup : MonoBehaviour
 {
     [HideInInspector] public bool buttonPressed = false;
-    public IEnumerator PopupConfirmation(Action function , GameObject popup)
+    public IEnumerator PopupConfirmation(Action<Num> function , GameObject popup, Num min)
     {
         popup.SetActive(true);
         yield return new WaitUntil (() => buttonPressed);
         popup.SetActive(false);
 
-        function.Invoke();
+        function.Invoke(min);
     }
     public void OnConfirmButtonPressed()
     {
