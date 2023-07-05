@@ -27,7 +27,7 @@ public class GameController : Singleton<GameController>
     [HideInInspector] public int HighScore = 0;
 
     [HideInInspector] public GraphicRaycaster raycaster;
-
+    private bool raycastBlocked = false;
     private void Start()
     {
         chain = new List<Element>();
@@ -167,6 +167,19 @@ public class GameController : Singleton<GameController>
         //DependencyManager.Instance.newBlockPopup, maxElement, minElement));
 
         DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
+    }
+    public void BlockRaycast(bool block)
+    {
+        if (block)
+        {
+            raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.All;
+            raycastBlocked = true;
+        }
+        else
+        {
+            raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
+            raycastBlocked = false;
+        }
     }
     public IEnumerator SwapBlock(Element e)
     {
