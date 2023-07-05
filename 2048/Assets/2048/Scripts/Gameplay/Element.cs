@@ -102,7 +102,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             yield break;
         }
 
-        DependencyManager.Instance.gameController.raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.All;
+        DependencyManager.Instance.gameController.BlockRaycast(true);
 
         Vector2 initialPos  = rectTransform.anchoredPosition;
         float elapsedTime   = 0f;
@@ -116,7 +116,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         }
         rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
 
-        DependencyManager.Instance.gameController.raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
+        DependencyManager.Instance.gameController.BlockRaycast(false);
     }
     public void SetNum(int val = default, Num _num = null)
     {

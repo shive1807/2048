@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    public string GameElements;
     public void LoadScene(string scene)
     {
         SceneManager.LoadScene(scene);
