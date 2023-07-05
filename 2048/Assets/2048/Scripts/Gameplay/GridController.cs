@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class GridController : MonoBehaviour
 {
-    private Element[,]  Grid;
+    private Element[,]  grid;
     private GameObject  block;
     public Vector2      ElementfallOffset;
 
@@ -14,27 +14,31 @@ public class GridController : MonoBehaviour
     [HideInInspector] public int ElementMaxLimit = 8;
     [HideInInspector] public int ElementMinLimit = 1;
     [HideInInspector] public int DecInd = 0;
-    private bool reShuffling = false;
-    public int reShuffleOffset = 0;
-    private int reShuffleThresh = 0;
+
+    private int     reShuffleOffset = 0;
+    private int     reShuffleThresh = 0;
+    private bool    reShuffling     = false;
+
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
+
     private void Start() => GridSetup();
+
     private void GridSetup()
     {
-        Grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+        grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
                 GenerateBlock(i, j);
-
             }
         }
     }
+
     private void GenerateBlock(int i, int j)
     {
-        GameObject element = Instantiate(block) as GameObject;
+        GameObject element = Pooler.Instance.SpawnfromPool();//Instantiate(block) as GameObject;
         //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
 
         element.transform.SetParent(this.transform, false);
@@ -43,14 +47,15 @@ public class GridController : MonoBehaviour
 
         if(gameData == null)
         {
-            Grid[i, j] = element.GetComponent<Element>();
-            Grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
+            grid[i, j] = element.GetComponent<Element>();
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
         }
         else
         {
-            Grid[i, j] = gameData.SavedGrid[i, j];
+            grid[i, j] = gameData.SavedGrid[i, j];
         }
     }
+
     private int[,] GetDestroyedBlocks(List<Element> chain)
     {
         int[,] deductions = new int[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
@@ -115,7 +120,8 @@ public class GridController : MonoBehaviour
 
             for (int i = 0; i < index; i++)
             {
-                Destroy(chain[i].gameObject);
+                Pooler.Instance.Deactivate(chain[i].gameObject);
+                //Destroy(chain[i].gameObject);
                 //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
 
                 //Debug.Log("refil");
@@ -130,13 +136,13 @@ public class GridController : MonoBehaviour
                     if (depth == -1 || depth == 0)
                         continue;
 
-                    Vector2 targetPos = Grid[i, j - depth].GetComponent<RectTransform>().anchoredPosition;
-                    StartCoroutine(Grid[i, j].MoveElement(targetPos, 1));
+                    Vector2 targetPos = grid[i, j - depth].GetComponent<RectTransform>().anchoredPosition;
+                    StartCoroutine(grid[i, j].MoveElement(targetPos, 1));
                 }
             }
 
             Element[,] temp = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
-            temp = Grid;
+            temp = grid;
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
@@ -147,13 +153,13 @@ public class GridController : MonoBehaviour
                     if (depth == -1 || depth == 0)
                         continue;
 
-                    temp[i, j - depth] = Grid[i, j];
+                    temp[i, j - depth] = grid[i, j];
                     //temp[i, j - depth].x = i;
                     temp[i, j - depth].SetElementCoord(i, j - depth);
                 }
             }
 
-            Grid = temp;
+            grid = temp;
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
@@ -178,11 +184,11 @@ public class GridController : MonoBehaviour
             int j = e.y;
             for (int i = j + 1; i < GameSettings.GRID_HEIGHT; i++)
             {
-                Vector2 targetPos = Grid[e.x, i - 1].GetComponent<RectTransform>().anchoredPosition;
+                Vector2 targetPos = grid[e.x, i - 1].GetComponent<RectTransform>().anchoredPosition;
 
-                StartCoroutine(Grid[e.x, i].MoveElement(targetPos, ElementFallDuration));
-                Grid[e.x, i - 1] = Grid[e.x, i];
-                Grid[e.x, i].SetElementCoord(e.x, i - 1);
+                StartCoroutine(grid[e.x, i].MoveElement(targetPos, ElementFallDuration));
+                grid[e.x, i - 1] = grid[e.x, i];
+                grid[e.x, i].SetElementCoord(e.x, i - 1);
             }
             //Debug.Log("sw");
             Destroy(e.gameObject);
@@ -195,13 +201,13 @@ public class GridController : MonoBehaviour
     }
     public Num GetMaxElement()
     {
-        Num tempMax = Grid[0, 0].num;
+        Num tempMax = grid[0, 0].num;
 
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
-                tempMax = Num.Max(Grid[i, j].num, tempMax);
+                tempMax = Num.Max(grid[i, j].num, tempMax);
             }
         }
         return tempMax;
@@ -212,8 +218,8 @@ public class GridController : MonoBehaviour
         {
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
-                int x = Grid[i, j].x;
-                int y = Grid[i, j].y;
+                int x = grid[i, j].x;
+                int y = grid[i, j].y;
 
                 for (int a = x - 1; a <= x + 1; a++)
                 {
@@ -222,7 +228,7 @@ public class GridController : MonoBehaviour
                         if (a >= 0 && a < GameSettings.GRID_WIDTH && b >= 0 && b < GameSettings.GRID_HEIGHT &&
                             (a != x || b != y))
                         {
-                            if(Grid[a, b].num.txt == Grid[i, j].num.txt)
+                            if(grid[a, b].num.txt == grid[i, j].num.txt)
                             {
                                 return; // Found a match, game has not ended
                             }
@@ -266,9 +272,9 @@ public class GridController : MonoBehaviour
         {
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
-                if (Grid[i, j].num.numVal == MinNum.numVal && Grid[i, j].num.dec == MinNum.dec)
+                if (grid[i, j].num.numVal == MinNum.numVal && grid[i, j].num.dec == MinNum.dec)
                 {
-                    list.Add(Grid[i, j]);
+                    list.Add(grid[i, j]);
                 }
             }
         }

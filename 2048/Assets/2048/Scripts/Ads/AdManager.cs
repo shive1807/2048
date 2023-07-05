@@ -11,14 +11,9 @@ public class AdManager : Singleton<AdManager>
     [SerializeField] private AdPosition adPos;
     public bool showAD = true;
 
-    [Header("These are Samples , Please Add Your Ids")]
-    [SerializeField] private string bannerUnitId = "ca-app-pub-3940256099942544/6300978111";
-    [SerializeField] private string interstitialUnitId = "ca-app-pub-3940256099942544/1033173712";
-    [SerializeField] private string rewardedUnitId = "ca-app-pub-3940256099942544/5224354917";
-
-
     private void Start()
     {
+        MobileAds.RaiseAdEventsOnUnityMainThread = true;
         MobileAds.Initialize(InitializationStatus => { });
     }
 
@@ -33,7 +28,7 @@ public class AdManager : Singleton<AdManager>
         if (!showAD)
             return;
 
-        this.bannerAd = new BannerView(bannerUnitId, AdSize.SmartBanner, adPos);
+        this.bannerAd = new BannerView(GameSettings.BannerUnitId, AdSize.SmartBanner, adPos);
         this.bannerAd.LoadAd(this.CreateAdRequest());
     }
     #endregion
@@ -50,7 +45,7 @@ public class AdManager : Singleton<AdManager>
             interstitialAd.Destroy();
         }
 
-        InterstitialAd.Load(interstitialUnitId, CreateAdRequest(), (InterstitialAd ad, LoadAdError loadAdError) =>
+        InterstitialAd.Load(GameSettings.InterstitialUnitId, CreateAdRequest(), (InterstitialAd ad, LoadAdError loadAdError) =>
         {
             if (loadAdError != null)
             {
@@ -113,7 +108,7 @@ public class AdManager : Singleton<AdManager>
 
 
         // send the request to load the ad.
-        RewardedAd.Load(rewardedUnitId, CreateAdRequest(),
+        RewardedAd.Load(GameSettings.RewardedUnitId, CreateAdRequest(),
             (RewardedAd ad, LoadAdError error) =>
             {
               // if error is not null, the load request failed.

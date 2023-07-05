@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+
 public class UiManager : MonoBehaviour
 {
     public void PanelOpenAnimation(GameObject objectToMove)
