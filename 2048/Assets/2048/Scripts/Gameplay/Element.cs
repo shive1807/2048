@@ -10,6 +10,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
     [HideInInspector] public int numVal;
     [HideInInspector] public Num num;
+    [HideInInspector] public Image image;
 
     [HideInInspector] public bool selected = false;
     [HideInInspector] public int y;
@@ -24,6 +25,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     {
         element         = this.gameObject.GetComponent<Element>();
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
+        image           = this.gameObject.GetComponent<Image>();
     }
     private void Update()
     {
@@ -133,7 +135,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             this.num = _num;
         }
         this.numVal = num.numVal;
-
+        image.color = Num.BlockColor(ref this.num);
         this.GetComponentInChildren<TextMeshProUGUI>().text = num.txt;
     }
 }

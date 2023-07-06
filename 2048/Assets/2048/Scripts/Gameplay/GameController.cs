@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class GameController : Singleton<GameController>
     private LineRenderer lineRenderer;
     private GameObject line;
     private List<GameObject> lines;
+    public Material lineColor;
 
     private List<Element> swapElements;
     [HideInInspector] public bool swaping = false;
@@ -135,9 +137,13 @@ public class GameController : Singleton<GameController>
         {
             lineRenderer.enabled = true;
 
+            // Setting position
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
             lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
             lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
+
+            // Setting Color
+            lineColor.color = chain[chain.Count - 1].image.color; 
         }
         else
         {
@@ -246,7 +252,12 @@ public class GameController : Singleton<GameController>
         Vector2 dir = e1.GetComponent<RectTransform>().anchoredPosition - e2.GetComponent<RectTransform>().anchoredPosition;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         _line.GetComponent<RectTransform>().rotation = Quaternion.Euler(0f, 0f, angle);
+
+        // Setting color of line renderer
+        _line.GetComponent<Image>().color = e1.image.color;
+
         lines.Add(_line);
+
     }
     private void DestroyLine(GameObject _line = default)
     {

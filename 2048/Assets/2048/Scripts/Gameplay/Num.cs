@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Num
@@ -202,5 +203,12 @@ public class Num
             dec = dec,
             txt = $"{x}{dec}"
         };
+    }
+    public static Color BlockColor(ref Num num)
+    {
+        int numVal = num.numVal;
+        int dec = CurrentDec(num);
+
+        return new Color(1 /** numVal / 10*/, 1 /** dec */, 1/* * (numVal + dec)*/);
     }
 }

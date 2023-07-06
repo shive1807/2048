@@ -8,7 +8,7 @@ public static class SaveSystem
     {
         BinaryFormatter formatter= new BinaryFormatter();
 
-        string path = Application.persistentDataPath + "/GameData";
+        string path = Application.persistentDataPath + "/GameData.data";
         FileStream stream = new FileStream(path, FileMode.Create);
 
         GameData gameData = new GameData(gameGrid, highScore, gems);
@@ -18,7 +18,7 @@ public static class SaveSystem
     }
     public static GameData LoadGame()
     {
-        string path = Application.persistentDataPath + "/GameData";
+        string path = Application.persistentDataPath + "/GameData.data";
 
         if(File.Exists(path))
         {
