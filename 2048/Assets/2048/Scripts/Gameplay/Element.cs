@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Transform))]
 public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 {
     System.Random random = new System.Random();
@@ -14,17 +15,18 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public bool selected = false;
     [HideInInspector] public int y;
     [HideInInspector] public int x;
-    [HideInInspector] public bool onElement = false;
+    //[HideInInspector] public bool onElement = false;
 
     [HideInInspector] public Vector3 elementPos;
     [HideInInspector] public RectTransform rectTransform;
-    private Element element;
+    //private Element element;
 
     private void Start()
     {
-        element         = this.gameObject.GetComponent<Element>();
+        //element         = this.gameObject.GetComponent<Element>();
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
     }
+
     private void Update()
     {
         // Example anchored position
@@ -33,22 +35,23 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         // Convert anchored position to transform position
         elementPos = rectTransform.TransformPoint(anchoredPosition);
     }
+
     public void OnPointerEnter(PointerEventData eventData)  // to get element when mouse button is already pressed and being dragged on the other
     {
         if (DependencyManager.Instance.inputManager.pressed && !DependencyManager.Instance.gameController.smashing && !DependencyManager.Instance.gameController.swaping)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
         {
-            onElement = true;
+            //onElement = true;//TODO No use of this
             SelectCheck(eventData);
-            //Debug.Log("run drag");
         }
     }
 
     public void OnPointerDown(PointerEventData eventData) // to get the element when the mouse button gets pressed while on the element
     {
-        onElement = true;
+        //onElement = true; //TODO No use of this
         SelectCheck(eventData);
         //Debug.Log("run down");
     }
+
     private void SelectCheck(PointerEventData eventData)
     {
         if (eventData.pointerCurrentRaycast.gameObject.CompareTag(this.tag)) // so that it only gets called when the cursor is on the element button nor on any button
@@ -56,12 +59,10 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             if (DependencyManager.Instance.gameController.smashing)
             {
                 DependencyManager.Instance.gameController.SmashBlock(this);
-                //Debug.Log("smashing run");
             }
             else if (DependencyManager.Instance.gameController.swaping)
             {
                 StartCoroutine(DependencyManager.Instance.gameController.SwapBlock(this));
-                //Debug.Log("swaping run");
             }
             else
             {
@@ -69,9 +70,10 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             }
         }
     }
+
     public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveDuration = default, Num num = default)
     {
-        if (element == null || rectTransform == null)
+        if ( rectTransform == null)//element == null ||
             Start();
 
         Vector2 targetPos = new Vector2((i * GameSettings.SPACING) - 370, (j * GameSettings.SPACING) - 520);  // calculating Pos with respect to anchors
@@ -82,14 +84,14 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         //TO GET IN MATRIX POSTION OF THE ELEMENTS.
         
-        element.SetNum(0, num);
+        this.SetNum(0, num);
 
         StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }
     public void SetElementCoord(int i, int j)
     {
-        element.x = i;
-        element.y = j;
+        this.x = i;
+        this.y = j;
         transform.name = "(" + i + ", " + j + ")";
     }
     public IEnumerator MoveElement(Vector2 targetPos, float duration)

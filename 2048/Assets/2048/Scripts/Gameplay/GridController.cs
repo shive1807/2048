@@ -38,7 +38,7 @@ public class GridController : MonoBehaviour
 
     private void GenerateBlock(int i, int j)
     {
-        GameObject element = Pooler.Instance.SpawnfromPool();//Instantiate(block) as GameObject;
+        GameObject element = Pooler.Instance.GetBlock();//Instantiate(block) as GameObject;
         //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
 
         element.transform.SetParent(this.transform, false);
@@ -120,7 +120,7 @@ public class GridController : MonoBehaviour
 
             for (int i = 0; i < index; i++)
             {
-                Pooler.Instance.Deactivate(chain[i].gameObject);
+                Pooler.Instance.DestroyBlock(chain[i].gameObject);
                 //Destroy(chain[i].gameObject);
                 //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
 

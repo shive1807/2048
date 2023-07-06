@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class Pooler : Singleton<Pooler>
 {
-    private int poolCount = 0;
-
     private GameObject element;
     private Queue<GameObject> pool;
 
@@ -12,14 +10,15 @@ public class Pooler : Singleton<Pooler>
     {
         element     = Resources.Load<GameObject>(Assets.numElement);
         pool        = new Queue<GameObject>();
-        poolCount   = GameSettings.GRID_HEIGHT * GameSettings.GRID_WIDTH;
 
         Initialize();
     }
 
     private void Initialize()
     {
-        for(int i = 0; i < poolCount; i++)
+        int poolCount = GameSettings.GRID_HEIGHT * GameSettings.GRID_WIDTH;
+
+        for (int i = 0; i < poolCount; i++)
         {
             GameObject _element = Instantiate(element);
             _element.transform.SetParent(this.transform, true);
@@ -28,14 +27,18 @@ public class Pooler : Singleton<Pooler>
         }
     }
 
-    public GameObject SpawnfromPool()
+    public GameObject GetBlock()
     {
         var element = pool.Dequeue();
         element.SetActive(true);
         return element;
     }
 
-    public void Deactivate(GameObject element)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="element"></param>
+    public void DestroyBlock(GameObject element)
     {
         element.SetActive(false);
         pool.Enqueue(element);
