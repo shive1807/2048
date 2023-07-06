@@ -7,23 +7,18 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Transform))]
 public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 {
-    System.Random random = new System.Random();
-
     [HideInInspector] public int numVal;
     [HideInInspector] public Num num;
 
     [HideInInspector] public bool selected = false;
     [HideInInspector] public int y;
     [HideInInspector] public int x;
-    //[HideInInspector] public bool onElement = false;
 
     [HideInInspector] public Vector3 elementPos;
     [HideInInspector] public RectTransform rectTransform;
-    //private Element element;
 
     private void Start()
     {
-        //element         = this.gameObject.GetComponent<Element>();
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
     }
 
@@ -40,16 +35,13 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     {
         if (DependencyManager.Instance.inputManager.pressed && !DependencyManager.Instance.gameController.smashing && !DependencyManager.Instance.gameController.swaping)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
         {
-            //onElement = true;//TODO No use of this
             SelectCheck(eventData);
         }
     }
 
     public void OnPointerDown(PointerEventData eventData) // to get the element when the mouse button gets pressed while on the element
     {
-        //onElement = true; //TODO No use of this
         SelectCheck(eventData);
-        //Debug.Log("run down");
     }
 
     private void SelectCheck(PointerEventData eventData)
@@ -78,7 +70,6 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         Vector2 targetPos = new Vector2((i * GameSettings.SPACING) - 370, (j * GameSettings.SPACING) - 520);  // calculating Pos with respect to anchors
 
-        rectTransform = transform.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(targetPos.x + elementMoveOffset.x, targetPos.y + elementMoveOffset.y);  // spawning the element a bit up to make room for drop animatio
         SetElementCoord(i, j);  // naming according to in-matrix position
 
@@ -88,12 +79,14 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }
+
     public void SetElementCoord(int i, int j)
     {
         this.x = i;
         this.y = j;
         transform.name = "(" + i + ", " + j + ")";
     }
+
     public IEnumerator MoveElement(Vector2 targetPos, float duration)
     {
         yield return null;
