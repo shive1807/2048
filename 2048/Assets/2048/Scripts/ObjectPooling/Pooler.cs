@@ -8,8 +8,8 @@ public class Pooler : Singleton<Pooler>
 
     protected override void Awake()
     {
-        element     = Resources.Load<GameObject>(Assets.numElement);
-        pool        = new Queue<GameObject>();
+        element = Resources.Load<GameObject>(Assets.numElement);
+        pool = new Queue<GameObject>();
 
         Initialize();
     }

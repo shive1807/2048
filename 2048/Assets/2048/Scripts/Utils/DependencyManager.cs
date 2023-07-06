@@ -11,4 +11,5 @@ public class DependencyManager : Singleton<DependencyManager>
     public Pooler           pooler;
     public Popup            popup;
     public GameObject       newBlockPopup;
+    public GemsManager      gemsManager;
 }

@@ -196,7 +196,7 @@ public class GridController : MonoBehaviour
         }
 
         StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
-            
+        //SaveSystem.SaveGame(Grid, DependencyManager.Instance.gameController.HighScore, DependencyManager.Instance.gemsManager.gems);
         GameEndCheck();
     }
     public Num GetMaxElement()
