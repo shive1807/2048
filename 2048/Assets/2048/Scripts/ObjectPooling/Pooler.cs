@@ -41,6 +41,7 @@ public class Pooler : Singleton<Pooler>
     public void DestroyBlock(GameObject element)
     {
         element.SetActive(false);
+        element.GetComponent<Element>().selected = false;
         pool.Enqueue(element);
     }
 }

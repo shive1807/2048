@@ -45,14 +45,15 @@ public class GridController : MonoBehaviour
 
         GameData gameData = SaveSystem.LoadGame();
 
-        if(gameData == null)
+        grid[i, j] = element.GetComponent<Element>();
+
+        if (gameData == null)
         {
-            grid[i, j] = element.GetComponent<Element>();
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
         }
         else
         {
-            grid[i, j] = gameData.SavedGrid[i, j];
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, gameData.SavedGrid[i, j]);
         }
     }
 
@@ -196,7 +197,7 @@ public class GridController : MonoBehaviour
         }
 
         StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
-        //SaveSystem.SaveGame(Grid, DependencyManager.Instance.gameController.HighScore, DependencyManager.Instance.gemsManager.gems);
+        SaveSystem.SaveGame(grid, DependencyManager.Instance.gameController.HighScore, DependencyManager.Instance.gemsManager.gems);
         GameEndCheck();
     }
     public Num GetMaxElement()
@@ -238,6 +239,7 @@ public class GridController : MonoBehaviour
             }
         }
         DependencyManager.Instance.gameManager.LoadScene("MainMenu");
+        SaveSystem.DeleteGameData();
         //return true; // No match found, game has ended
     }
     public void ElementReShuffle(Num MaxNum, Num MinNum)

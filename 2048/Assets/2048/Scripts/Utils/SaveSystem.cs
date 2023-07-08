@@ -11,7 +11,16 @@ public static class SaveSystem
         string path = Application.persistentDataPath + "/GameData.data";
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        GameData gameData = new GameData(gameGrid, highScore, gems);
+        Num[,] grid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+
+        for(int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for(int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                grid[i, j] = gameGrid[i, j].num;
+            }
+        }
+        GameData gameData = new GameData(grid, highScore, gems);
 
         formatter.Serialize(stream, gameData);
         stream.Close();
@@ -34,6 +43,15 @@ public static class SaveSystem
         else
         {
             return null;
+        }
+    }
+    public static void DeleteGameData()
+    {
+        string path = Application.persistentDataPath + "/GameData.data";
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
         }
     }
 }

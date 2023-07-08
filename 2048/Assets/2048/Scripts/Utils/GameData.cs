@@ -2,13 +2,13 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-    public Element[,] SavedGrid;
+    public Num[,] SavedGrid;
     public int HighScore = 0;
     public int Gems = 0;
 
-    public GameData(Element[,] Grid = default, int highScore = default, int gems = default)
+    public GameData(Num[,] Grid = default, int highScore = default, int gems = default)
     {
-        SavedGrid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+        SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
         if(Grid != null)
         {

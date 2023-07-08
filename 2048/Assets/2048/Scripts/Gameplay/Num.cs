@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
+[Serializable]
 public class Num
 {
     public static char[] Dec = { ' ', 'K', 'M', 'B', 'T', 'q', 'Q', 's', 'S', 'O', 'N', 'D' };
@@ -10,7 +11,11 @@ public class Num
     public int numVal;
     public char dec;
     public string txt;
-
+    public Num(int val = default, char dec = default)
+    {
+        this.numVal = val;
+        this.dec = dec;
+    }
     public static int CurrentDec(Num num)
     {
         return (Array.IndexOf(Dec, num.dec));

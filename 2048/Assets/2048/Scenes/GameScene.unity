@@ -1001,9 +1001,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   adPos: 0
   showAD: 1
-  bannerUnitId: ca-app-pub-3940256099942544/6300978111
-  interstitialUnitId: ca-app-pub-3940256099942544/1033173712
-  rewardedUnitId: ca-app-pub-3940256099942544/5224354917
 --- !u!114 &293176434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1614,7 +1611,6 @@ MonoBehaviour:
   ElementMaxLimit: 8
   ElementMinLimit: 1
   DecInd: 0
-  reShuffleOffset: 0
 --- !u!1 &688579059
 GameObject:
   m_ObjectHideFlags: 0
@@ -3441,7 +3437,7 @@ MonoBehaviour:
   pooler: {fileID: 1729794871}
   popup: {fileID: 1824086792}
   newBlockPopup: {fileID: 1824086790}
-  gemsManager: {fileID: 0}
+  gemsManager: {fileID: 2034552531}
 --- !u!1 &1824086790
 GameObject:
   m_ObjectHideFlags: 0

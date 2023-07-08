@@ -9,7 +9,7 @@ public class GemsManager : MonoBehaviour
     private void Start()
     {
         GameData gameData = SaveSystem.LoadGame();
-        if(gameData != null)
+        if (gameData != null)
         {
             gems = gameData.Gems;
         }
