@@ -209,6 +209,6 @@ public class Num
         int numVal = num.numVal;
         int dec = CurrentDec(num);
 
-        return new Color(0 /** numVal / 10*/, 1 /** dec */, 1/* * (numVal + dec)*/);
+        return new Color(1 /** numVal / 10*/, 1 /** dec */, 1/* * (numVal + dec)*/);
     }
 }
