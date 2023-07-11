@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SaveGame(Element[,] gameGrid = default, int highScore = default , int gems = default)
+    public static void SaveGame(Element[,] gameGrid = default, double highScore = default , int gems = default)
     {
         BinaryFormatter formatter= new BinaryFormatter();
 

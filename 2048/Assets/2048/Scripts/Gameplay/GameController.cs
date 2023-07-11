@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameController : Singleton<GameController>
 {
@@ -26,7 +27,9 @@ public class GameController : Singleton<GameController>
     [HideInInspector] public Num minElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
 
     [HideInInspector] public int maxPower = 0;
-    [HideInInspector] public int HighScore = 0;
+    [HideInInspector] public double HighScore = 0;
+    private double tempHighScore = 0;
+    public TextMeshProUGUI highScoreTxt;
 
     [HideInInspector] public GraphicRaycaster raycaster;
     private bool raycastBlocked = false;
@@ -42,6 +45,8 @@ public class GameController : Singleton<GameController>
 
         raycaster = transform.parent.root.gameObject.GetComponent<GraphicRaycaster>();
         Debug.Log(minElement.txt);
+
+        HighScore = DependencyManager.Instance.gridController.gameData.HighScore;
     }
     private void Update()
     {
@@ -150,9 +155,16 @@ public class GameController : Singleton<GameController>
             lineRenderer.enabled = false;
         }
     }
-    private void HighScoreUpdate()
+    private void HighScoreUpdate(Num num)
     {
-        
+        int val = (int)(num.numVal * Mathf.Pow(1000, Num.CurrentDec(num)));
+        tempHighScore += val;
+        highScoreTxt.text = tempHighScore.ToString();
+
+        if(HighScore < tempHighScore)
+        {
+            HighScore = tempHighScore;
+        }
     }
     public IEnumerator MaxElementCheck()
     {
@@ -305,7 +317,9 @@ public class GameController : Singleton<GameController>
         {
             if(chain.Count > 1)
             {
-                chain[chain.Count - 1].SetNum(0, ChangeNum());
+                Num num = ChangeNum();
+                chain[chain.Count - 1].SetNum(0, num);
+                HighScoreUpdate(num);
                 DestroyLine();
             }
             DependencyManager.Instance.gridController.GridRefill(chain);

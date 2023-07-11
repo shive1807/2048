@@ -3,10 +3,10 @@ using UnityEngine;
 public class GameData
 {
     public Num[,] SavedGrid;
-    public int HighScore = 0;
+    public double HighScore = 0;
     public int Gems = 0;
 
-    public GameData(Num[,] Grid = default, int highScore = default, int gems = default)
+    public GameData(Num[,] Grid = default, double highScore = default, int gems = default)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 

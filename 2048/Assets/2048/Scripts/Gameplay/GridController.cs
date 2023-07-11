@@ -5,6 +5,9 @@ public class GridController : MonoBehaviour
 {
     private Element[,]  grid;
     private GameObject  block;
+
+    public GameData gameData;
+
     public Vector2      ElementfallOffset;
 
     private int index;
@@ -25,6 +28,8 @@ public class GridController : MonoBehaviour
 
     private void GridSetup()
     {
+        gameData = SaveSystem.LoadGame();
+
         grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -43,7 +48,6 @@ public class GridController : MonoBehaviour
 
         element.transform.SetParent(this.transform, false);
 
-        GameData gameData = SaveSystem.LoadGame();
 
         grid[i, j] = element.GetComponent<Element>();
 

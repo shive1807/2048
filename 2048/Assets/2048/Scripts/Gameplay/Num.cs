@@ -170,6 +170,21 @@ public class Num
         num.txt = $"{s}{Dec[currentInd]}";
         return num;
     }
+    public static Num AddNum(Num num1, Num num2)
+    {
+        float sum = 0;
+        int currentDec = CurrentDec(num1);
+
+        if(num1.dec == num2.dec)
+        {
+           sum = num1.numVal + num2.numVal;
+        }
+        else if(num1.dec != num2.dec)
+        {
+            sum = num1.numVal + num2.numVal / Mathf.Pow(1000, CurrentDec(num1));
+        }
+        return new Num() { numVal = (int)sum, dec = Dec[currentDec] };
+    }
     public static void NumSetup(ref Num num, int numeric = default)
     {
         System.Random random = new System.Random();
