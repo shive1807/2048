@@ -6,7 +6,7 @@ public class GameData
     public double HighScore = 0;
     public int Gems = 0;
 
-    public GameData(Num[,] Grid = default, double highScore = default, int gems = default)
+    public GameData(int gems = -1, Num[,] Grid = default, double highScore = -1)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
@@ -14,11 +14,11 @@ public class GameData
         {
             SavedGrid = Grid;
         }
-        if ( highScore != 0)
+        if ( highScore != -1)
         {
             HighScore = highScore;
         }
-        if( gems != 0)
+        if( gems != -1)
         {
             Gems = gems;
         }

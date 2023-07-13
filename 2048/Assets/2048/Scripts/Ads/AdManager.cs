@@ -25,6 +25,8 @@ public class AdManager : Singleton<AdManager>
     #region Banner AD
     public void RequestBanner()
     {
+        if (PlayerPrefs.GetInt("RemoveAds") == 1)
+            return;
         if (!showAD)
             return;
 
@@ -62,6 +64,8 @@ public class AdManager : Singleton<AdManager>
     }
     public void ShowInterstitial()
     {
+        if (PlayerPrefs.GetInt("RemoveAds") == 1)
+            return;
         if (interstitialAd != null && interstitialAd.CanShowAd())
         {
             interstitialAd.Show();
@@ -129,6 +133,8 @@ public class AdManager : Singleton<AdManager>
     }
     public void ShowRewardedAd()
     {
+        if (PlayerPrefs.GetInt("RemoveAds") == 1)
+            return;
         const string rewardMsg =
             "Rewarded ad rewarded the user. Type: {0}, amount: {1}.";
 

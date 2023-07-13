@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class GemsManager : MonoBehaviour
+public class GemsManager : Singleton<GemsManager>
 {
     public int gems { get; private set; } = 0;
     public TextMeshProUGUI text;
@@ -15,10 +15,13 @@ public class GemsManager : MonoBehaviour
         }
         text.text = gems.ToString();
     }
+    //this function ads gems? yes
+    
     public void AddGems(int amount)
     {
         gems += amount;
         text.text = gems.ToString();
+        SaveSystem.SaveGame(gems);
     }
     public void RemoveGems(int amount)
     {

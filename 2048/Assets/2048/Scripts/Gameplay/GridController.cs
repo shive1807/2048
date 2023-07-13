@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class GridController : MonoBehaviour
 {
-    private Element[,]  grid;
+    public Element[,]  grid;
     private GameObject  block;
 
     public GameData gameData;
@@ -201,7 +201,7 @@ public class GridController : MonoBehaviour
         }
 
         StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
-        SaveSystem.SaveGame(grid, DependencyManager.Instance.gameController.HighScore, DependencyManager.Instance.gemsManager.gems);
+        SaveSystem.SaveGame(-1, true, grid, DependencyManager.Instance.gameController.HighScore);
         GameEndCheck();
     }
     public Num GetMaxElement()

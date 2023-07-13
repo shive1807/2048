@@ -4,23 +4,31 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SaveGame(Element[,] gameGrid = default, double highScore = default , int gems = default)
+    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1)
     {
-        BinaryFormatter formatter= new BinaryFormatter();
+        BinaryFormatter formatter = new BinaryFormatter();
 
         string path = Application.persistentDataPath + "/GameData.data";
         FileStream stream = new FileStream(path, FileMode.Create);
 
         Num[,] grid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
-        for(int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        if(!gridChanged)
         {
-            for(int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            grid = LoadGame().SavedGrid;
+        }
+        else
+        {
+            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
-                grid[i, j] = gameGrid[i, j].num;
+                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                {
+                    grid[i, j] = gameGrid[i, j].num;
+                }
             }
         }
-        GameData gameData = new GameData(grid, highScore, gems);
+        
+        GameData gameData = new GameData(gems, grid, highScore);
 
         formatter.Serialize(stream, gameData);
         stream.Close();
@@ -53,5 +61,12 @@ public static class SaveSystem
         {
             File.Delete(path);
         }
+    }
+
+    //--------------bug here-------------------------------------
+    // call ResetGrid in pause menu restart instead of DeleteGameData
+    public static void ResetGrid() 
+    {
+        SaveGame(-1, true, null, -1);
     }
 }

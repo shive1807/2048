@@ -860,7 +860,7 @@ PlayerSettings:
     Build: 0
     Collab: 0
     Game Performance: 0
-    Purchasing: 0
+    Purchasing: 1
     UDP: 0
     Unity Ads: 0
   luminIcon:
@@ -877,11 +877,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 5c551ffd-ff91-49f6-8e08-3742ca6de79e
+  cloudProjectId: 38e9a2b3-697f-48d2-b41c-cc77d294351a
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: 2048
-  organizationId: singhkaran20270
+  organizationId: fufu-games-as-publisher
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
