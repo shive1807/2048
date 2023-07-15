@@ -2,9 +2,9 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-    public Num[,] SavedGrid;
-    public double HighScore = 0;
-    public int Gems = 0;
+    public Num[,] SavedGrid = null;
+    public double HighScore = -1;
+    public int Gems = -1;
 
     public GameData(int gems = -1, Num[,] Grid = default, double highScore = -1)
     {

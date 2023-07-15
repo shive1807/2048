@@ -7,6 +7,7 @@ public class GridController : MonoBehaviour
     private GameObject  block;
 
     public GameData gameData;
+    private bool startingGrid = true;
 
     public Vector2      ElementfallOffset;
 
@@ -39,6 +40,7 @@ public class GridController : MonoBehaviour
                 GenerateBlock(i, j);
             }
         }
+        startingGrid = false;
     }
 
     private void GenerateBlock(int i, int j)
@@ -51,11 +53,11 @@ public class GridController : MonoBehaviour
 
         grid[i, j] = element.GetComponent<Element>();
 
-        if (gameData == null)
+        if (gameData == null || !startingGrid || gameData.SavedGrid == null)
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
         }
-        else
+        else 
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, gameData.SavedGrid[i, j]);
         }

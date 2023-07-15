@@ -15,7 +15,14 @@ public static class SaveSystem
 
         if(!gridChanged)
         {
-            grid = LoadGame().SavedGrid;
+            //------------------bug here-------------------------------------
+            // gameData loading is  giving some error
+
+            GameData _gameData = LoadGame();
+            if(_gameData != null )
+            {
+                grid = _gameData.SavedGrid;
+            }
         }
         else
         {
@@ -35,21 +42,23 @@ public static class SaveSystem
     }
     public static GameData LoadGame()
     {
-        string path = Application.persistentDataPath + "/GameData.data";
+        string path = Application.persistentDataPath + "/GameData.Data";
 
-        if(File.Exists(path))
+        FileStream stream = new FileStream(path, FileMode.Open);
+        if (File.Exists(path) && stream.Length > 0)
         {
             BinaryFormatter formatter = new BinaryFormatter();
-
-            FileStream stream = new FileStream(path, FileMode.Open);
-
-            GameData gameData =  formatter.Deserialize(stream) as GameData;
+            GameData data = formatter.Deserialize(stream) as GameData;
             stream.Close();
-
-            return gameData;
+            return data;
         }
         else
         {
+            Debug.LogError("Save file was not found in " + path);
+            BinaryFormatter formatter = new BinaryFormatter();
+            GameData data = new GameData();
+            formatter.Serialize(stream, data);
+            stream.Close();
             return null;
         }
     }

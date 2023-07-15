@@ -15,13 +15,12 @@ public class GemsManager : Singleton<GemsManager>
         }
         text.text = gems.ToString();
     }
-    //this function ads gems? yes
-    
     public void AddGems(int amount)
     {
         gems += amount;
         text.text = gems.ToString();
         SaveSystem.SaveGame(gems);
+        Debug.Log(gems);
     }
     public void RemoveGems(int amount)
     {
@@ -34,5 +33,6 @@ public class GemsManager : Singleton<GemsManager>
             Debug.Log("Not enough gems");
         }
         text.text = gems.ToString();
+        SaveSystem.SaveGame(gems);
     }
 }
