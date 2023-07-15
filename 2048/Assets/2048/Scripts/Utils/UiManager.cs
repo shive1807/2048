@@ -11,4 +11,9 @@ public class UiManager : MonoBehaviour
         RectTransform rect = objectToMove.GetComponent<RectTransform>();
         DOTweenModuleUI.DOAnchorPosX(rect, 0, 1);
     }
+    public void PanelCloseAnimation(GameObject objectToMove )
+    {
+        RectTransform rect = objectToMove.GetComponent<RectTransform>();
+        DOTweenModuleUI.DOAnchorPosX(rect, 1000, 1);
+    }
 }

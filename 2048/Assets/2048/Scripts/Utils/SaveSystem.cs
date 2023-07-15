@@ -6,23 +6,15 @@ public static class SaveSystem
 {
     public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1)
     {
-        BinaryFormatter formatter = new BinaryFormatter();
-
-        string path = Application.persistentDataPath + "/GameData.data";
-        FileStream stream = new FileStream(path, FileMode.Create);
-
         Num[,] grid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
-        if(!gridChanged)
+        if (!gridChanged)
         {
-            //------------------bug here-------------------------------------
-            // gameData loading is  giving some error
-
-            //GameData _gameData = LoadGame();
-            //if (_gameData != null)
-            //{
-            //    grid = _gameData.SavedGrid;
-            //}
+            GameData _gameData = LoadGame();
+            if (_gameData != null)
+            {
+                grid = _gameData.SavedGrid;
+            }
         }
         else
         {
@@ -34,7 +26,12 @@ public static class SaveSystem
                 }
             }
         }
-        
+
+        BinaryFormatter formatter = new BinaryFormatter();
+
+        string path = Application.persistentDataPath + "/GameData.data";
+        FileStream stream = new FileStream(path, FileMode.Create);
+
         GameData gameData = new GameData(gems, grid, highScore);
 
         formatter.Serialize(stream, gameData);
@@ -44,10 +41,12 @@ public static class SaveSystem
     {
         string path = Application.persistentDataPath + "/GameData.Data";
 
-        FileStream stream = new FileStream(path, FileMode.Open);
+
         if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
             GameData data = formatter.Deserialize(stream) as GameData;
             stream.Close();
             return data;
@@ -56,7 +55,9 @@ public static class SaveSystem
         {
             Debug.LogError("Save file was not found in " + path);
             BinaryFormatter formatter = new BinaryFormatter();
-            GameData data = new GameData();
+            FileStream stream = new FileStream(path, FileMode.Create);
+
+            GameData data = new GameData(0, null, 0);
             formatter.Serialize(stream, data);
             stream.Close();
             return null;

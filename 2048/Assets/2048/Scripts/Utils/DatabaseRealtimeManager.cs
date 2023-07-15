@@ -28,6 +28,7 @@ public class User
 {
     public string username;
     public string email;
+    public GameData gameData;
 
     public User()
     {

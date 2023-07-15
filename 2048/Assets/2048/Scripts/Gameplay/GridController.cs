@@ -53,10 +53,12 @@ public class GridController : MonoBehaviour
         if (GameManager.Instance.gameData == null || !startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
+            Debug.Log("New");
         }
         else 
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, GameManager.Instance.gameData.SavedGrid[i, j]);
+            Debug.Log("Old");
         }
     }
 
@@ -248,7 +250,6 @@ public class GridController : MonoBehaviour
     public void ElementReShuffle(Num MaxNum, Num MinNum)
     {
         reShuffleOffset++;
-        Debug.Log("called");
 
         if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
         {

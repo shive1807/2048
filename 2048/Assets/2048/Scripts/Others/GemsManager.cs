@@ -3,7 +3,7 @@ using TMPro;
 
 public class GemsManager : Singleton<GemsManager>
 {
-    public int gems { get; private set; } = 0;
+    public int gems = 0;
     public TextMeshProUGUI text;
 
     private void Start()
