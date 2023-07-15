@@ -1826,6 +1826,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d77e68ba376ee364c9968194a4214a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameData:
+    HighScore: 0
+    Gems: 0
 --- !u!4 &449247877
 Transform:
   m_ObjectHideFlags: 0
@@ -2162,6 +2165,14 @@ PrefabInstance:
       propertyPath: gemsManager
       value: 
       objectReference: {fileID: 1129534450}
+    - target: {fileID: 2331619455537585484, guid: 35a1b223792aad848916ed94c94e72c8, type: 3}
+      propertyPath: inputManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2331619455537585484, guid: 35a1b223792aad848916ed94c94e72c8, type: 3}
+      propertyPath: gameController
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2331619455537585486, guid: 35a1b223792aad848916ed94c94e72c8, type: 3}
       propertyPath: m_Name
       value: DependencyManager

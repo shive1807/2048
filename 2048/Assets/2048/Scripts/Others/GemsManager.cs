@@ -8,10 +8,9 @@ public class GemsManager : Singleton<GemsManager>
 
     private void Start()
     {
-        GameData gameData = SaveSystem.LoadGame();
-        if (gameData != null)
+        if (GameManager.Instance.gameData != null)
         {
-            gems = gameData.Gems;
+            gems = GameManager.Instance.gameData.Gems;
         }
         text.text = gems.ToString();
     }
