@@ -6,7 +6,6 @@ public class GridController : MonoBehaviour
     public Element[,]  grid;
     private GameObject  block;
 
-    public GameData gameData;
     private bool startingGrid = true;
 
     public Vector2      ElementfallOffset;
@@ -29,8 +28,6 @@ public class GridController : MonoBehaviour
 
     private void GridSetup()
     {
-        gameData = SaveSystem.LoadGame();
-
         grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -53,13 +50,13 @@ public class GridController : MonoBehaviour
 
         grid[i, j] = element.GetComponent<Element>();
 
-        if (gameData == null || !startingGrid || gameData.SavedGrid == null)
+        if (GameManager.Instance.gameData == null || !startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
         }
         else 
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, gameData.SavedGrid[i, j]);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, GameManager.Instance.gameData.SavedGrid[i, j]);
         }
     }
 

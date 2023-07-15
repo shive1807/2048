@@ -710,6 +710,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d77e68ba376ee364c9968194a4214a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameData:
+    HighScore: 0
+    Gems: 0
 --- !u!4 &215764650
 Transform:
   m_ObjectHideFlags: 0
@@ -1512,9 +1515,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8a37560bad6dd459951b7b48eae4d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameData:
-    HighScore: 0
-    Gems: 0
   ElementfallOffset: {x: 0, y: 200}
   ElementFallDuration: 1
   ElementMaxLimit: 8

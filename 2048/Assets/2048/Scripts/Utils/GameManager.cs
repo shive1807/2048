@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public class GameManager : Singleton<GameManager>
 {
+    [HideInInspector] public GameData gameData;
+    void Start()
+    {
+        gameData = SaveSystem.LoadGame();
+    }
     public void LoadScene(string scene)
     {
         SceneManager.LoadScene(scene);

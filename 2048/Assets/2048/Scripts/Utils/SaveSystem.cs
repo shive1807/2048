@@ -18,11 +18,11 @@ public static class SaveSystem
             //------------------bug here-------------------------------------
             // gameData loading is  giving some error
 
-            GameData _gameData = LoadGame();
-            if(_gameData != null )
-            {
-                grid = _gameData.SavedGrid;
-            }
+            //GameData _gameData = LoadGame();
+            //if (_gameData != null)
+            //{
+            //    grid = _gameData.SavedGrid;
+            //}
         }
         else
         {
@@ -45,7 +45,7 @@ public static class SaveSystem
         string path = Application.persistentDataPath + "/GameData.Data";
 
         FileStream stream = new FileStream(path, FileMode.Open);
-        if (File.Exists(path) && stream.Length > 0)
+        if (File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             GameData data = formatter.Deserialize(stream) as GameData;

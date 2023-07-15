@@ -2,8 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class DependencyManager : Singleton<DependencyManager>
+public class DependencyManager : MonoBehaviour
 {
+    public static DependencyManager Instance;
+
     public GameManager      gameManager;
     public InputManager     inputManager;
     public GameController   gameController;
@@ -12,4 +14,17 @@ public class DependencyManager : Singleton<DependencyManager>
     public Popup            popup;
     public GameObject       newBlockPopup;
     public GemsManager      gemsManager;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+        else
+        {
+            Instance = this as DependencyManager;
+        }
+    }
 }

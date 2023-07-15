@@ -60,7 +60,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             }
             else
             {
-                GameController.Instance.Chaining(this);
+                DependencyManager.Instance.gameController.Chaining(this);
             }
         }
     }

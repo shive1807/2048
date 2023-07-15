@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameController : Singleton<GameController>
+public class GameController : MonoBehaviour
 {
     private List<Element> chain;
     private bool upChain = false;
@@ -46,7 +46,7 @@ public class GameController : Singleton<GameController>
         raycaster = transform.parent.root.gameObject.GetComponent<GraphicRaycaster>();
         Debug.Log(minElement.txt);
 
-        HighScore = DependencyManager.Instance.gridController.gameData.HighScore;
+        HighScore = GameManager.Instance.gameData.HighScore;
     }
     private void Update()
     {
@@ -330,7 +330,6 @@ public class GameController : Singleton<GameController>
             chain[chain.Count - 1].selected = false;
             chain.Clear();
             DependencyManager.Instance.inputManager.released = false;
-            //Debug.Log("clear");
         }
     }
 }
