@@ -1,7 +1,7 @@
+using UnityEngine;
+using Firebase.Database;
 using System.Collections;
 using System.Collections.Generic;
-using Firebase.Database;
-using UnityEngine;
 
 public class DatabaseRealtimeManager : MonoBehaviour
 {
