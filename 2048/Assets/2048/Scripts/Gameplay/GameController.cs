@@ -5,6 +5,8 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+
 
 public class GameController : MonoBehaviour
 {
@@ -243,11 +245,17 @@ public class GameController : MonoBehaviour
     private void SetSmash()
     {
         smashing = true;
+
+        // vibration
+        VibrationManager.Instance.vibrate(500);
         //Debug.Log("smahing " + smashing);
     }
     private void SetSwap()
     {
         swaping = true;
+
+        // vibration
+        VibrationManager.Instance.vibrate(500);
         //Debug.Log("swaping " + swaping);
     }
     private void CreateLine(Element e1, Element e2)
@@ -296,12 +304,28 @@ public class GameController : MonoBehaviour
     }
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
+        // animation
+        chain[chain.Count - 1].rectTransform.localScale = new Vector2(.8f, .8f);
+        chain[chain.Count - 1].rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
+
+        // vibration
+        VibrationManager.Instance.vibrate(500);
+
+        // removing from chain
         chain[chain.Count - 1].selected = false;
         chain.Remove(chain[chain.Count - 1]);
         DestroyLine(lines[lines.Count - 1]);
     }
     private void AddToChain(Element numElement)       // adding element to chain
     {
+        // animation
+        numElement.rectTransform.localScale = new Vector2(.8f, .8f);
+        numElement.rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
+
+        // vibration
+        VibrationManager.Instance.vibrate(500);
+
+        //adding to chain
         chain.Add(numElement);
         numElement.selected = true;
         if(chain.Count > 1)
