@@ -52,7 +52,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         {
             if (DependencyManager.Instance.gameController.smashing)
             {
-                DependencyManager.Instance.gameController.SmashBlock(this);
+                StartCoroutine(DependencyManager.Instance.gameController.SmashBlock(this));
             }
             else if (DependencyManager.Instance.gameController.swaping)
             {

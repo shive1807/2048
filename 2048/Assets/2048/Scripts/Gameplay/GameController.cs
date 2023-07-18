@@ -33,6 +33,10 @@ public class GameController : MonoBehaviour
     private double tempHighScore = 0;
     public TextMeshProUGUI highScoreTxt;
 
+    [SerializeField] RectTransform hammer;
+    [SerializeField] float smashTime;
+    [SerializeField] GameObject smashImg;
+
     [HideInInspector] public GraphicRaycaster raycaster;
     private bool raycastBlocked = false;
     private void Start()
@@ -235,8 +239,33 @@ public class GameController : MonoBehaviour
             Debug.Log("swapping element");
         }
     }
-    public void SmashBlock(Element e)
+    public IEnumerator SmashBlock(Element e)
     {
+        //hammer animation
+        hammer.gameObject.SetActive(true);
+
+        //----------------Bug Here---------------------------
+        //can't get accurate position of the element
+
+        hammer.DOAnchorPos(e.gameObject.transform.position, smashTime);  
+        yield return new WaitForSeconds(smashTime);
+
+        hammer.DOLocalRotateQuaternion(Quaternion.Euler(0, 0, 60), .2f);
+        yield return new WaitForSeconds(.2f);
+
+        smashImg.gameObject.SetActive(true);
+        yield return new WaitForSeconds(.2f);
+
+        smashImg.gameObject.SetActive(false);
+        yield return new WaitForSeconds(.1f);
+
+        hammer.gameObject.SetActive(false);
+        //---------------------------------------------------------
+        
+        // vibration
+        VibrationManager.Instance.vibrate(500);
+
+        //destroying block
         chain.Add(e);
         DependencyManager.Instance.gridController.GridRefill(chain);
         chain.Clear();
@@ -245,10 +274,6 @@ public class GameController : MonoBehaviour
     private void SetSmash()
     {
         smashing = true;
-
-        // vibration
-        VibrationManager.Instance.vibrate(500);
-        //Debug.Log("smahing " + smashing);
     }
     private void SetSwap()
     {

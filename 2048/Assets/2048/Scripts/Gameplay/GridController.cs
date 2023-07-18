@@ -197,7 +197,7 @@ public class GridController : MonoBehaviour
                 grid[e.x, i].SetElementCoord(e.x, i - 1);
             }
             //Debug.Log("sw");
-            Destroy(e.gameObject);
+            Pooler.Instance.DestroyBlock(e.gameObject);
             GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
         }
 

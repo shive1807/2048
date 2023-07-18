@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1)
+    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, int soundPref = -1, int musicPref = -1)
     {
         Num[,] grid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
@@ -31,8 +31,8 @@ public static class SaveSystem
 
         string path = Application.persistentDataPath + "/GameData.data";
         FileStream stream = new FileStream(path, FileMode.Create);
-
-        GameData gameData = new GameData(gems, grid, highScore);
+        Debug.Log(soundPref);
+        GameData gameData = new GameData(gems, grid, highScore, soundPref, musicPref);
 
         formatter.Serialize(stream, gameData);
         stream.Close();
