@@ -6279,7 +6279,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1694240015}
         m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: ToggleSound
+        m_MethodName: AutoToggleSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6488,7 +6488,7 @@ MonoBehaviour:
   musicSource: {fileID: 1105008227}
   soundEffects: []
   musics: []
-  muted: 0
+  muteSound: 0
   mutedImage: {fileID: 1522159149}
   UnMutedImage: {fileID: 1069103111}
   muteMusic: 0

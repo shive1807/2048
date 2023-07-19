@@ -8,8 +8,9 @@ public class GameData
 
     public int SoundPref = 1;
     public int MusicPref = 1;
+    public int VibrationPref = 1;
 
-    public GameData(int gems = -1, Num[,] Grid = default, double highScore = -1, int soundPref = -1, int musicPref = -1)
+    public GameData(int gems = -1, Num[,] Grid = default, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
@@ -32,6 +33,10 @@ public class GameData
         if( soundPref != -1)
         {
             SoundPref = soundPref;
+        }
+        if( vibrationPref != -1)
+        {
+            VibrationPref = vibrationPref;
         }
     }
 }

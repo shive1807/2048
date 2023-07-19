@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, int soundPref = -1, int musicPref = -1)
+    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1)
     {
         Num[,] grid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
@@ -32,7 +32,7 @@ public static class SaveSystem
         string path = Application.persistentDataPath + "/GameData.data";
         FileStream stream = new FileStream(path, FileMode.Create);
         Debug.Log(soundPref);
-        GameData gameData = new GameData(gems, grid, highScore, soundPref, musicPref);
+        GameData gameData = new GameData(gems, grid, highScore, soundPref, musicPref, vibrationPref);
 
         formatter.Serialize(stream, gameData);
         stream.Close();
@@ -72,11 +72,8 @@ public static class SaveSystem
             File.Delete(path);
         }
     }
-
-    //--------------bug here-------------------------------------
-    // call ResetGrid in pause menu restart instead of DeleteGameData
     public static void ResetGrid() 
     {
-        SaveGame(-1, true, null, -1);
+        SaveGame(-1, true, null);
     }
 }

@@ -39,7 +39,6 @@ public class GridController : MonoBehaviour
         }
         startingGrid = false;
     }
-
     private void GenerateBlock(int i, int j)
     {
         GameObject element = Pooler.Instance.GetBlock();//Instantiate(block) as GameObject;
@@ -53,15 +52,12 @@ public class GridController : MonoBehaviour
         if (GameManager.Instance.gameData == null || !startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
-            Debug.Log("New");
         }
         else 
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, GameManager.Instance.gameData.SavedGrid[i, j]);
-            Debug.Log("Old");
         }
     }
-
     private int[,] GetDestroyedBlocks(List<Element> chain)
     {
         int[,] deductions = new int[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];

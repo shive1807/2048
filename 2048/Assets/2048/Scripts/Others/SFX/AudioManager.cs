@@ -20,51 +20,91 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] GameObject musicUnMutedImage;
     private void Start()
     {
-        StartCoroutine(start());
-    }
-
-    private void starting()
-    {
         muteSound = GameManager.Instance.gameData.SoundPref;
         muteMusic = GameManager.Instance.gameData.MusicPref;
-        ToggleSound();
-        //ToggleMusic();
-    }
 
-    IEnumerator start()
-    {
-        yield return new WaitForSeconds(1);
-        starting();
+        ToggleSound(true, muteSound);
+        //ToggleMusic(true, muteMusic);
     }
-    public void ToggleSound()
+    public void ToggleSound(bool change = false, int pref = 0)
     {
-        if(muteSound == 1)
+        // change & pref is if you want to toggle sound on/off no matter the current state
+        if(change)
+        {
+            if (pref == 0)
+            {
+                soundSource.mute = true;
+                UnMutedImage.SetActive(true);
+                mutedImage.SetActive(false);
+                muteSound = 0;
+            }
+            else if (pref == 1)
+            {
+                soundSource.mute = false;
+                mutedImage.SetActive(true);
+                UnMutedImage.SetActive(false);
+                muteSound = 1;
+            }
+            SaveSystem.SaveGame(-1, false, null, -1, muteSound);
+        }
+        else
+        {
+            AutoToggleSound();
+        }
+    }
+    public void AutoToggleSound()
+    {
+        if (muteSound == 1)
         {
             soundSource.mute = true;
             UnMutedImage.SetActive(true);
             mutedImage.SetActive(false);
             muteSound = 0;
         }
-        else if(muteSound == 0) 
+        else if (muteSound == 0)
         {
             soundSource.mute = false;
             mutedImage.SetActive(true);
             UnMutedImage.SetActive(false);
             muteSound = 1;
         }
-        Debug.Log(muteSound);
         SaveSystem.SaveGame(-1, false, null, -1, muteSound);
     }
-    public void ToggleMusic()
+    public void ToggleMusic(bool change, int pref)
     {
-        if(muteMusic == 1)
+        if (change)
+        {
+            if (pref == 0)
+            {
+                musicSource.mute = false;
+                musicUnMutedImage.SetActive(true);
+                musicMutedImage.SetActive(false);
+                muteMusic = 0;
+            }
+            else if (pref == 1)
+            {
+                musicSource.mute = true;
+                musicUnMutedImage.SetActive(false);
+                musicMutedImage.SetActive(true);
+                muteMusic = 1;
+            }
+            SaveSystem.SaveGame(-1, false, null, -1, -1, muteMusic);
+        }
+        else
+        {
+            AutoToggleMusic();
+        }
+    }
+    public void AutoToggleMusic()
+    {
+        if (muteMusic == 1)
         {
             musicSource.mute = false;
             musicUnMutedImage.SetActive(true);
             musicMutedImage.SetActive(false);
             muteMusic = 0;
         }
-        else if(muteMusic == 0)
+        else if (muteMusic == 0)
         {
             musicSource.mute = true;
             musicUnMutedImage.SetActive(false);
