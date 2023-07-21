@@ -24,6 +24,7 @@ public class AudioManager : Singleton<AudioManager>
         muteMusic = GameManager.Instance.gameData.MusicPref;
 
         ToggleSound(true, muteSound);
+        
         //ToggleMusic(true, muteMusic);
     }
     public void ToggleSound(bool change = false, int pref = 0)

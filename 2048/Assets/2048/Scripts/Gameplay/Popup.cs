@@ -10,6 +10,7 @@ public class Popup : MonoBehaviour
     {
         popup.SetActive(true);
 
+        buttonPressed = false;
         DependencyManager.Instance.gameController.BlockRaycast(true);
 
         yield return new WaitUntil (() => buttonPressed);

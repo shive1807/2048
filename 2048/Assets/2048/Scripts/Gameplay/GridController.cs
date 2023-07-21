@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class GridController : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class GridController : MonoBehaviour
                 GenerateBlock(i, j);
             }
         }
+       DependencyManager.Instance.gameController.maxElement = GetMaxElement();
         startingGrid = false;
     }
     private void GenerateBlock(int i, int j)
@@ -214,7 +216,7 @@ public class GridController : MonoBehaviour
         }
         return tempMax;
     }
-    private void GameEndCheck()
+    IEnumerator GameEndCheck()
     {
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
@@ -232,13 +234,15 @@ public class GridController : MonoBehaviour
                         {
                             if(grid[a, b].num.txt == grid[i, j].num.txt)
                             {
-                                return; // Found a match, game has not ended
+                               yield return null; // Found a match, game has not ended
                             }
                         }
                     }
                 }
             }
         }
+        AudioManager.Instance.PlaySound("GameOver");
+        yield return new WaitForSeconds(GameSettings.GAME_END_TIME);
         DependencyManager.Instance.gameManager.LoadScene("MainMenu");
         SaveSystem.DeleteGameData();
         //return true; // No match found, game has ended
@@ -249,7 +253,9 @@ public class GridController : MonoBehaviour
 
         if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
         {
+            Debug.Log("reshuffle");
             StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ReShuffleContinued, DependencyManager.Instance.newBlockPopup, MinNum));
+            DependencyManager.Instance.vfx.PlayCelebrationVfx();
         }
     }
     private void ReShuffleContinued(Num MinNum)

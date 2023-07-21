@@ -180,9 +180,11 @@ public class GameController : MonoBehaviour
 
         if (Num.Max(maxElement, num) == maxElement)
         {
+            Debug.Log("not max");
             yield break;
         }
-        
+
+        Debug.Log("max");
         maxElement = Num.Max(maxElement, num);
 
         //Action<Num, Num> action = DependencyManager.Instance.gridController.ElementReShuffle;
@@ -329,6 +331,11 @@ public class GameController : MonoBehaviour
     }
     private void RemoveFromChain(Element numElement)  // removing the last element from chain
     {
+        // removing from chain
+        chain[chain.Count - 1].selected = false;
+        chain.Remove(chain[chain.Count - 1]);
+        DestroyLine(lines[lines.Count - 1]);
+
         // animation
         chain[chain.Count - 1].rectTransform.localScale = new Vector2(.8f, .8f);
         chain[chain.Count - 1].rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
@@ -336,20 +343,11 @@ public class GameController : MonoBehaviour
         // vibration
         VibrationManager.Instance.vibrate(500);
 
-        // removing from chain
-        chain[chain.Count - 1].selected = false;
-        chain.Remove(chain[chain.Count - 1]);
-        DestroyLine(lines[lines.Count - 1]);
+        //SFX
+        AudioManager.Instance.PlaySound("Wrong");
     }
     private void AddToChain(Element numElement)       // adding element to chain
     {
-        // animation
-        numElement.rectTransform.localScale = new Vector2(.8f, .8f);
-        numElement.rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
-
-        // vibration
-        VibrationManager.Instance.vibrate(500);
-
         //adding to chain
         chain.Add(numElement);
         numElement.selected = true;
@@ -358,8 +356,17 @@ public class GameController : MonoBehaviour
             CreateLine(chain[chain.Count - 2], numElement);
         }
 
+        // animation
+        numElement.rectTransform.localScale = new Vector2(.8f, .8f);
+        numElement.rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
+
+        // vibration
+        VibrationManager.Instance.vibrate(500);
+
+        // SFX
+        AudioManager.Instance.PlaySound("CorrectMatch");
         //Debug.Log("(" + numElement.x + "," + numElement.y + ") Added");
-    }   
+    }
     private void ClearChain()
     {
         if (DependencyManager.Instance.inputManager.released && chain.Count > 0 && !smashing && !swaping)  // resetting the variables on mouse release

@@ -14,10 +14,8 @@ public class GameData
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
-        if(Grid != null)
-        {
-            SavedGrid = Grid;
-        }
+        SavedGrid = Grid;
+        
         if ( highScore != -1)
         {
             HighScore = highScore;

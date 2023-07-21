@@ -18,12 +18,19 @@ public static class SaveSystem
         }
         else
         {
-            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+            if(gameGrid != null)
             {
-                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
                 {
-                    grid[i, j] = gameGrid[i, j].num;
+                    for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                    {
+                        grid[i, j] = gameGrid[i, j].num;
+                    }
                 }
+            }
+            else
+            {
+                grid = null;
             }
         }
 
