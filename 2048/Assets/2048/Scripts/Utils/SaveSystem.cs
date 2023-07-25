@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System;
 
 public static class SaveSystem
 {
-    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1)
+    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1, DateTime date = default, int rewardStreak = -1)
     {
         Num[,] grid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
@@ -39,7 +40,7 @@ public static class SaveSystem
         string path = Application.persistentDataPath + "/GameData.data";
         FileStream stream = new FileStream(path, FileMode.Create);
         Debug.Log(soundPref);
-        GameData gameData = new GameData(gems, grid, highScore, soundPref, musicPref, vibrationPref);
+        GameData gameData = new GameData(gems, grid, highScore, soundPref, musicPref, vibrationPref, date, rewardStreak);
 
         formatter.Serialize(stream, gameData);
         stream.Close();
@@ -82,5 +83,6 @@ public static class SaveSystem
     public static void ResetGrid() 
     {
         SaveGame(-1, true, null);
+        DependencyManager.Instance.gridController.startingGrid = false;
     }
 }

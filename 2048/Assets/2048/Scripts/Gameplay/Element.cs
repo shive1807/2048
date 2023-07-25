@@ -17,11 +17,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
     [HideInInspector] public Vector3 elementPos;
     [HideInInspector] public RectTransform rectTransform;
-
+    [HideInInspector] public ParticleSystem breakEffect;
     private void Start()
     {
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
         image           = this.gameObject.GetComponent<Image>();
+        breakEffect     = this.gameObject.GetComponent<ParticleSystem>();
     }
 
     private void Update()
@@ -32,7 +33,6 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         // Convert anchored position to transform position
         elementPos = rectTransform.TransformPoint(anchoredPosition);
     }
-
     public void OnPointerEnter(PointerEventData eventData)  // to get element when mouse button is already pressed and being dragged on the other
     {
         if (DependencyManager.Instance.inputManager.pressed && !DependencyManager.Instance.gameController.smashing && !DependencyManager.Instance.gameController.swaping)  // to avoid the un-wanted calls if the mouse button isn't pressed and the cursor is hovering over the buttons
@@ -40,12 +40,10 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             SelectCheck(eventData);
         }
     }
-
     public void OnPointerDown(PointerEventData eventData) // to get the element when the mouse button gets pressed while on the element
     {
         SelectCheck(eventData);
     }
-
     private void SelectCheck(PointerEventData eventData)
     {
         if (eventData.pointerCurrentRaycast.gameObject.CompareTag(this.tag)) // so that it only gets called when the cursor is on the element button nor on any button
@@ -64,7 +62,6 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             }
         }
     }
-
     public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveDuration = default, Num num = default)
     {
         if ( rectTransform == null)//element == null ||
@@ -81,14 +78,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
     }
-
     public void SetElementCoord(int i, int j)
     {
         this.x = i;
         this.y = j;
         transform.name = "(" + i + ", " + j + ")";
     }
-
     public IEnumerator MoveElement(Vector2 targetPos, float duration)
     {
         yield return null;

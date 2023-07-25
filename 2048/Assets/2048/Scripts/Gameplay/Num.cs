@@ -163,7 +163,11 @@ public class Num
             s = 1; // for the bug when sum = 1024 then it isn't setting itself to 1k
             currentInd++;
         }
-
+        if( s == 2048)
+        {
+            s = 2;
+            currentInd++;
+        }
         Num num = new Num();
         num.numVal = s;
         num.dec = Dec[currentInd];
