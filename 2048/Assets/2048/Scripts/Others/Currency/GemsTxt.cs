@@ -1,8 +1,9 @@
-using UnityEngine;
+    using UnityEngine;
 using TMPro;
 
 public class GemsTxt : MonoBehaviour
 {
+
     public static GemsTxt instance;
     public TextMeshProUGUI text;
     private void Awake()

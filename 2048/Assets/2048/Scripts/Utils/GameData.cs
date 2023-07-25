@@ -49,3 +49,10 @@ public class GameData
         }
     }
 }
+
+
+public static class DataManager
+{
+    public static int Gems { get; set; }
+
+}

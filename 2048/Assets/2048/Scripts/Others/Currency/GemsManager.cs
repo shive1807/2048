@@ -11,21 +11,25 @@ public class GemsManager : Singleton<GemsManager>
         {
             gems = GameManager.Instance.gameData.Gems;
         }
-        GemsTxt.instance.SetText(gems);
+        //GemsTxt.instance.SetText(gems);
     }
     public void AddGems(int amount)
     {
         gems += amount;
-        GemsTxt.instance.SetText(gems);
+        //GemsTxt.instance.SetText(gems);
         SaveSystem.SaveGame(gems);
+
+        DataManager.Gems = gems;
     }
     public void RemoveGems(int amount)
     {
         if (gems > 0)
         {
             gems -= amount;
-            GemsTxt.instance.SetText(gems);
+            //GemsTxt.instance.SetText(gems);
             SaveSystem.SaveGame(gems);
+
+            DataManager.Gems = gems;
         }
         else
         {

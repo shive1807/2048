@@ -5,20 +5,53 @@ using DG.Tweening;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 
-public class UiManager : MonoBehaviour
+public enum Panel
 {
+    LeaderBoard,
+    Store
+}
+
+public class UiManager : Singleton<UiManager>
+{
+    private GameObject LeaderBoard;
+    private GameObject Store;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        LeaderBoard = transform.GetChild(1).gameObject;
+        Store       = transform.GetChild(2).gameObject;
+    }
+
     bool rolledOut = false;
     public GameObject[] Settings;
-    public void PanelOpenAnimation(GameObject objectToMove)
+
+    public void PanelOpenAnimation(Panel panel)
     {
-        RectTransform rect = objectToMove.GetComponent<RectTransform>();
+        GameObject panelObject  = GetPanel(panel);
+        panelObject.SetActive(true);
+        RectTransform rect      = panelObject.GetComponent<RectTransform>();
         rect.DOAnchorPos(new Vector2(0, 0), .4f, false).SetEase(Ease.OutBack);
     }
+
+    private GameObject GetPanel(Panel panel)
+    {
+        switch (panel)
+        {
+            case Panel.LeaderBoard:
+                return LeaderBoard;
+            default:
+                return Store;
+        }
+    }
+
     public void PanelCloseAnimation(GameObject objectToMove )
     {
         RectTransform rect = objectToMove.GetComponent<RectTransform>();
         DOTweenModuleUI.DOAnchorPosX(rect, 1000, .1f);
     }
+
     public void ToggleRoll(RectTransform pos)
     {
         if (rolledOut)
