@@ -10,9 +10,13 @@ public class GemsTxt : MonoBehaviour
     {
         instance = this;
     }
+    private void OnEnable()
+    {
+        text.text = GemsManager.Instance.gems.ToString();
+    }
     private void Start()
     {
-        SetText(GemsManager.Instance.gems);
+        text.text = GemsManager.Instance.gems.ToString();
     }
     public void SetText(int gems)
     {

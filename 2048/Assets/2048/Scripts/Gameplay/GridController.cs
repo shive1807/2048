@@ -125,6 +125,7 @@ public class GridController : MonoBehaviour
             for (int i = 0; i < index; i++)
             {
                 DependencyManager.Instance.vfx.PlayBreakingFX(chain[i]);
+
                 Pooler.Instance.DestroyBlock(chain[i].gameObject);
                 //Destroy(chain[i].gameObject);
                 //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);

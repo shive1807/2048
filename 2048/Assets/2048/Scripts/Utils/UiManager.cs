@@ -13,8 +13,8 @@ public enum Panel
 
 public class UiManager : Singleton<UiManager>
 {
-    private GameObject LeaderBoard;
-    private GameObject Store;
+    public GameObject LeaderBoard;
+    public GameObject Store;
 
     protected override void Awake()
     {
@@ -34,7 +34,6 @@ public class UiManager : Singleton<UiManager>
         RectTransform rect      = panelObject.GetComponent<RectTransform>();
         rect.DOAnchorPos(new Vector2(0, 0), .4f, false).SetEase(Ease.OutBack);
     }
-
     private GameObject GetPanel(Panel panel)
     {
         switch (panel)
@@ -45,13 +44,13 @@ public class UiManager : Singleton<UiManager>
                 return Store;
         }
     }
-
-    public void PanelCloseAnimation(GameObject objectToMove )
+    public void PanelCloseAnimation(Panel panel )
     {
+        GameObject objectToMove = GetPanel(panel);
+        objectToMove.SetActive(false);
         RectTransform rect = objectToMove.GetComponent<RectTransform>();
         DOTweenModuleUI.DOAnchorPosX(rect, 1000, .1f);
     }
-
     public void ToggleRoll(RectTransform pos)
     {
         if (rolledOut)

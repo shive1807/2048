@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using System.Runtime.Serialization.Json;
 
 public class RewardManager : Singleton<RewardManager>
 {
@@ -34,11 +35,24 @@ public class RewardManager : Singleton<RewardManager>
         currentStreak = GameManager.Instance.gameData.RewardClaimStreak;
 
         int reward = rewardAmount * currentStreak * rewardMultiplier;
-
+        StreakCheck();
         // UI update
         UIUpdate();
     }
+    private void StreakCheck()
+    {
+        TimeSpan timeSinceLastClaim = DateTime.Now - lastClaimDate;
 
+        if (timeSinceLastClaim.TotalDays >= 1)
+        {
+            if(timeSinceLastClaim.TotalDays > 1)
+            {
+                currentStreak = 1;
+                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, DateTime.Now);
+            }
+            UIUpdate();
+        }
+    }
     private void UIUpdate()
     {
         for (int i = 0; i < Days.Length; i++)
@@ -47,6 +61,7 @@ public class RewardManager : Singleton<RewardManager>
             {
                 Days[i].inActiveImg.SetActive(false);
                 Days[i].collectedImg.SetActive(false);
+                Days[i].isActive = true;
             }
             else
             {
@@ -54,35 +69,34 @@ public class RewardManager : Singleton<RewardManager>
                 {
                     Days[i].inActiveImg.SetActive(true);
                     Days[i].collectedImg.SetActive(true);
+                    Days[i].isActive = true;
                 }
                 else if (i + 1 > currentStreak)
                 {
                     Days[i].inActiveImg.SetActive(true);
                     Days[i].collectedImg.SetActive(false);
+                    Days[i].isActive = true;
                 }
             }
         }
     }
-    public void ClaimDailyReward()
+    public void ClaimDailyReward(DailyReward dailyReward)
     {
-        TimeSpan timeSinceLastClaim = DateTime.Now - lastClaimDate;
-
-        if (timeSinceLastClaim.TotalDays >= 1)
+        if(dailyReward.isActive)
         {
-            if (timeSinceLastClaim.TotalDays == 1)
+            if (!dailyReward.isCollected)
             {
                 currentStreak++;
+                UIUpdate();
+                dailyReward.isCollected = true;
+                dailyReward.isActive = false;
+                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, DateTime.Now);
+                GemsManager.Instance.AddGems(rewardAmount + (currentStreak * rewardMultiplier));
             }
             else
             {
-                currentStreak = 1;
+                Debug.Log("You can claim the reward again tomorrow.");
             }
-            UIUpdate();
-            SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, DateTime.Now);
-        }
-        else
-        {
-            Debug.Log("You can claim the reward again tomorrow.");
         }
     }
 }
