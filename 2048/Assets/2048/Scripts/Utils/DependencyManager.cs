@@ -15,6 +15,7 @@ public class DependencyManager : MonoBehaviour
     public GameObject       newBlockPopup;
     public GemsManager      gemsManager;
     public VFX              vfx;
+    public PauseMenu        pauseMenu;
     private void Awake()
     {
         if (Instance != null && Instance != this)

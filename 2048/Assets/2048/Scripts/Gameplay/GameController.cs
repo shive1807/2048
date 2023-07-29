@@ -273,11 +273,11 @@ public class GameController : MonoBehaviour
         chain.Clear();
         smashing = false;
     }
-    private void SetSmash()
+    public void SetSmash()
     {
         smashing = true;
     }
-    private void SetSwap()
+    public void SetSwap()
     {
         swaping = true;
 

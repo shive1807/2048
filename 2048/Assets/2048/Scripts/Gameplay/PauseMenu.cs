@@ -11,7 +11,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void OnRestartPressed()
     {
-        GameManager.Instance.ReloadScene();
         SaveSystem.ResetGrid();
+        GameManager.Instance.ReloadScene();
     }
 }

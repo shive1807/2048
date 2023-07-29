@@ -13,7 +13,7 @@ public class GameData
 
     public DateTime LastClaimRewardDate = DateTime.Now;
     public int RewardClaimStreak = 1;
-    public GameData(int gems = -1, Num[,] Grid = default, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1, DateTime date = default, int rewardStreak = -1)
+    public GameData(int gems = -1, Num[,] Grid = null, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1, DateTime date = default, int rewardStreak = -1)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 

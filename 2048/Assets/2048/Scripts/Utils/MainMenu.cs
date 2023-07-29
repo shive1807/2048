@@ -45,10 +45,8 @@ public class MainMenu : MonoBehaviour
         PlayButtonLogic();
 
         StoreButtonLogic();
-        StoreBackButtonLogic();
 
         LeaderBoardButtonLogic();
-        LeaderBoardBackButtonLogic();
 
         SettingsButtonLogic();
 
@@ -83,6 +81,14 @@ public class MainMenu : MonoBehaviour
 
         PlusButton.onClick.AddListener(OpenStore);
         StoreButton.onClick.AddListener(OpenStore);
+
+        StoreBackButtonLogic();
+    }
+    private void StoreBackButtonLogic()
+    {
+        StoreBackButton = UiManager.Instance.Store.transform.GetChild(3).GetComponent<Button>();
+
+        StoreBackButton.onClick.AddListener(() => Back(Panel.Store, gameObject));
     }
     private void LeaderBoardButtonLogic()
     {
@@ -98,6 +104,14 @@ public class MainMenu : MonoBehaviour
 
         LeaderBoardButton.onClick.AddListener(OpenLeaderBoard);
         RankButton.onClick.AddListener(OpenLeaderBoard);
+
+        LeaderBoardBackButtonLogic();
+    }
+    private void LeaderBoardBackButtonLogic()
+    {
+        LeaderBoardBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(1).GetComponent<Button>();
+
+        LeaderBoardBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
     }
     private void SettingsButtonLogic()
     {
@@ -115,18 +129,6 @@ public class MainMenu : MonoBehaviour
             GameManager.Instance.LoadScene("GameScene");
             ButtonClickSound();
         });
-    }
-    private void StoreBackButtonLogic()
-    {
-        StoreBackButton = UiManager.Instance.Store.transform.GetChild(3).GetComponent<Button>();
-
-        StoreBackButton.onClick.AddListener(() => Back(Panel.Store, gameObject));
-    }
-    private void LeaderBoardBackButtonLogic()
-    {
-        LeaderBoardBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(1).GetComponent<Button>();
-
-        LeaderBoardBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
     }
     UnityAction<Panel, GameObject> Back = (panel, gameObject) =>
     {

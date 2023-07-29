@@ -51,7 +51,7 @@ public class GridController : MonoBehaviour
 
         grid[i, j] = element.GetComponent<Element>();
 
-        if (GameManager.Instance.gameData == null || !startingGrid || GameManager.Instance.gameData.SavedGrid == null)
+        if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
             grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
         }

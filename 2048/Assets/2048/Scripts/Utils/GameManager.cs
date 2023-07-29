@@ -9,6 +9,10 @@ public class GameManager : Singleton<GameManager>
     {
         gameData = SaveSystem.LoadGame();
     }
+    public void ReloadGameData()
+    {
+        gameData = SaveSystem.LoadGame();
+    }
     public void LoadScene(string scene)
     {
         SceneManager.LoadScene(scene);

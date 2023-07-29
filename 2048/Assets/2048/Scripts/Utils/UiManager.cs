@@ -11,15 +11,15 @@ public enum Panel
     Store
 }
 
-public class UiManager : Singleton<UiManager>
+public class UiManager : MonoBehaviour
 {
+    public static UiManager Instance;
     public GameObject LeaderBoard;
     public GameObject Store;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
-
+        Instance = this;
         LeaderBoard = transform.GetChild(1).gameObject;
         Store       = transform.GetChild(2).gameObject;
     }
