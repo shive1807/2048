@@ -243,7 +243,10 @@ public class GridController : MonoBehaviour
                 }
             }
         }
-        AudioManager.Instance.PlaySound("GameOver");
+
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound("GameOver");
+
         yield return new WaitForSeconds(GameSettings.GAME_END_TIME);
         DependencyManager.Instance.gameManager.LoadScene("MainMenu");
         SaveSystem.DeleteGameData();

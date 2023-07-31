@@ -139,6 +139,7 @@ public class GamePlay : MonoBehaviour
     ///Supporting function;
     private void ButtonClickSound()
     {
-        AudioManager.Instance.PlaySound("ButtonClick");
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound("ButtonClick");
     }
 }

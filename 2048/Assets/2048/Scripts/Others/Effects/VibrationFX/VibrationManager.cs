@@ -8,7 +8,8 @@ public class VibrationManager : Singleton<VibrationManager>
     [HideInInspector] public int vibration = 1;
     [SerializeField] private GameObject vibOn;
     [SerializeField] private GameObject vibOff;
-    public void vibrate(int duration)
+
+    public void Vibrate(int duration)
     {
         if (vibration == 1)
         {
@@ -19,6 +20,7 @@ public class VibrationManager : Singleton<VibrationManager>
             return;
         }
     }
+
     public void ToggleVibration()
     {
         if(vibration == 1)

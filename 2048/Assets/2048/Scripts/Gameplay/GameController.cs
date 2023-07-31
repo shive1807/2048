@@ -265,7 +265,8 @@ public class GameController : MonoBehaviour
         //---------------------------------------------------------
         
         // vibration
-        VibrationManager.Instance.vibrate(500);
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
 
         //destroying block
         chain.Add(e);
@@ -281,9 +282,10 @@ public class GameController : MonoBehaviour
     {
         swaping = true;
 
-        // vibration
-        VibrationManager.Instance.vibrate(500);
-        //Debug.Log("swaping " + swaping);
+
+        // Vibration
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
     }
     private void CreateLine(Element e1, Element e2)
     {
@@ -341,10 +343,12 @@ public class GameController : MonoBehaviour
         chain[chain.Count - 1].rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
 
         // vibration
-        VibrationManager.Instance.vibrate(500);
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
 
         //SFX
-        AudioManager.Instance.PlaySound("Wrong");
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound("Wrong");
     }
     private void AddToChain(Element numElement)       // adding element to chain
     {
@@ -361,11 +365,12 @@ public class GameController : MonoBehaviour
         numElement.rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
 
         // vibration
-        VibrationManager.Instance.vibrate(500);
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
 
         // SFX
-        AudioManager.Instance.PlaySound("CorrectMatch");
-        //Debug.Log("(" + numElement.x + "," + numElement.y + ") Added");
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound("CorrectMatch");
     }
     private void ClearChain()
     {
