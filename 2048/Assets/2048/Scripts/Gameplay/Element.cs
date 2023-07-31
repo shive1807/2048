@@ -110,6 +110,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         DependencyManager.Instance.gameController.BlockRaycast(false);
     }
+
     public void SetNum(int val = default, Num _num = null)
     {
         if (val == 0 && _num == null)
@@ -127,5 +128,12 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         this.numVal = num.numVal;
         image.color = Num.BlockColor(ref this.num);
         this.GetComponentInChildren<TextMeshProUGUI>().text = num.txt;
+
+        SetColor();
+    }
+
+    private void SetColor()
+    {
+        transform.GetComponent<Image>().color = DataManager.GetColor(num.numVal);
     }
 }
