@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using DG.Tweening;
 
 public class GridController : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class GridController : MonoBehaviour
 
     private int index;
 
-    public float ElementFallDuration;
+    public float ElementFallDuration = 3f;
 
     [HideInInspector] public int ElementMaxLimit = 8;
     [HideInInspector] public int ElementMinLimit = 1;
@@ -22,6 +23,8 @@ public class GridController : MonoBehaviour
     private int     reShuffleOffset = 0;
     private int     reShuffleThresh = 0;
     private bool    reShuffling     = false;
+
+    public float ElementDestroyDuration = .3f;
 
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
@@ -124,9 +127,10 @@ public class GridController : MonoBehaviour
 
             for (int i = 0; i < index; i++)
             {
-                DependencyManager.Instance.vfx.PlayBreakingFX(chain[i]);
 
-                Pooler.Instance.DestroyBlock(chain[i].gameObject);
+                StartCoroutine(DestroyBlock(chain[i]));
+
+                //Pooler.Instance.DestroyBlock(chain[i].gameObject);
                 //Destroy(chain[i].gameObject);
                 //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
 
@@ -204,6 +208,13 @@ public class GridController : MonoBehaviour
         StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
         SaveSystem.SaveGame(-1, true, grid, DependencyManager.Instance.gameController.HighScore);
         GameEndCheck();
+    }
+    private IEnumerator DestroyBlock(Element e)
+    {
+        //DependencyManager.Instance.vfx.PlayBreakingFX(e);
+        e.rectTransform.DOShakeScale(ElementDestroyDuration);
+        yield return new WaitForSeconds(ElementDestroyDuration);
+        Pooler.Instance.DestroyBlock(e.gameObject);
     }
     public Num GetMaxElement()
     {

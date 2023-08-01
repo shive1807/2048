@@ -180,7 +180,6 @@ public class GameController : MonoBehaviour
 
         if (Num.Max(maxElement, num) == maxElement)
         {
-            Debug.Log("not max");
             yield break;
         }
 

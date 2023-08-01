@@ -66,8 +66,8 @@ public class MainMenu : MonoBehaviour
         // gettting reference
         GemsStatus = ButtonsContainer.transform.GetChild(1).gameObject;
 
-        PlusButton = GemsStatus.transform.GetChild(3).GetComponent<Button>();
-        StoreButton = ButtonsContainer.transform.GetChild(4).GetComponent<Button>();
+        PlusButton = GemsStatus.transform.GetChild(2).GetComponent<Button>();
+        StoreButton = ButtonsContainer.transform.GetChild(3).GetChild(1).GetComponent<Button>();
 
         GemsText = GemsStatus.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
 
@@ -92,8 +92,8 @@ public class MainMenu : MonoBehaviour
     }
     private void LeaderBoardButtonLogic()
     {
-        LeaderBoardButton = ButtonsContainer.transform.GetChild(5).GetComponent<Button>();
-        RankButton = ButtonsContainer.transform.GetChild(2).GetChild(1).GetComponent<Button>();
+        LeaderBoardButton = ButtonsContainer.transform.GetChild(3).GetChild(2).GetComponent<Button>();
+        RankButton = ButtonsContainer.transform.GetChild(2).GetChild(0).GetComponent<Button>();
 
         UnityAction OpenLeaderBoard = () =>
         {
@@ -115,7 +115,7 @@ public class MainMenu : MonoBehaviour
     }
     private void SettingsButtonLogic()
     {
-        SettingsButton = ButtonsContainer.transform.GetChild(6).GetComponent<Button>();
+        SettingsButton = ButtonsContainer.transform.GetChild(3).GetChild(3).GetComponent<Button>();
 
         SettingsButton.onClick.AddListener(() =>
         {

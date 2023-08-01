@@ -44,6 +44,7 @@ public static class SaveSystem
 
         formatter.Serialize(stream, gameData);
         stream.Close();
+        GameManager.Instance.ReloadGameData();
     }
     public static GameData LoadGame()
     {
