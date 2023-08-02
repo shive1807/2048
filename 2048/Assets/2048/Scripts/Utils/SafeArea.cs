@@ -31,5 +31,8 @@ public class SafeArea : MonoBehaviour
 
         float height = GameSettings.BLOCK_SIZE * GameSettings.GRID.y + (GameSettings.GRID.y + 1) * GameSettings.GRID_SPACING;
         GameSettings.GRID_SIZE = new Vector2(rectTransform.rect.width, height);
+
+        Debug.Log(GameSettings.SAFE_AREA_SIZE + " 11 GameSettings.SAFE_AREA_SIZE");
+        Debug.Log(GameSettings.GRID_SIZE + " 11 GameSettings.GRID_SIZE");
     }
 }

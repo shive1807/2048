@@ -47,6 +47,9 @@ public class GamePlay : MonoBehaviour
 
         ButtonsContainer.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta
             = new Vector2(panelWidth, panelHeight);
+
+        ButtonsContainer.transform.GetChild(1).GetComponent<RectTransform>().sizeDelta
+            = new Vector2(panelWidth, panelHeight);
     }
 
     private void ButtonsLogic()
