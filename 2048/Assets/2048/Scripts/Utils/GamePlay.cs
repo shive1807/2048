@@ -1,35 +1,54 @@
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
+
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class GamePlay : MonoBehaviour
 {
     private GameObject ButtonsContainer;
 
     private Button StoreButton;
+    private Button PauseButton;
+    private Button SmashButton;
+    private Button SwapButton;
+
     private Button PlusButton;
     private Button StoreBackButton;
 
     private Button RankButton;
     private Button RankBackButton;
 
-    private Button PauseButton;
     private Button ResumeButton;
     private Button RestartButton;
     private Button HomeButton;
 
-    private Button SmashButton;
-    private Button SwapButton;
 
     private void Start()
     {
         ButtonsContainer = transform.GetChild(1).gameObject;
-
+        
         ButtonsLogic();
+
+        SetBottomButtonPanelSize();
     }
+
+    private void SetBottomButtonPanelSize()
+    {
+        Debug.Log(ButtonsContainer.transform.GetChild(0).name);
+        float height = GameSettings.GRID_SIZE.y;
+
+        Vector2 safeArea = GameSettings.SAFE_AREA_SIZE;
+
+        float panelHeight = (safeArea.y - height) / 2;
+
+        float panelWidth = safeArea.x;
+
+        ButtonsContainer.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta
+            = new Vector2(panelWidth, panelHeight);
+    }
+
     private void ButtonsLogic()
     {
         StoreButtonLogic();
@@ -39,12 +58,15 @@ public class GamePlay : MonoBehaviour
         PauseButtonLogic();
 
         SmashButtonLogic();
+
         SwapButtonLogic();
     }
+
     private void StoreButtonLogic()
     {
-        PlusButton = ButtonsContainer.transform.GetChild(2).GetChild(3).GetComponent<Button>();
-        StoreButton = ButtonsContainer.transform.GetChild(4).GetComponent<Button>();
+        var topUiPanel  = ButtonsContainer.transform.GetChild(1);
+        PlusButton      = topUiPanel.GetChild(1).GetComponent<Button>();
+        StoreButton     = ButtonsContainer.transform.GetChild(0).GetChild(3).GetComponent<Button>();
 
         UnityAction OpenStore = () =>
         {
@@ -58,15 +80,18 @@ public class GamePlay : MonoBehaviour
 
         StoreBackButtonLogic();
     }
+
     private void StoreBackButtonLogic()
     {
         StoreBackButton = UiManager.Instance.Store.transform.GetChild(3).GetComponent<Button>();
 
         StoreBackButton.onClick.AddListener(() => Back(Panel.Store, gameObject));
     }
+
     private void LeaderBoardButtonLogic()
     {
-        RankButton = ButtonsContainer.transform.GetChild(1).GetChild(2).GetComponent<Button>();
+        var topUiPanel = ButtonsContainer.transform.GetChild(1);
+        RankButton = topUiPanel.GetChild(0).GetComponent<Button>();
 
         UnityAction OpenLeaderBoard = () =>
         {
@@ -79,17 +104,20 @@ public class GamePlay : MonoBehaviour
 
         LeaderBoardBackButtonLogic();
     }
+
     private void LeaderBoardBackButtonLogic()
     {
         RankBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(1).GetComponent<Button>();
 
         RankBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
     }
-    UnityAction<Panel, GameObject> Back = (panel, gameObject) =>
+
+    private UnityAction<Panel, GameObject> Back = (panel, gameObject) =>
     {
         gameObject.SetActive(true);
         UiManager.Instance.PanelCloseAnimation(panel);
     };
+
     private void SmashButtonLogic()
     {
         SmashButton = ButtonsContainer.transform.GetChild(0).GetChild(1).GetComponent<Button>();
@@ -99,6 +127,7 @@ public class GamePlay : MonoBehaviour
             DependencyManager.Instance.gameController.SetSmash();
         });
     }
+
     private void SwapButtonLogic()
     {
         SwapButton = ButtonsContainer.transform.GetChild(0).GetChild(0).GetComponent<Button>();
@@ -108,12 +137,16 @@ public class GamePlay : MonoBehaviour
             DependencyManager.Instance.gameController.SetSwap();
         });
     }
+
     private void PauseButtonLogic()
     {
-        PauseButton = ButtonsContainer.transform.GetChild(3).GetComponent<Button>();
-        ResumeButton = ButtonsContainer.transform.GetChild(5).GetChild(4).GetComponent<Button>();
-        RestartButton = ButtonsContainer.transform.GetChild(5).GetChild(3).GetComponent<Button>();
-        HomeButton = ButtonsContainer.transform.GetChild(5).GetChild(2).GetComponent<Button>();
+        PauseButton = ButtonsContainer.transform.GetChild(0).GetChild(2).GetComponent<Button>();
+
+        var PausePanel = ButtonsContainer.transform.GetChild(2);
+
+        ResumeButton    = PausePanel.GetChild(4).GetComponent<Button>();
+        RestartButton   = PausePanel.GetChild(3).GetComponent<Button>();
+        HomeButton      = PausePanel.GetChild(2).GetComponent<Button>();
 
         PauseButton.onClick.AddListener(() =>
         {

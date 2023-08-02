@@ -23,6 +23,8 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
         image           = this.gameObject.GetComponent<Image>();
         breakEffect     = this.gameObject.GetComponent<ParticleSystem>();
+
+        rectTransform.sizeDelta = new Vector2(GameSettings.BLOCK_SIZE, GameSettings.BLOCK_SIZE);
     }
 
     private void Update()
@@ -67,8 +69,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         if ( rectTransform == null)//element == null ||
             Start();
 
-        Vector2 targetPos = new Vector2((i * GameSettings.SPACING) - 370, (j * GameSettings.SPACING) - 520);  // calculating Pos with respect to anchors
-
+        Vector2 targetPos = new Vector2(-GameSettings.GRID_SIZE.x / 2 + (2*i + 1) * GameSettings.BLOCK_SIZE/2 + (i + 1) * GameSettings.GRID_SPACING, -GameSettings.GRID_SIZE.y / 2 + (2*j + 1) * GameSettings.BLOCK_SIZE /2 + (j + 1) * GameSettings.GRID_SPACING);
         rectTransform.anchoredPosition = new Vector2(targetPos.x + elementMoveOffset.x, targetPos.y + elementMoveOffset.y);  // spawning the element a bit up to make room for drop animatio
         SetElementCoord(i, j);  // naming according to in-matrix position
 

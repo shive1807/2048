@@ -24,14 +24,26 @@ public class GridController : MonoBehaviour
     private int     reShuffleThresh = 0;
     private bool    reShuffling     = false;
 
+    private RectTransform linesRectTransform;
+
     public float ElementDestroyDuration = .3f;
 
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
     private void Start() => GridSetup();
 
+    private void SetSize()
+    {
+        transform.GetComponent<RectTransform>().sizeDelta = GameSettings.GRID_SIZE;
+
+        linesRectTransform = transform.GetChild(0).GetComponent<RectTransform>();
+        linesRectTransform.sizeDelta = GameSettings.GRID_SIZE;
+    }
+
     private void GridSetup()
     {
+        SetSize();
+
         grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
