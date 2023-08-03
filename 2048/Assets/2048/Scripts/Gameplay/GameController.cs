@@ -54,11 +54,13 @@ public class GameController : MonoBehaviour
 
         HighScore = GameManager.Instance.gameData.HighScore;
     }
+
     private void Update()
     {
         ClearChain();  // to clear the chain when mouse button is released
         LineMatching();
     }
+
     public void Chaining(Element numElement)
     {
         if (!numElement.selected)
@@ -118,6 +120,7 @@ public class GameController : MonoBehaviour
             }
         }
     }
+
     private void ChainCheck(Element numElement)
     {
         if (numElement.numVal / chain[chain.Count - 1].numVal == 2 || (numElement.numVal == 512 && chain[chain.Count - 1].numVal == 1))    // special case: when the decimal changes it wasn't adding to chain
@@ -137,6 +140,7 @@ public class GameController : MonoBehaviour
             AddToChain(numElement);
         }
     }
+
     private void LineMatching()
     {
         if (smashing || swaping || chain.Count == 0)
@@ -150,7 +154,7 @@ public class GameController : MonoBehaviour
 
             // Setting position
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
-            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
+            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos - new Vector3(GameSettings.BLOCK_SIZE/2, GameSettings.BLOCK_SIZE/2, 0));
             lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
 
             // Setting Color
@@ -161,6 +165,7 @@ public class GameController : MonoBehaviour
             lineRenderer.enabled = false;
         }
     }
+
     private void HighScoreUpdate(Num num)
     {
         int val = (int)(num.numVal * Mathf.Pow(1000, Num.CurrentDec(num)));
@@ -264,7 +269,8 @@ public class GameController : MonoBehaviour
         //---------------------------------------------------------
         
         // vibration
-        VibrationManager.Instance.vibrate(500);
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
 
         //destroying block
         chain.Add(e);
@@ -280,9 +286,10 @@ public class GameController : MonoBehaviour
     {
         swaping = true;
 
-        // vibration
-        VibrationManager.Instance.vibrate(500);
-        //Debug.Log("swaping " + swaping);
+
+        // Vibration
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
     }
     private void CreateLine(Element e1, Element e2)
     {
@@ -291,6 +298,7 @@ public class GameController : MonoBehaviour
         _line.transform.SetParent(e1.transform.parent.transform.Find("Lines"), false);  // for keeping the lines below the Numelements
 
         // Calculate the position
+        Debug.Log(e1.GetComponent<RectTransform>().anchoredPosition + " e1 and e2 "+ e2.GetComponent<RectTransform>().anchoredPosition);
         Vector2 pos = (e1.GetComponent<RectTransform>().anchoredPosition + e2.GetComponent<RectTransform>().anchoredPosition) / 2f;
         _line.GetComponent<RectTransform>().anchoredPosition = pos;
 
@@ -340,10 +348,12 @@ public class GameController : MonoBehaviour
         chain[chain.Count - 1].rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
 
         // vibration
-        VibrationManager.Instance.vibrate(500);
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
 
         //SFX
-        AudioManager.Instance.PlaySound("Wrong");
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound("Wrong");
     }
     private void AddToChain(Element numElement)       // adding element to chain
     {
@@ -360,11 +370,12 @@ public class GameController : MonoBehaviour
         numElement.rectTransform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce);
 
         // vibration
-        VibrationManager.Instance.vibrate(500);
+        if(VibrationManager.Instance != null)
+            VibrationManager.Instance.Vibrate(500);
 
         // SFX
-        AudioManager.Instance.PlaySound("CorrectMatch");
-        //Debug.Log("(" + numElement.x + "," + numElement.y + ") Added");
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound("CorrectMatch");
     }
     private void ClearChain()
     {

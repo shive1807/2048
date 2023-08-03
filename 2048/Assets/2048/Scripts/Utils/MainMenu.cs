@@ -1,10 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Events;
-using Unity.VisualScripting;
 
 public class MainMenu : MonoBehaviour
 {
@@ -158,7 +157,8 @@ public class MainMenu : MonoBehaviour
     ///Supporting function;
     private void ButtonClickSound()
     {
-        AudioManager.Instance.PlaySound("ButtonClick");
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySound("ButtonClick");
     }
 }
 
