@@ -39,6 +39,7 @@ public class GameController : MonoBehaviour
 
     [HideInInspector] public GraphicRaycaster raycaster;
     private bool raycastBlocked = false;
+
     private void Start()
     {
         chain = new List<Element>();
@@ -154,7 +155,7 @@ public class GameController : MonoBehaviour
 
             // Setting position
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
-            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos - new Vector3(GameSettings.BLOCK_SIZE/2, GameSettings.BLOCK_SIZE/2, 0));
+            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos );
             lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
 
             // Setting Color
