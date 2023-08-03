@@ -27,6 +27,11 @@ public class MainMenu : MonoBehaviour
 
     private TextMeshProUGUI GemsText;
 
+    private Button Day_1Button;
+    private Button Day_2Button;
+    private Button Day_3Button;
+    private Button Day_4Button;
+    private Button Day_5Button;
     private void OnEnable()
     {
         //UpdateCurrency();
@@ -51,6 +56,13 @@ public class MainMenu : MonoBehaviour
         SettingsButtonLogic();
 
         DailyRewardCloseButtonLogic();
+    }
+    private void DailyRewardButtonsLogic()
+    {
+        UnityAction claimReward = () =>
+        {
+            //RewardManager.Instance.ClaimDailyReward();
+        };
     }
     private void DailyRewardCloseButtonLogic()
     {

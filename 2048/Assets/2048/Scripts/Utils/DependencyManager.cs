@@ -6,14 +6,17 @@ public class DependencyManager : MonoBehaviour
 {
     public static DependencyManager Instance;
 
+    [Header("MAIN MENU DEPENDENCIES")]
     public GameManager      gameManager;
+    public GemsManager      gemsManager;
+
+    [Header("GAME SCENE DEPENDENCIES")]
     public InputManager     inputManager;
     public GameController   gameController;
     public GridController   gridController;
     public Pooler           pooler;
     public Popup            popup;
     public GameObject       newBlockPopup;
-    public GemsManager      gemsManager;
     public VFX              vfx;
     public PauseMenu        pauseMenu;
     private void Awake()
