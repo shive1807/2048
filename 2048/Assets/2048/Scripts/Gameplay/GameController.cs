@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour
 
     private List<Element> swapElements;
     [HideInInspector] public bool swaping = false;
-    private float swapDuration = 1f;
+    public float swapSpeed = 1f;
 
     [HideInInspector] public bool smashing = false;
 
@@ -154,7 +154,7 @@ public class GameController : MonoBehaviour
 
             // Setting position
             Vector3 mousePos = DependencyManager.Instance.inputManager.mousePos;
-            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos - new Vector3(GameSettings.BLOCK_SIZE/2, GameSettings.BLOCK_SIZE/2, 0));
+            lineRenderer.SetPosition(0, chain[chain.Count - 1].elementPos);
             lineRenderer.SetPosition(1, new Vector3(mousePos.x, mousePos.y, 90));
 
             // Setting Color
@@ -202,13 +202,12 @@ public class GameController : MonoBehaviour
     {
         if (block)
         {
-            raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.All;
+            raycaster.enabled = false;
             raycastBlocked = true;
         }
         else
         {
-            raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
-            raycastBlocked = false;
+            raycaster.enabled = true;
         }
     }
     public IEnumerator SwapBlock(Element e)
@@ -227,10 +226,10 @@ public class GameController : MonoBehaviour
             Vector2 e1Pos = e1.GetComponent<RectTransform>().anchoredPosition;
             Vector2 e2Pos = e2.GetComponent<RectTransform>().anchoredPosition;
 
-            StartCoroutine(e1.MoveElement(e2Pos, swapDuration));
-            StartCoroutine(e2.MoveElement(e1Pos, swapDuration));
+            StartCoroutine(e1.MoveElement(e2Pos, swapSpeed));
+            StartCoroutine(e2.MoveElement(e1Pos, swapSpeed));
 
-            yield return new WaitForSeconds(swapDuration + .2f);
+            yield return new WaitUntil(() => e2.moving);
 
             e1.GetComponent<RectTransform>().anchoredPosition = e1Pos;
             e2.GetComponent<RectTransform>().anchoredPosition = e2Pos;

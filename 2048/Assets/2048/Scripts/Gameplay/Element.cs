@@ -18,6 +18,8 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public Vector3 elementPos;
     [HideInInspector] public RectTransform rectTransform;
     [HideInInspector] public ParticleSystem breakEffect;
+
+    [HideInInspector] public bool moving = false;
     private void Start()
     {
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
@@ -64,21 +66,27 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
             }
         }
     }
-    public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveDuration = default, Num num = default)
+    public void ElementSetup(int i, int j, Vector2 elementMoveOffset = default, float elementMoveSpeed = default, Num num = default)
     {
         if ( rectTransform == null)//element == null ||
             Start();
 
 
-        Vector2 targetPos = new Vector2(-GameSettings.GRID_SIZE.x / 2 + (2*i + 1) * GameSettings.BLOCK_SIZE/2 + (i + 1) * GameSettings.GRID_SPACING, -GameSettings.GRID_SIZE.y / 2 + (2*j + 1) * GameSettings.BLOCK_SIZE /2 + (j + 1) * GameSettings.GRID_SPACING);
-        rectTransform.anchoredPosition = new Vector2(targetPos.x + elementMoveOffset.x, targetPos.y + elementMoveOffset.y);  // spawning the element a bit up to make room for drop animatio
-        SetElementCoord(i, j);  // naming according to in-matrix position
+        Vector2 targetPos = new Vector2(-GameSettings.GRID_SIZE.x / 2 + (2 * i + 1) * GameSettings.BLOCK_SIZE/2 + (i + 1) * GameSettings.GRID_SPACING,
+                                        -GameSettings.GRID_SIZE.y / 2 + (2 * j + 1) * GameSettings.BLOCK_SIZE /2 + (j + 1) * GameSettings.GRID_SPACING);
+        
+        // spawning the element a bit up to make room for drop animation
+        rectTransform.anchoredPosition = new Vector2(targetPos.x + elementMoveOffset.x, targetPos.y + elementMoveOffset.y);  
+        
+        // naming according to in-matrix position
+        SetElementCoord(i, j);  
 
         //TO GET IN MATRIX POSTION OF THE ELEMENTS.
         
         this.SetNum(0, num);
 
-        StartCoroutine(MoveElement(targetPos, elementMoveDuration));  // moving the element down (drop animation on spawn)
+        // moving the element down (drop animation on spawn)
+        StartCoroutine(MoveElement(targetPos, elementMoveSpeed));  
     }
     public void SetElementCoord(int i, int j)
     {
@@ -86,32 +94,39 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         this.y = j;
         transform.name = "(" + i + ", " + j + ")";
     }
-    public IEnumerator MoveElement(Vector2 targetPos, float duration)
+    public IEnumerator MoveElement(Vector2 targetPos, float speed = 4)
     {
         yield return null;
 
-        if(rectTransform == null)
+        if (rectTransform == null)
         {
-            //Debug.LogError("  rectTransform is null");
+            Debug.LogError("RectTransform is null");
             yield break;
         }
+        moving = true;
 
         DependencyManager.Instance.gameController.BlockRaycast(true);
 
-        Vector2 initialPos  = rectTransform.anchoredPosition;
-        float elapsedTime   = 0f;
-        //Debug.Log("moving");
-        while (elapsedTime < duration)               // moving the element down gradually
+        Vector2 initialPos = rectTransform.anchoredPosition;
+
+        float distance = Vector2.Distance(initialPos, targetPos);
+        float duration = distance / speed;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < duration) // moving the element down gradually
         {
             float t = elapsedTime / duration;
             rectTransform.anchoredPosition = Vector2.Lerp(initialPos, targetPos, t);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        rectTransform.anchoredPosition = targetPos;  // for ensuring the final position of element is correctly set
+
+        rectTransform.anchoredPosition = targetPos; // Ensure the final position of the element is correctly set
 
         DependencyManager.Instance.gameController.BlockRaycast(false);
+        moving = false;
     }
+
 
     public void SetNum(int val = default, Num _num = null)
     {

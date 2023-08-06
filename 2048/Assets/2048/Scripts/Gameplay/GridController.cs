@@ -14,7 +14,7 @@ public class GridController : MonoBehaviour
 
     private int index;
 
-    public float ElementFallDuration = 3f;
+    public float ElementFallSpeed = 3f;
 
     [HideInInspector] public int ElementMaxLimit = 8;
     [HideInInspector] public int ElementMinLimit = 1;
@@ -50,13 +50,13 @@ public class GridController : MonoBehaviour
         {
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
-                GenerateBlock(i, j);
+                GenerateBlock(i, j, 0);
             }
         }
        DependencyManager.Instance.gameController.maxElement = GetMaxElement();
         startingGrid = false;
     }
-    private void GenerateBlock(int i, int j)
+    private void GenerateBlock(int i, int j, int blockBelow)
     {
         GameObject element = Pooler.Instance.GetBlock();//Instantiate(block) as GameObject;
         //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
@@ -68,11 +68,11 @@ public class GridController : MonoBehaviour
 
         if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset + new Vector2(0, blockBelow * (GameSettings.GRID_SPACING + GameSettings.BLOCK_SIZE)), ElementFallSpeed);
         }
         else 
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, GameManager.Instance.gameData.SavedGrid[i, j]);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed, GameManager.Instance.gameData.SavedGrid[i, j]);
         }
     }
     private int[,] GetDestroyedBlocks(List<Element> chain)
@@ -159,7 +159,7 @@ public class GridController : MonoBehaviour
                         continue;
 
                     Vector2 targetPos = grid[i, j - depth].GetComponent<RectTransform>().anchoredPosition;
-                    StartCoroutine(grid[i, j].MoveElement(targetPos, 1));
+                    StartCoroutine(grid[i, j].MoveElement(targetPos, ElementFallSpeed));
                 }
             }
 
@@ -196,7 +196,7 @@ public class GridController : MonoBehaviour
 
                 for (int j = GameSettings.GRID_HEIGHT - blocksToAdd; j < GameSettings.GRID_HEIGHT; j++)
                 {
-                    GenerateBlock(i, j);
+                    GenerateBlock(i, j, j - (GameSettings.GRID_HEIGHT - blocksToAdd));
                 }
             }
         }
@@ -208,13 +208,13 @@ public class GridController : MonoBehaviour
             {
                 Vector2 targetPos = grid[e.x, i - 1].GetComponent<RectTransform>().anchoredPosition;
 
-                StartCoroutine(grid[e.x, i].MoveElement(targetPos, ElementFallDuration));
+                StartCoroutine(grid[e.x, i].MoveElement(targetPos, ElementFallSpeed));
                 grid[e.x, i - 1] = grid[e.x, i];
                 grid[e.x, i].SetElementCoord(e.x, i - 1);
             }
             //Debug.Log("sw");
             Pooler.Instance.DestroyBlock(e.gameObject);
-            GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
+            GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1, 0);
         }
 
         StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
@@ -224,7 +224,7 @@ public class GridController : MonoBehaviour
     private IEnumerator DestroyBlock(Element e)
     {
         //DependencyManager.Instance.vfx.PlayBreakingFX(e);
-        e.rectTransform.DOShakeScale(ElementDestroyDuration);
+        e.rectTransform.DOScale(0, ElementDestroyDuration).SetEase(Ease.OutElastic);
         yield return new WaitForSeconds(ElementDestroyDuration);
         Pooler.Instance.DestroyBlock(e.gameObject);
     }

@@ -1043,6 +1043,7 @@ MonoBehaviour:
     MusicPref: 0
     VibrationPref: 0
     RewardClaimStreak: 0
+    Collected: 0
 --- !u!4 &215764650
 Transform:
   m_ObjectHideFlags: 0
@@ -7000,7 +7001,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1122}
+  m_AnchoredPosition: {x: 0, y: -493}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &602148825
@@ -7574,8 +7575,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingGrid: 1
-  ElementfallOffset: {x: 0, y: 200}
-  ElementFallDuration: 1
+  ElementfallOffset: {x: 0, y: 300}
+  ElementFallSpeed: 300
   ElementMaxLimit: 8
   ElementMinLimit: 1
   DecInd: 0
@@ -21806,6 +21807,10 @@ PrefabInstance:
     - target: {fileID: 4928144427676950457, guid: 6c8f79c96bde1ae4a95dafe876dd7bdd, type: 3}
       propertyPath: smashTime
       value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4928144427676950457, guid: 6c8f79c96bde1ae4a95dafe876dd7bdd, type: 3}
+      propertyPath: swapSpeed
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 4928144427676950457, guid: 6c8f79c96bde1ae4a95dafe876dd7bdd, type: 3}
       propertyPath: highScoreTxt

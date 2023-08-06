@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
-using System.Runtime.Serialization.Json;
+
 
 public class RewardManager : Singleton<RewardManager>
 {
@@ -15,7 +15,9 @@ public class RewardManager : Singleton<RewardManager>
     public int rewardMultiplier = 10;
 
     private DateTime lastClaimDate;
-    private int currentStreak = 1;
+    public int currentStreak = 0;
+
+    public int rewardCollected = 0;
     void Start()
     {
         StartCoroutine(StartDailyRewardPopup());
@@ -33,49 +35,73 @@ public class RewardManager : Singleton<RewardManager>
     {
         lastClaimDate = GameManager.Instance.gameData.LastClaimRewardDate;
         currentStreak = GameManager.Instance.gameData.RewardClaimStreak;
+        rewardCollected = GameManager.Instance.gameData.Collected;
 
-        int reward = rewardAmount * currentStreak * rewardMultiplier;
-        StreakCheck();
-        // UI update
-        UIUpdate();
+        if(currentStreak >= Days.Length)
+        {
+            currentStreak = 0;
+            SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak);
+        }
+        DayCheck();
     }
-    private void StreakCheck()
+    private void DayCheck()
     {
+        int currentDay = 0;
         TimeSpan timeSinceLastClaim = DateTime.Now - lastClaimDate;
 
         if (timeSinceLastClaim.TotalDays >= 1)
         {
-            if(timeSinceLastClaim.TotalDays > 1)
+            rewardCollected = 0;
+            if (timeSinceLastClaim.TotalDays > 2)
             {
-                currentStreak = 1;
-                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, DateTime.Now);
+                currentStreak = 0;
+                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak);
             }
-            UIUpdate();
+            currentDay = currentStreak;
         }
+        else
+        {
+            currentDay = currentStreak;
+        }
+
+        UIUpdate(currentDay);
     }
-    private void UIUpdate()
+    private void UIUpdate(int currentDay)
     {
         for (int i = 0; i < Days.Length; i++)
         {
-            if (currentStreak == i + 1)
+            if (currentDay == i)
             {
-                Days[i].inActiveImg.SetActive(false);
-                Days[i].collectedImg.SetActive(false);
-                Days[i].isActive = true;
-            }
-            else
-            {
-                if (i + 1 < currentStreak)
+                if(rewardCollected == 1)
                 {
                     Days[i].inActiveImg.SetActive(true);
                     Days[i].collectedImg.SetActive(true);
-                    Days[i].isActive = true;
+                    Days[i].isActive = false;
+                    Days[i].isCollected = true;
                 }
-                else if (i + 1 > currentStreak)
+                else if(rewardCollected == 0)
+                {
+                    Days[i].inActiveImg.SetActive(false);
+                    Days[i].collectedImg.SetActive(false);
+                    Days[i].isActive = true;
+                    Days[i].isCollected = false;
+                }
+            }
+            else
+            {
+                if (currentDay > i)
+                {
+                    Days[i].inActiveImg.SetActive(true);
+                    Days[i].collectedImg.SetActive(true);
+                    Days[i].isActive = false;
+                    Days[i].isCollected = true;
+                }
+                else if (currentDay < i)
                 {
                     Days[i].inActiveImg.SetActive(true);
                     Days[i].collectedImg.SetActive(false);
-                    Days[i].isActive = true;
+                    Days[i].isActive = false;
+                    Days[i].isCollected = false;
                 }
             }
         }
@@ -86,12 +112,18 @@ public class RewardManager : Singleton<RewardManager>
         {
             if (!dailyReward.isCollected)
             {
-                currentStreak++;
-                UIUpdate();
+                // UI update
                 dailyReward.isCollected = true;
                 dailyReward.isActive = false;
-                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, DateTime.Now);
+                dailyReward.collectedImg.SetActive(true);
+                dailyReward.inActiveImg.SetActive(true);
+
+                // Streak update
+                currentStreak++;
+
+                rewardCollected = 1;
                 GemsManager.Instance.AddGems(rewardAmount + (currentStreak * rewardMultiplier));
+                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak, DateTime.Now, rewardCollected);
             }
             else
             {

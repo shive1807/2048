@@ -9,6 +9,7 @@ public class DependencyManager : MonoBehaviour
     [Header("MAIN MENU DEPENDENCIES")]
     public GameManager      gameManager;
     public GemsManager      gemsManager;
+    public Login            login;
 
     [Header("GAME SCENE DEPENDENCIES")]
     public InputManager     inputManager;

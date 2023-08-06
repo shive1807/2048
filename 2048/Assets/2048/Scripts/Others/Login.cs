@@ -22,4 +22,9 @@ public class Login : MonoBehaviour
         user = new User();
         user.username = userInput.text;
     }
+
+    public void OnClearInput()
+    {
+        userInput.text = string.Empty;
+    }
 }
