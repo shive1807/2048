@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class GamePlay : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class GamePlay : MonoBehaviour
     private Button RestartButton;
     private Button HomeButton;
 
-
+    private Button newBlockRewardClaimButton;
     private void Start()
     {
         ButtonsContainer = transform.GetChild(1).gameObject;
@@ -63,6 +64,19 @@ public class GamePlay : MonoBehaviour
         SmashButtonLogic();
 
         SwapButtonLogic();
+
+        newBlockUnlockRewardClaimButtonLogic();
+    }
+
+    private void newBlockUnlockRewardClaimButtonLogic()
+    {
+        newBlockRewardClaimButton = ButtonsContainer.transform.GetChild(3).GetChild(8).GetComponent<Button>();
+
+        newBlockRewardClaimButton.onClick.AddListener(() =>
+        {
+            DependencyManager.Instance.popup.OnConfirmButtonPressed();
+            ButtonClickSound();
+        });
     }
 
     private void StoreButtonLogic()
@@ -70,6 +84,8 @@ public class GamePlay : MonoBehaviour
         var topUiPanel  = ButtonsContainer.transform.GetChild(1);
         PlusButton      = topUiPanel.GetChild(1).GetComponent<Button>();
         StoreButton     = ButtonsContainer.transform.GetChild(0).GetChild(3).GetComponent<Button>();
+
+        StoreBackButton = UiManager.Instance.Store.transform.GetChild(3).GetComponent<Button>();
 
         UnityAction OpenStore = () =>
         {
@@ -81,13 +97,6 @@ public class GamePlay : MonoBehaviour
         PlusButton.onClick.AddListener(OpenStore);
         StoreButton.onClick.AddListener(OpenStore);
 
-        StoreBackButtonLogic();
-    }
-
-    private void StoreBackButtonLogic()
-    {
-        StoreBackButton = UiManager.Instance.Store.transform.GetChild(3).GetComponent<Button>();
-
         StoreBackButton.onClick.AddListener(() => Back(Panel.Store, gameObject));
     }
 
@@ -95,6 +104,8 @@ public class GamePlay : MonoBehaviour
     {
         var topUiPanel = ButtonsContainer.transform.GetChild(1);
         RankButton = topUiPanel.GetChild(0).GetComponent<Button>();
+
+        RankBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(1).GetComponent<Button>();
 
         UnityAction OpenLeaderBoard = () =>
         {
@@ -104,13 +115,6 @@ public class GamePlay : MonoBehaviour
         };
 
         RankButton.onClick.AddListener(OpenLeaderBoard);
-
-        LeaderBoardBackButtonLogic();
-    }
-
-    private void LeaderBoardBackButtonLogic()
-    {
-        RankBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(1).GetComponent<Button>();
 
         RankBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
     }
@@ -138,6 +142,7 @@ public class GamePlay : MonoBehaviour
         SwapButton.onClick.AddListener(() =>
         {
             DependencyManager.Instance.gameController.SetSwap();
+            ButtonClickSound();
         });
     }
 
@@ -155,25 +160,29 @@ public class GamePlay : MonoBehaviour
         {
             ButtonsContainer.transform.GetChild(5).gameObject.SetActive(true);
             DependencyManager.Instance.gameController.BlockRaycast(true);
+            ButtonClickSound();
         });
         ResumeButton.onClick.AddListener(() =>
         {
             ButtonsContainer.transform.GetChild(5).gameObject.SetActive(false);
             DependencyManager.Instance.gameController.BlockRaycast(false);
+            ButtonClickSound();
         });
         RestartButton.onClick.AddListener(() =>
         {
             DependencyManager.Instance.pauseMenu.OnRestartPressed();
             DependencyManager.Instance.gameController.BlockRaycast(false);
+            ButtonClickSound();
         });
         HomeButton.onClick.AddListener(() =>
         {
             DependencyManager.Instance.pauseMenu.OnHomePressed();
             DependencyManager.Instance.gameController.BlockRaycast(false);
+            ButtonClickSound();
         });
     }
     ///Supporting function;
-    private void ButtonClickSound()
+    public void ButtonClickSound()
     {
         if(AudioManager.Instance != null)
             AudioManager.Instance.PlaySound("ButtonClick");

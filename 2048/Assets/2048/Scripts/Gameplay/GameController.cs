@@ -202,7 +202,7 @@ public class GameController : MonoBehaviour
     {
         if (block)
         {
-            raycaster.enabled = false;
+            //raycaster.enabled = false;
             raycastBlocked = true;
         }
         else

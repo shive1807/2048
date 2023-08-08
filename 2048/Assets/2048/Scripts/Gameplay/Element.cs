@@ -151,6 +151,6 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
     private void SetColor()
     {
-        transform.GetComponent<Image>().color = DataManager.GetColor(num.numVal);
+        transform.GetComponent<Image>().color = DataManager.GetColor(num);
     }
 }

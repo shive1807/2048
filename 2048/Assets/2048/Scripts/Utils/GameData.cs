@@ -84,8 +84,9 @@ public static class DataManager
         new Color(0.9531f, 0.9063f, 0.8203f, 1.0f)  // Tender Tan (#F4E8D2)
     };
 
-    public static Color GetColor(int n)
+    public static Color GetColor(Num num)
     {
+        int n = (int)(num.numVal * Math.Pow(1000, Num.CurrentDec(num)));
         if (n <= 0)
             throw new ArgumentException("Input must be a positive integer greater than 0.");
 
