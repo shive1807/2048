@@ -5,124 +5,62 @@ using DG.Tweening;
 
 public class GridController : MonoBehaviour
 {
-    public Element[,]  grid;
-    private GameObject  block;
+    //Private variables.
+    private int             reShuffleThresh = 0;
+    private int             reShuffleOffset = 0;
+    private int             index           = 0;
+    private bool            reShuffling     = false;
+    private GameObject      block;
+    private RectTransform   linesRectTransform;
 
-    public bool startingGrid = true;
-
+    //Public variables.
+    public bool         startingGrid = true;
+    public float        ElementFallDuration = 3f;
+    public float        ElementDestroyDuration = .3f;
+    public Element[,]   grid;
     public Vector2      ElementfallOffset;
 
     private int index;
 
     public float ElementFallSpeed = 3f;
 
+    //Public hidden variables.
     [HideInInspector] public int ElementMaxLimit = 8;
     [HideInInspector] public int ElementMinLimit = 1;
     [HideInInspector] public int DecInd = 0;
 
-    private int     reShuffleOffset = 0;
-    private int     reShuffleThresh = 0;
-    private bool    reShuffling     = false;
-
-    private RectTransform linesRectTransform;
-
-    public float ElementDestroyDuration = .3f;
-
+    //Unity engine funtions.
     private void Awake() => block = Resources.Load<GameObject>(Assets.numElement);
 
     private void Start() => GridSetup();
 
-    private void SetSize()
+    #region public functions
+    public Num GetMaxElement()
     {
-        transform.GetComponent<RectTransform>().sizeDelta = GameSettings.GRID_SIZE;
-
-        linesRectTransform = transform.GetChild(0).GetComponent<RectTransform>();
-        linesRectTransform.sizeDelta = GameSettings.GRID_SIZE;
-    }
-
-    private void GridSetup()
-    {
-        SetSize();
-
-        grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+        Num tempMax = grid[0, 0].num;
 
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
             for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
             {
-                GenerateBlock(i, j, 0);
+                tempMax = Num.Max(grid[i, j].num, tempMax);
             }
         }
-       DependencyManager.Instance.gameController.maxElement = GetMaxElement();
-        startingGrid = false;
+        return tempMax;
     }
-    private void GenerateBlock(int i, int j, int blockBelow)
+
+    public void ElementReShuffle(Num MaxNum, Num MinNum)
     {
-        GameObject element = Pooler.Instance.GetBlock();//Instantiate(block) as GameObject;
-        //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
+        reShuffleOffset++;
 
-        element.transform.SetParent(this.transform, false);
-
-
-        grid[i, j] = element.GetComponent<Element>();
-
-        if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
+        if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset + new Vector2(0, blockBelow * (GameSettings.GRID_SPACING + GameSettings.BLOCK_SIZE)), ElementFallSpeed);
-        }
-        else 
-        {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed, GameManager.Instance.gameData.SavedGrid[i, j]);
+            Debug.Log("reshuffle");
+            StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ReShuffleContinued, DependencyManager.Instance.newBlockPopup, MinNum));
+            DependencyManager.Instance.vfx.PlayCelebrationVfx();
         }
     }
-    private int[,] GetDestroyedBlocks(List<Element> chain)
-    {
-        int[,] deductions = new int[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
 
-        for(int i = 0; i < index; i++)
-        {
-            deductions[chain[i].x, chain[i].y]++;
-        }
-
-        string s = "";
-        for (int j = GameSettings.GRID_HEIGHT - 1; j >= 0; j--)
-        {
-            s += "";
-            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-            {
-                s += deductions[i, j].ToString();
-            }
-        }
-        //Debug.Log(s);
-
-
-        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-        {
-            for(int j = 1; j < GameSettings.GRID_HEIGHT; j++)
-            {
-                deductions[i, j] += deductions[i, j-1];
-            }
-        }
-
-        for (int i = 0; i < index; i++)
-        {
-            deductions[chain[i].x, chain[i].y] = -1;
-        }
-
-        s = "";
-        for (int j = GameSettings.GRID_HEIGHT - 1; j >= 0; j--)
-        {
-            s += "/n";
-            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-            {
-                s += "  " + deductions[i, j].ToString();
-            }
-        }
-        //Debug.Log(s);
-
-  
-        return deductions;
-    }
     public void GridRefill(List<Element> chain)
     {
         if (reShuffling)
@@ -221,6 +159,103 @@ public class GridController : MonoBehaviour
         SaveSystem.SaveGame(-1, true, grid, DependencyManager.Instance.gameController.HighScore);
         GameEndCheck();
     }
+    #endregion
+
+    #region private functions
+    private void SetSize()
+    {
+        transform.GetComponent<RectTransform>().sizeDelta = GameSettings.GRID_SIZE;
+
+        linesRectTransform = transform.GetChild(0).GetComponent<RectTransform>();
+        linesRectTransform.sizeDelta = GameSettings.GRID_SIZE;
+    }
+
+    private void GridSetup()
+    {
+        SetSize();
+
+        grid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+
+        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                GenerateBlock(i, j);
+            }
+        }
+       DependencyManager.Instance.gameController.maxElement = GetMaxElement();
+        startingGrid = false;
+    }
+
+    private void GenerateBlock(int i, int j)
+    {
+        GameObject element = Pooler.Instance.GetBlock();//Instantiate(block) as GameObject;
+        //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
+
+        element.transform.SetParent(this.transform, false);
+
+
+        grid[i, j] = element.GetComponent<Element>();
+
+        if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
+        {
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
+        }
+        else 
+        {
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, GameManager.Instance.gameData.SavedGrid[i, j]);
+        }
+    }
+
+    private int[,] GetDestroyedBlocks(List<Element> chain)
+    {
+        int[,] deductions = new int[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+
+        for(int i = 0; i < index; i++)
+        {
+            deductions[chain[i].x, chain[i].y]++;
+        }
+
+        string s = "";
+        for (int j = GameSettings.GRID_HEIGHT - 1; j >= 0; j--)
+        {
+            s += "";
+            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+            {
+                s += deductions[i, j].ToString();
+            }
+        }
+        //Debug.Log(s);
+
+
+        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+        {
+            for(int j = 1; j < GameSettings.GRID_HEIGHT; j++)
+            {
+                deductions[i, j] += deductions[i, j-1];
+            }
+        }
+
+        for (int i = 0; i < index; i++)
+        {
+            deductions[chain[i].x, chain[i].y] = -1;
+        }
+
+        s = "";
+        for (int j = GameSettings.GRID_HEIGHT - 1; j >= 0; j--)
+        {
+            s += "/n";
+            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+            {
+                s += "  " + deductions[i, j].ToString();
+            }
+        }
+        //Debug.Log(s);
+
+  
+        return deductions;
+    }
+   
     private IEnumerator DestroyBlock(Element e)
     {
         //DependencyManager.Instance.vfx.PlayBreakingFX(e);
@@ -228,20 +263,8 @@ public class GridController : MonoBehaviour
         yield return new WaitForSeconds(ElementDestroyDuration);
         Pooler.Instance.DestroyBlock(e.gameObject);
     }
-    public Num GetMaxElement()
-    {
-        Num tempMax = grid[0, 0].num;
-
-        for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-        {
-            for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
-            {
-                tempMax = Num.Max(grid[i, j].num, tempMax);
-            }
-        }
-        return tempMax;
-    }
-    IEnumerator GameEndCheck()
+    
+    private IEnumerator GameEndCheck()
     {
         for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
         {
@@ -275,17 +298,7 @@ public class GridController : MonoBehaviour
         SaveSystem.DeleteGameData();
         //return true; // No match found, game has ended
     }
-    public void ElementReShuffle(Num MaxNum, Num MinNum)
-    {
-        reShuffleOffset++;
 
-        if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
-        {
-            Debug.Log("reshuffle");
-            StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ReShuffleContinued, DependencyManager.Instance.newBlockPopup, MinNum, MaxNum));
-            DependencyManager.Instance.vfx.PlayCelebrationVfx();
-        }
-    }
     private void ReShuffleContinued(Num MinNum)
     {
         ADTest.Instance.LoadInterstitialAd();
@@ -318,4 +331,5 @@ public class GridController : MonoBehaviour
         DependencyManager.Instance.gameController.minElement = Num.Increment(MinNum, 1);
         reShuffling = false;
     }
+    #endregion
 }
