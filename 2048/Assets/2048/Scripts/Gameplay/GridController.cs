@@ -20,8 +20,6 @@ public class GridController : MonoBehaviour
     public Element[,]   grid;
     public Vector2      ElementfallOffset;
 
-    private int index;
-
     public float ElementFallSpeed = 3f;
 
     //Public hidden variables.
@@ -56,7 +54,7 @@ public class GridController : MonoBehaviour
         if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
         {
             Debug.Log("reshuffle");
-            StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ReShuffleContinued, DependencyManager.Instance.newBlockPopup, MinNum));
+            StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ReShuffleContinued, DependencyManager.Instance.newBlockPopup, MinNum, MaxNum));
             DependencyManager.Instance.vfx.PlayCelebrationVfx();
         }
     }
@@ -187,7 +185,7 @@ public class GridController : MonoBehaviour
         startingGrid = false;
     }
 
-    private void GenerateBlock(int i, int j)
+    private void GenerateBlock(int i, int j, int BlocksBelow = 0)
     {
         GameObject element = Pooler.Instance.GetBlock();//Instantiate(block) as GameObject;
         //GameObject element = DependencyManager.Instance.pooler.SpawnfromPool();
@@ -199,11 +197,11 @@ public class GridController : MonoBehaviour
 
         if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed);
         }
         else 
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallDuration, GameManager.Instance.gameData.SavedGrid[i, j]);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed, GameManager.Instance.gameData.SavedGrid[i, j]);
         }
     }
 
