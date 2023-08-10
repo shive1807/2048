@@ -118,11 +118,12 @@ public class RewardManager : Singleton<RewardManager>
                 dailyReward.collectedImg.SetActive(true);
                 dailyReward.inActiveImg.SetActive(true);
 
+                rewardCollected = 1;
+                GemsManager.Instance.AddGems(rewardAmount + (currentStreak * rewardMultiplier));
+
                 // Streak update
                 currentStreak++;
 
-                rewardCollected = 1;
-                GemsManager.Instance.AddGems(rewardAmount + (currentStreak * rewardMultiplier));
                 SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak, DateTime.Now, rewardCollected);
             }
             else
