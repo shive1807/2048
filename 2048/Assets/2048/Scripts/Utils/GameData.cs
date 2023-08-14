@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameData
 {
     public Num[,] SavedGrid = null;
-    public double HighScore = -1;
+    public double HighScore = 0;
     public int Gems = 0;
 
     public int SoundPref = 1;

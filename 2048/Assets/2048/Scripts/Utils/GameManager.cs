@@ -1,15 +1,16 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 
 public class GameManager : Singleton<GameManager>
 {
     [HideInInspector] public GameData gameData;
-    void Start()
+
+    protected override void Awake()
     {
-        gameData = SaveSystem.LoadGame();
+        LoadGameData();
     }
-    public void ReloadGameData()
+
+    public void LoadGameData()
     {
         gameData = SaveSystem.LoadGame();
     }

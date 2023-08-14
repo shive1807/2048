@@ -19,11 +19,10 @@ public class IAP : MonoBehaviour, IStoreListener
     public static string unlock_all_items = "unlock_all_items";
     public static string unlock_inapp_item = "unlock_inapp_item";
     
-    public static string buy_200_coins = "buy_200_coins";
-    public static string buy_500_coins = "buy_500_coins";
-    public static string buy_1000_coins = "buy_1000_coins";
-    public static string buy_2000_coins = "buy_2000_coins";
-    public static string buy_5000_coins = "buy_5000_coins";
+    public static string buy_50_gems = "buy_50_coins";
+    public static string buy_100_gems = "buy_100_coins";
+    public static string buy_300_gems = "buy_300_coins";
+    public static string buy_1000_gems = "buy_1000_coins";
     
     void Start()
     {
@@ -47,11 +46,10 @@ public class IAP : MonoBehaviour, IStoreListener
         builder.AddProduct(Remove_ads, ProductType.NonConsumable);
         builder.AddProduct(unlock_all_items, ProductType.NonConsumable);
         builder.AddProduct(unlock_inapp_item, ProductType.NonConsumable);
-        builder.AddProduct(buy_200_coins, ProductType.Consumable);
-        builder.AddProduct(buy_500_coins, ProductType.Consumable);
-        builder.AddProduct(buy_1000_coins, ProductType.Consumable);
-        builder.AddProduct(buy_2000_coins, ProductType.Consumable);
-        builder.AddProduct(buy_5000_coins, ProductType.Consumable);
+        builder.AddProduct(buy_50_gems, ProductType.Consumable);
+        builder.AddProduct(buy_100_gems, ProductType.Consumable);
+        builder.AddProduct(buy_300_gems, ProductType.Consumable);
+        builder.AddProduct(buy_1000_gems, ProductType.Consumable);
 
         UnityPurchasing.Initialize(this, builder);
     }
@@ -65,43 +63,24 @@ public class IAP : MonoBehaviour, IStoreListener
 
     public void BuyConsumableRemove_Ads()
     {
-
         BuyProductID(Remove_ads);
     }
-    public void BuyConsumableUnlock_All()
+    public void Buy50gems()
     {
-
-        BuyProductID(unlock_all_items);
+        BuyProductID(buy_50_gems);
     }
-   
-    public void UnlockAllInapp()
+    public void Buy100Coins()
     {
-        BuyProductID(unlock_inapp_item);
-    }
-    public void Buy200Coins()
+        BuyProductID(buy_100_gems);
+    } public void Buy300Coins()
     {
-
-        BuyProductID(buy_200_coins);
-    }
-    public void Buy500Coins()
-    {
-
-        BuyProductID(buy_500_coins);
+        BuyProductID(buy_300_gems);
     }
     public void Buy1000Coins()
     {
-
-        BuyProductID(buy_1000_coins);
-    } public void Buy2000Coins()
-    {
-
-        BuyProductID(buy_2000_coins);
+        BuyProductID(buy_1000_gems);
     }
-    public void Buy5000Coins()
-    {
 
-        BuyProductID(buy_5000_coins);
-    }
     public string Getproductpricefromgoogle(string id)
     {
         if (m_StoreController != null && m_StoreController.products != null)
@@ -116,7 +95,7 @@ public class IAP : MonoBehaviour, IStoreListener
     }
 
 
-    public static bool notopenAdcall=false;
+    public static bool notopenAdcall = false;
     void BuyProductID(string productId)
     {
         notopenAdcall = true;
@@ -214,64 +193,39 @@ public class IAP : MonoBehaviour, IStoreListener
             Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 
             print("Purcahse Remove ads");
-            PlayerPrefs.SetInt("RemoveAds", 1);
+
             m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(Remove_ads));
         }
-        if (String.Equals(args.purchasedProduct.definition.id, unlock_all_items, StringComparison.Ordinal))
+        if (String.Equals(args.purchasedProduct.definition.id, buy_50_gems, StringComparison.Ordinal))
         {
             Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-            PlayerPrefs.SetInt("RemoveAds", 1);
-
-
-            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(unlock_all_items));
-
+            GemsManager.Instance.AddGems(50);
         }
-        if (String.Equals(args.purchasedProduct.definition.id, unlock_inapp_item, StringComparison.Ordinal))
+        if (String.Equals(args.purchasedProduct.definition.id, buy_100_gems, StringComparison.Ordinal))
         {
             Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
+            GemsManager.Instance.AddGems(100);
 
-            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(unlock_inapp_item));
-
-
+            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_100_gems));
         }
-        if (String.Equals(args.purchasedProduct.definition.id, buy_200_coins, StringComparison.Ordinal))
+        if (String.Equals(args.purchasedProduct.definition.id, buy_300_gems, StringComparison.Ordinal))
         {
             Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-            PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore") + 200);
-            GemsManager.Instance.AddGems(30);
+            GemsManager.Instance.AddGems(300);
 
+            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_300_gems));
         }
-        //if (String.Equals(args.purchasedProduct.definition.id, buy_500_coins, StringComparison.Ordinal))
-        //{
-        //    Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-        //    PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore") + 500);
-        //    GemsManager.Instance.AddGems(2000);
+        if (String.Equals(args.purchasedProduct.definition.id, buy_1000_gems, StringComparison.Ordinal))
+        {
+            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
+            GemsManager.Instance.AddGems(1000);
 
-        //    m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_500_coins));
-
-        //}
-
-        //if (String.Equals(args.purchasedProduct.definition.id, buy_1000_coins, StringComparison.Ordinal))
-        //{
-        //    Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-        //    PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore") + 1000);
-        //    m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_1000_coins));
-        //}
-        //if (String.Equals(args.purchasedProduct.definition.id, buy_2000_coins, StringComparison.Ordinal))
-        //{
-        //    Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-        //    PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore") + 2000);
-        //}
-
-        //if (String.Equals(args.purchasedProduct.definition.id, buy_5000_coins, StringComparison.Ordinal))
-        //{
-        //    Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-        //    PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore") + 5000);
-        //}
-        //else
-        //{
-        //    Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
-        //}
+            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_1000_gems));
+        }
+        else
+        {
+            Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
+        }
 
         // Return a flag indicating whether this product has completely been received, or if the application needs 
         // to be reminded of this purchase at next app launch. Use PurchaseProcessingResult.Pending when still 

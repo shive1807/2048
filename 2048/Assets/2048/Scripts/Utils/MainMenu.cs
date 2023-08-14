@@ -143,6 +143,7 @@ public class MainMenu : MonoBehaviour
             gameObject.SetActive(false);
         };
 
+
         PlusButton.onClick.AddListener(OpenStore);
         StoreButton.onClick.AddListener(OpenStore);
 

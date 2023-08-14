@@ -10,6 +10,7 @@ public class DependencyManager : MonoBehaviour
     public GameManager      gameManager;
     public GemsManager      gemsManager;
     public Login            login;
+    public IAP              iap;
 
     [Header("GAME SCENE DEPENDENCIES")]
     public InputManager     inputManager;

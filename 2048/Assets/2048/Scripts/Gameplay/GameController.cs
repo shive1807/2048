@@ -38,7 +38,6 @@ public class GameController : MonoBehaviour
     [SerializeField] GameObject smashImg;
 
     [HideInInspector] public GraphicRaycaster raycaster;
-    private bool raycastBlocked = false;
 
     private void Start()
     {
@@ -204,8 +203,7 @@ public class GameController : MonoBehaviour
     {
         if (block)
         {
-            //raycaster.enabled = false;
-            raycastBlocked = true;
+            raycaster.enabled = false;
         }
         else
         {

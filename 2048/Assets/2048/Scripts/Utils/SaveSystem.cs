@@ -38,13 +38,14 @@ public static class SaveSystem
         BinaryFormatter formatter = new BinaryFormatter();
 
         string path = Application.persistentDataPath + "/GameData.data";
+        Debug.Log(path);
         FileStream stream = new FileStream(path, FileMode.Create);
         Debug.Log(soundPref);
         GameData gameData = new GameData(gems, grid, highScore, soundPref, musicPref, vibrationPref, rewardStreak, date, collected);
 
         formatter.Serialize(stream, gameData);
         stream.Close();
-        GameManager.Instance.ReloadGameData();
+        GameManager.Instance.LoadGameData();
     }
     public static GameData LoadGame()
     {

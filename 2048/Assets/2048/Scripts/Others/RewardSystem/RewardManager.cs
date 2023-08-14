@@ -46,7 +46,6 @@ public class RewardManager : Singleton<RewardManager>
     }
     private void DayCheck()
     {
-        int currentDay = 0;
         TimeSpan timeSinceLastClaim = DateTime.Now - lastClaimDate;
 
         if (timeSinceLastClaim.TotalDays >= 1)
@@ -57,27 +56,22 @@ public class RewardManager : Singleton<RewardManager>
                 currentStreak = 0;
                 SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak);
             }
-            currentDay = currentStreak;
-        }
-        else
-        {
-            currentDay = currentStreak;
         }
 
-        UIUpdate(currentDay);
+        UIUpdate(currentStreak);
     }
-    private void UIUpdate(int currentDay)
+    private void UIUpdate(int streak)
     {
         for (int i = 0; i < Days.Length; i++)
         {
-            if (currentDay == i)
+            if (streak == i)
             {
                 if(rewardCollected == 1)
                 {
                     Days[i].inActiveImg.SetActive(true);
-                    Days[i].collectedImg.SetActive(true);
+                    Days[i].collectedImg.SetActive(false);
                     Days[i].isActive = false;
-                    Days[i].isCollected = true;
+                    Days[i].isCollected = false;
                 }
                 else if(rewardCollected == 0)
                 {
@@ -89,14 +83,14 @@ public class RewardManager : Singleton<RewardManager>
             }
             else
             {
-                if (currentDay > i)
+                if (streak > i)
                 {
                     Days[i].inActiveImg.SetActive(true);
                     Days[i].collectedImg.SetActive(true);
                     Days[i].isActive = false;
                     Days[i].isCollected = true;
                 }
-                else if (currentDay < i)
+                else if (streak < i)
                 {
                     Days[i].inActiveImg.SetActive(true);
                     Days[i].collectedImg.SetActive(false);
@@ -124,7 +118,7 @@ public class RewardManager : Singleton<RewardManager>
                 // Streak update
                 currentStreak++;
 
-                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak, DateTime.Now, rewardCollected);
+                SaveSystem.SaveGame(GemsManager.Instance.gems, false, null, -1, -1, -1, -1, currentStreak, DateTime.Now, rewardCollected);
             }
             else
             {
