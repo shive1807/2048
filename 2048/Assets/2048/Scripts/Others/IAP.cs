@@ -8,7 +8,7 @@ using UnityEngine.Purchasing;
 // one of the existing Survival Shooter scripts.
 
 // Deriving the Purchaser class from IStoreListener enables it to receive messages from Unity Purchasing.
-public class IAP : MonoBehaviour, IStoreListener
+public class IAP : Singleton<IAP>, IStoreListener
 {
 
     private static IStoreController m_StoreController;          // The Unity Purchasing system.

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Store : MonoBehaviour
@@ -24,23 +23,35 @@ public class Store : MonoBehaviour
 
         StoreItemButton_1.onClick.AddListener(() =>
         {
-            DependencyManager.Instance.iap.BuyConsumableRemove_Ads();
+            IAP.Instance.BuyConsumableRemove_Ads();
+            ButtonClickSFX();
         });
         StoreItemButton_3.onClick.AddListener(() =>
         {
-            DependencyManager.Instance.iap.Buy50gems();
+            IAP.Instance.Buy50gems();
+            ButtonClickSFX();
         });
         StoreItemButton_4.onClick.AddListener(() =>
         {
-            DependencyManager.Instance.iap.Buy100Coins();
+            IAP.Instance.Buy100Coins();
+            ButtonClickSFX();
         });
         StoreItemButton_5.onClick.AddListener(() =>
         {
-            DependencyManager.Instance.iap.Buy300Coins();
+            IAP.Instance.Buy300Coins();
+            ButtonClickSFX();
         });
         StoreItemButton_6.onClick.AddListener(() =>
         {
-            DependencyManager.Instance.iap.Buy1000Coins();
+            IAP.Instance.Buy1000Coins();
+            ButtonClickSFX();
         });
+    }
+
+    /// Supporting functions
+    
+    void ButtonClickSFX()
+    {
+        AudioManager.Instance.PlaySound("ButtonClick");
     }
 }
