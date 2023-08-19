@@ -4,8 +4,8 @@ public class ADTest : Singleton<ADTest>
 {
     private void Start()
     {
-        AdManager.Instance.RequestInterstitial();
-        AdManager.Instance.RequestRewardedAd();
+        AdManager.Instance.LoadInterstitialAd();
+        AdManager.Instance.LoadRewardedAd();
         AdManager.Instance.RequestBanner();
     }
 
