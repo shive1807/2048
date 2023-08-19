@@ -1,19 +1,19 @@
 using System;
 using UnityEngine;
-[System.Serializable]
+[Serializable]
 public class GameData
 {
     public Num[,] SavedGrid = null;
-    public double HighScore = 0;
-    public int Gems = 0;
+    public double HighScore = -1;
+    public int Gems = -1;
 
     public int SoundPref = 1;
     public int MusicPref = 1;
     public int VibrationPref = 1;
 
     public DateTime LastClaimRewardDate = DateTime.Now;
-    public int RewardClaimStreak = 0;
-    public int Collected = 0;
+    public int RewardClaimStreak = -1;
+    public int Collected = -1;
     public GameData(int gems = -1, Num[,] Grid = null, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1, int rewardStreak = -1, DateTime date = default, int collected = -1)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];

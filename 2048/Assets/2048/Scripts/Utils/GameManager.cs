@@ -3,13 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    [HideInInspector] public GameData gameData;
+    public GameData gameData = new GameData();
 
     protected override void Awake()
     {
         LoadGameData();
     }
-
+    private void Start()
+    {
+        LoadGameData();
+    }
     public void LoadGameData()
     {
         gameData = SaveSystem.LoadGame();

@@ -201,14 +201,14 @@ public class GameController : MonoBehaviour
     }
     public void BlockRaycast(bool block)
     {
-        if (block)
-        {
-            raycaster.enabled = false;
-        }
-        else
-        {
-            raycaster.enabled = true;
-        }
+        //if (block)
+        //{
+        //    raycaster.enabled = false;
+        //}
+        //else
+        //{
+        //    raycaster.enabled = true;
+        //}
     }
     public IEnumerator SwapBlock(Element e)
     {

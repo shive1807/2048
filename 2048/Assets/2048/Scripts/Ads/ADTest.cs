@@ -18,4 +18,5 @@ public class ADTest : Singleton<ADTest>
     {
         AdManager.Instance.ShowRewardedAd();
     }   
+
 }

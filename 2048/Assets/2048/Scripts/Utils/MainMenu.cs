@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEditor;
 using Unity.VisualScripting;
-using GleyDailyRewards;
 
 public class MainMenu : MonoBehaviour
 {

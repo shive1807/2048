@@ -158,13 +158,13 @@ public class GamePlay : MonoBehaviour
 
         PauseButton.onClick.AddListener(() =>
         {
-            ButtonsContainer.transform.GetChild(5).gameObject.SetActive(true);
+            ButtonsContainer.transform.GetChild(2).gameObject.SetActive(true);
             DependencyManager.Instance.gameController.BlockRaycast(true);
             ButtonClickSound();
         });
         ResumeButton.onClick.AddListener(() =>
         {
-            ButtonsContainer.transform.GetChild(5).gameObject.SetActive(false);
+            ButtonsContainer.transform.GetChild(2).gameObject.SetActive(false);
             DependencyManager.Instance.gameController.BlockRaycast(false);
             ButtonClickSound();
         });
