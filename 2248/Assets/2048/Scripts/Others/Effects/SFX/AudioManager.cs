@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AudioManager : Singleton<AudioManager>
@@ -46,12 +44,12 @@ public class AudioManager : Singleton<AudioManager>
                 UnMutedImage.SetActive(false);
                 muteSound = 1;
             }
-            SaveSystem.SaveGame(-1, false, null, -1, muteSound);
         }
         else
         {
             AutoToggleSound();
         }
+        //SaveSystem.SaveGame(-1, false, null, -1, muteSound);
     }
     public void AutoToggleSound()
     {
@@ -69,7 +67,6 @@ public class AudioManager : Singleton<AudioManager>
             UnMutedImage.SetActive(false);
             muteSound = 1;
         }
-        SaveSystem.SaveGame(-1, false, null, -1, muteSound);
     }
     public void ToggleMusic(bool change, int pref)
     {
@@ -89,12 +86,12 @@ public class AudioManager : Singleton<AudioManager>
                 musicMutedImage.SetActive(true);
                 muteMusic = 1;
             }
-            SaveSystem.SaveGame(-1, false, null, -1, -1, muteMusic);
         }
         else
         {
             AutoToggleMusic();
         }
+        SaveSystem.SaveGame(-1, false, null, -1, -1, muteMusic);
     }
     public void AutoToggleMusic()
     {
@@ -112,7 +109,6 @@ public class AudioManager : Singleton<AudioManager>
             musicMutedImage.SetActive(true);
             muteMusic = 1;
         }
-        SaveSystem.SaveGame(-1, false, null, -1, -1, muteMusic);
     }
     public void PlaySound(string sound)
     {

@@ -83,14 +83,7 @@ public class GridController : MonoBehaviour
 
             for (int i = 0; i < index; i++)
             {
-
                 StartCoroutine(DestroyBlock(chain[i]));
-
-                //Pooler.Instance.DestroyBlock(chain[i].gameObject);
-                //Destroy(chain[i].gameObject);
-                //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
-
-                //Debug.Log("refil");
             }
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -218,7 +211,7 @@ public class GridController : MonoBehaviour
 
         if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset + new Vector2(0, GameSettings.BLOCK_SIZE + GameSettings.SPACING), ElementFallSpeed);
         }
         else 
         {

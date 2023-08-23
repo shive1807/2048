@@ -176,6 +176,8 @@ public class GameController : MonoBehaviour
         if(HighScore < tempHighScore)
         {
             HighScore = tempHighScore;
+
+            SaveSystem.SaveGame(-1, false, null, HighScore);
         }
     }
 
@@ -261,9 +263,6 @@ public class GameController : MonoBehaviour
         //hammer animation
         hammer.gameObject.SetActive(true);
 
-        //----------------Bug Here---------------------------
-        //can't get accurate position of the element
-
         hammer.DOAnchorPos(e.gameObject.transform.position, smashTime);  
         yield return new WaitForSeconds(smashTime);
 
@@ -277,11 +276,10 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(.1f);
 
         hammer.gameObject.SetActive(false);
-        //---------------------------------------------------------
         
         // vibration
         if(VibrationManager.Instance != null)
-            VibrationManager.Instance.Vibrate(500);
+            VibrationManager.Instance.Vibrate(100);
 
         //destroying block
         chain.Add(e);
@@ -300,7 +298,7 @@ public class GameController : MonoBehaviour
 
         // Vibration
         if(VibrationManager.Instance != null)
-            VibrationManager.Instance.Vibrate(500);
+            VibrationManager.Instance.Vibrate(100);
     }
 
     private void CreateLine(Element e1, Element e2)
@@ -363,7 +361,7 @@ public class GameController : MonoBehaviour
 
         // vibration
         if(VibrationManager.Instance != null)
-            VibrationManager.Instance.Vibrate(500);
+            VibrationManager.Instance.Vibrate(100);
 
         //SFX
         if(AudioManager.Instance != null)
@@ -385,7 +383,7 @@ public class GameController : MonoBehaviour
 
         // vibration
         if(VibrationManager.Instance != null)
-            VibrationManager.Instance.Vibrate(500);
+            VibrationManager.Instance.Vibrate(100);
 
         // SFX
         if(AudioManager.Instance != null)

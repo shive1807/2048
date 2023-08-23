@@ -45,7 +45,7 @@ public class RewardManager : Singleton<RewardManager>
         if(currentStreak >= Days.Length)
         {
             currentStreak = 0;
-            SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak);
+            //SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak);
         }
         DayCheck();
     }
@@ -59,7 +59,7 @@ public class RewardManager : Singleton<RewardManager>
             if (timeSinceLastClaim.TotalDays > 2)
             {
                 currentStreak = 0;
-                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak);
+                //SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, currentStreak);
             }
         }
 
