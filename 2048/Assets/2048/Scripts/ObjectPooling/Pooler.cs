@@ -47,7 +47,7 @@ public class Pooler : Singleton<Pooler>
         element.SetActive(false);
         Element e = element.GetComponent<Element>();
         e.selected = false;
-        e.rectTransform.localScale = new Vector2(1.2f, 1.2f);
+        e.rectTransform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
         pool.Enqueue(element);
     }
 }

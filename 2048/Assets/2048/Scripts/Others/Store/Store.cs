@@ -23,27 +23,27 @@ public class Store : MonoBehaviour
 
         StoreItemButton_1.onClick.AddListener(() =>
         {
-            //IAP.Instance.BuyConsumableRemove_Ads();
+            IAP.Instance.BuyConsumableRemove_Ads();
             ButtonClickSFX();
         });
         StoreItemButton_3.onClick.AddListener(() =>
         {
-            //IAP.Instance.Buy50gems();
+            IAP.Instance.Buy50gems();
             ButtonClickSFX();
         });
         StoreItemButton_4.onClick.AddListener(() =>
         {
-            //IAP.Instance.Buy100Coins();
+            IAP.Instance.Buy100Coins();
             ButtonClickSFX();
         });
         StoreItemButton_5.onClick.AddListener(() =>
         {
-            //IAP.Instance.Buy300Coins();
+            IAP.Instance.Buy300Coins();
             ButtonClickSFX();
         });
         StoreItemButton_6.onClick.AddListener(() =>
         {
-            //IAP.Instance.Buy1000Coins();
+            IAP.Instance.Buy1000Coins();
             ButtonClickSFX();
         });
     }
