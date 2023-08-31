@@ -1,9 +1,12 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class GemsManager : Singleton<GemsManager>
 {
     public int gems = 0;
+
+    [HideInInspector] public UnityAction<int> updateGemsTxt;
 
     private void Start()
     {
@@ -11,12 +14,15 @@ public class GemsManager : Singleton<GemsManager>
         {
             gems = GameManager.Instance.gameData.Gems;
         }
-        //GemsTxt.instance.SetText(gems);
+
+        updateGemsTxt?.Invoke(gems);
     }
     public void AddGems(int amount)
     {
         gems += amount;
-        GemsTxt.instance.SetText(gems);
+
+        updateGemsTxt?.Invoke(gems);
+
         SaveSystem.SaveGame(gems);
 
         DataManager.Gems = gems;
@@ -26,7 +32,9 @@ public class GemsManager : Singleton<GemsManager>
         if (gems > 0)
         {
             gems -= amount;
-            GemsTxt.instance.SetText(gems);
+
+            updateGemsTxt?.Invoke(gems);
+
             SaveSystem.SaveGame(gems);
 
             DataManager.Gems = gems;
