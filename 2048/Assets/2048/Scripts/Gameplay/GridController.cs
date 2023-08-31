@@ -319,7 +319,7 @@ public class GridController : MonoBehaviour
 
     private void ReShuffleContinued(Num MinNum)
     {
-        //ADTest.Instance.LoadInterstitialAd();
+        ADTest.Instance.LoadInterstitialAd();
         reShuffleOffset = 0;
         reShuffling = true;
         List<Element> list = new List<Element>();

@@ -28,22 +28,29 @@ public class Store : MonoBehaviour
         });
         StoreItemButton_3.onClick.AddListener(() =>
         {
-            IAP.Instance.Buy50gems();
+            //IAP.Instance.Buy50gems();
+            GemsManager.Instance.AddGems(50);
             ButtonClickSFX();
         });
         StoreItemButton_4.onClick.AddListener(() =>
         {
-            IAP.Instance.Buy100Coins();
+            //IAP.Instance.Buy100Coins();
+            GemsManager.Instance.AddGems(100);
+
             ButtonClickSFX();
         });
         StoreItemButton_5.onClick.AddListener(() =>
         {
-            IAP.Instance.Buy300Coins();
+            //IAP.Instance.Buy300Coins();
+            GemsManager.Instance.AddGems(300);
+
             ButtonClickSFX();
         });
         StoreItemButton_6.onClick.AddListener(() =>
         {
-            IAP.Instance.Buy1000Coins();
+            //IAP.Instance.Buy1000Coins();
+            GemsManager.Instance.AddGems(1000);
+
             ButtonClickSFX();
         });
     }

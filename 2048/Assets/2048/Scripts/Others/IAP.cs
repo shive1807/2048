@@ -112,14 +112,12 @@ public class IAP : Singleton<IAP>, IStoreListener
                 // ... buy the product. Expect a response either through ProcessPurchase or OnPurchaseFailed 
                 m_StoreController.InitiatePurchase(product);
             }
-            // Otherwise ...
             else
             {
                 // ... report the product look-up failure situation  
                 Debug.Log("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
             }
         }
-        // Otherwise ...
         else
         {
             // ... report the fact Purchasing has not succeeded initializing yet. Consider waiting longer or 
