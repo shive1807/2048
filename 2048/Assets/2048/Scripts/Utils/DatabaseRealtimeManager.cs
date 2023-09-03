@@ -1,42 +1,138 @@
-//using UnityEngine;
-//using Firebase.Database;
-//using System.Collections;
-//using System.Collections.Generic;
+using Firebase;
+using Firebase.Database;
+using Firebase.Extensions;
+using UnityEngine;
 
-//public class DatabaseRealtimeManager : MonoBehaviour
-//{
-//    private DatabaseReference reference;
+public class DatabaseRealtimeManager : MonoBehaviour
+{
+    private DatabaseReference databaseReference;
 
-//    private void Start()
-//    {
-//        // Get the root reference location of the database.
-//        reference = FirebaseDatabase.DefaultInstance.RootReference;
+    public string UserID;
+    public User UserData;
 
-//        writeNewUser("shiva", "bhati", "shivambhati21@gmail.com");
-//    }
+    private void Start()
+    {
+        // Initialize Firebase
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+            FirebaseApp app = FirebaseApp.DefaultInstance;
 
-//    private void writeNewUser(string userId, string name, string email)
-//    {
-//        User user = new User(name, email);
-//        string json = JsonUtility.ToJson(user);
+            // Check for any initialization errors
+            if (task.Exception != null)
+            {
+                Debug.LogError($"Firebase Initialization Error: {task.Exception}");
+                return;
+            }
 
-//        reference.Child("users").Child(userId).SetRawJsonValueAsync(json);
-//    }
-//}
+            // Set up the database reference
+            databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
-//public class User
-//{
-//    public string username;
-//    public string email;
-//    public GameData gameData;
+            // Loading user data
+            ReadDataFromFirebase();  // needs user id
+        });
+    }
 
-//    public User()
-//    {
-//    }
+    public void CreateNewUser()
+    {
+        if (databaseReference != null)
+        {
+            // unique user id for every device
+            UserID = SystemInfo.deviceUniqueIdentifier;
 
-//    public User(string username, string email)
-//    {
-//        this.username = username;
-//        this.email = email;
-//    }
-//}
+            // Create a new data entry
+            User playerData = new User(UserData.Username, UserData.Email, UserData.GameData);
+
+            // Convert the data to JSON format
+            string json = JsonUtility.ToJson(playerData);
+
+            // Push the data to the database (creates a new child node with a unique key)
+            DatabaseReference newChildReference = databaseReference.Child("Users").Child(UserID).Push();
+            newChildReference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    Debug.Log("Data written to Firebase!");
+                }
+                else if (task.IsFaulted)
+                {
+                    Debug.LogError($"Error writing data to Firebase: {task.Exception}");
+                }
+            });
+        }
+    }
+
+    public void ReadDataFromFirebase(string userId = default)
+    {
+        if (databaseReference != null)
+        {
+            // Create a reference to the user's data based on their unique ID
+            DatabaseReference userReference = databaseReference.Child("Users").Child(userId);
+
+            // Read the data from the database
+            userReference.GetValueAsync().ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    DataSnapshot snapshot = task.Result;
+                    if (snapshot.Exists)
+                    {
+                        // Deserialize the JSON data into a User object
+                        User userData = JsonUtility.FromJson<User>(snapshot.GetRawJsonValue());
+
+                        UserData = userData;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("User data not found in the database.");
+                        CreateNewUser();
+                    }
+                }
+                else if (task.IsFaulted)
+                {
+                    Debug.LogError($"Error reading data from Firebase: {task.Exception}");
+                }
+            });
+        }
+    }
+
+    public void UpdateUserData(string userId, User newData)
+    {
+        if (databaseReference == null)
+        {
+            Debug.LogError("Firebase is not initialized.");
+            return;
+        }
+
+        // Create a reference to the user's data node
+        databaseReference = databaseReference.Child("Users").Child(userId);
+
+        // Update the data
+        databaseReference.Child("user").SetValueAsync(newData).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Error updating user data: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                Debug.Log("User data updated successfully.");
+            }
+        });
+    }
+}
+
+
+[System.Serializable]
+public class User
+{
+    public string Username;
+    public string Email;
+    public GameData GameData;
+
+    public User(string name, string email, GameData gameData)
+    {
+        this.Username = name;
+        this.Email = email;
+        this.GameData = gameData;
+    }
+}

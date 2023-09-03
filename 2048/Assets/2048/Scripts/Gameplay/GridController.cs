@@ -60,7 +60,7 @@ public class GridController : MonoBehaviour
 
         if (Num.CurrentDec(MaxNum) > 0 && reShuffleOffset > reShuffleThresh)
         {
-            //AdManager.Instance.ShowInterstitial();
+            ADTest.Instance.LoadInterstitialAd();
             Debug.Log("reshuffle");
             StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ReShuffleContinued, DependencyManager.Instance.newBlockPopup, MinNum, MaxNum));
             DependencyManager.Instance.vfx.PlayCelebrationVfx();
@@ -319,7 +319,7 @@ public class GridController : MonoBehaviour
 
     private void ReShuffleContinued(Num MinNum)
     {
-        ADTest.Instance.LoadInterstitialAd();
+        //ADTest.Instance.LoadInterstitialAd();
         reShuffleOffset = 0;
         reShuffling = true;
         List<Element> list = new List<Element>();
