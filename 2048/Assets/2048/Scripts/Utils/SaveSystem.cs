@@ -5,7 +5,9 @@ using System;
 
 public static class SaveSystem
 {
-    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, int soundPref = -1, int musicPref = -1, int vibrationPref = -1, int rewardStreak = -1, DateTime date = default, int collected = -1)
+    public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, 
+        int soundPref = -1, int musicPref = -1, int vibrationPref = -1, int rewardStreak = -1, DateTime date = default, int collected = -1,
+        int firstLogin = -1, User user = default)
     {
         GameData gameData = GameManager.Instance.gameData;
 
@@ -37,6 +39,7 @@ public static class SaveSystem
         gameData.RewardClaimStreak = (rewardStreak == -1) ? gameData.RewardClaimStreak : rewardStreak;
         gameData.Collected = (collected == -1) ? gameData.Collected : collected;
         gameData.LastClaimRewardDate = (date == default) ? gameData.LastClaimRewardDate : date;
+        gameData.User = (user == null) ? gameData.User : user;
 
         BinaryFormatter formatter = new BinaryFormatter();
 
@@ -47,6 +50,7 @@ public static class SaveSystem
         formatter.Serialize(stream, gameData);
         stream.Close();
 
+        //DatabaseRealtimeManager.Instance.UpdateUserData(new User(gameData));
         GameManager.Instance.LoadGameData();
     }
     public static GameData LoadGame()

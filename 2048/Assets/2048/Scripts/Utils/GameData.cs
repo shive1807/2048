@@ -14,7 +14,10 @@ public class GameData
     public DateTime LastClaimRewardDate = DateTime.Now;
     public int RewardClaimStreak = 0;
     public int Collected = 0;
-    public GameData(int gems = 0, Num[,] Grid = null, double highScore = 0, int soundPref = 1, int musicPref = 1, int vibrationPref = 1, int rewardStreak = 0, DateTime date = default, int collected = 0)
+
+    public int FirstLogin = 1;
+    public User User;
+    public GameData(int gems = 0, Num[,] Grid = null, double highScore = 0, int soundPref = 1, int musicPref = 1, int vibrationPref = 1, int rewardStreak = 0, DateTime date = default, int collected = 0, int firstLogin = 1, User user = default)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
         
@@ -35,6 +38,10 @@ public class GameData
         RewardClaimStreak = rewardStreak;
 
         Collected = collected;
+
+        FirstLogin = firstLogin;
+
+        User = user;
     }
 }
 

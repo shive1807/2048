@@ -3,7 +3,7 @@ using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
 
-public class DatabaseRealtimeManager : MonoBehaviour
+public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
 {
     private DatabaseReference databaseReference;
 
@@ -24,38 +24,69 @@ public class DatabaseRealtimeManager : MonoBehaviour
                 return;
             }
 
+            // unique user id for every device
+            //UserID = SystemInfo.deviceUniqueIdentifier;
+
+            UserID = GameManager.Instance.gameData.User.UserID;
+
             // Set up the database reference
             databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
-            // Loading user data
-            ReadDataFromFirebase();  // needs user id
+            //// Loading user data
+            //ReadDataFromFirebase();  // needs user id
+            UserDataSetup(UserID);
+
         });
     }
 
     public void CreateNewUser()
     {
+        // Create a new data entry
+        User playerData = new User(UserData.GameData, UserData.Username, UserData.Email);
+
+        // Convert the data to JSON format
+        string json = JsonUtility.ToJson(playerData);
+
+        // Push the data to the database (creates a new child node with a unique key)
+        databaseReference.Child("Users").Child(UserID).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                Debug.Log("Data written to Firebase!");
+            }
+            else if (task.IsFaulted)
+            {
+                Debug.LogError($"Error writing data to Firebase: {task.Exception}");
+            }
+        });
+    }
+
+    public void UserDataSetup(string userId)
+    {
         if (databaseReference != null)
         {
-            // unique user id for every device
-            UserID = SystemInfo.deviceUniqueIdentifier;
+            DatabaseReference userReference = databaseReference.Child("Users").Child(userId);
 
-            // Create a new data entry
-            User playerData = new User(UserData.Username, UserData.Email, UserData.GameData);
-
-            // Convert the data to JSON format
-            string json = JsonUtility.ToJson(playerData);
-
-            // Push the data to the database (creates a new child node with a unique key)
-            DatabaseReference newChildReference = databaseReference.Child("Users").Child(UserID).Push();
-            newChildReference.SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+            userReference.GetValueAsync().ContinueWithOnMainThread(task =>
             {
-                if (task.IsCompleted)
+                if (task.IsFaulted)
                 {
-                    Debug.Log("Data written to Firebase!");
+                    Debug.LogError($"Error checking user existence: {task.Exception}");
                 }
-                else if (task.IsFaulted)
+                else if (task.IsCompleted)
                 {
-                    Debug.LogError($"Error writing data to Firebase: {task.Exception}");
+                    DataSnapshot snapshot = task.Result;
+                    Debug.Log(snapshot.Key);
+
+                    if (snapshot.Exists)
+                    {
+                        Debug.Log($"User with ID {userId} exists!");
+                    }
+                    else
+                    {
+                        Debug.Log($"User with ID {userId} does not exist.");
+                        CreateNewUser();
+                    }
                 }
             });
         }
@@ -95,7 +126,7 @@ public class DatabaseRealtimeManager : MonoBehaviour
         }
     }
 
-    public void UpdateUserData(string userId, User newData)
+    public void UpdateUserData(User newData)
     {
         if (databaseReference == null)
         {
@@ -104,10 +135,10 @@ public class DatabaseRealtimeManager : MonoBehaviour
         }
 
         // Create a reference to the user's data node
-        databaseReference = databaseReference.Child("Users").Child(userId);
+        databaseReference = databaseReference.Child("Users").Child(UserID);
 
         // Update the data
-        databaseReference.Child("user").SetValueAsync(newData).ContinueWithOnMainThread(task =>
+        databaseReference.SetValueAsync(newData).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
@@ -118,21 +149,5 @@ public class DatabaseRealtimeManager : MonoBehaviour
                 Debug.Log("User data updated successfully.");
             }
         });
-    }
-}
-
-
-[System.Serializable]
-public class User
-{
-    public string Username;
-    public string Email;
-    public GameData GameData;
-
-    public User(string name, string email, GameData gameData)
-    {
-        this.Username = name;
-        this.Email = email;
-        this.GameData = gameData;
     }
 }
