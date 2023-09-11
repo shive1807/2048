@@ -39,6 +39,7 @@ public static class SaveSystem
         gameData.RewardClaimStreak = (rewardStreak == -1) ? gameData.RewardClaimStreak : rewardStreak;
         gameData.Collected = (collected == -1) ? gameData.Collected : collected;
         gameData.LastClaimRewardDate = (date == default) ? gameData.LastClaimRewardDate : date;
+        gameData.FirstLogin = (firstLogin == -1) ? gameData.FirstLogin : firstLogin;
         gameData.User = (user == null) ? gameData.User : user;
 
         BinaryFormatter formatter = new BinaryFormatter();

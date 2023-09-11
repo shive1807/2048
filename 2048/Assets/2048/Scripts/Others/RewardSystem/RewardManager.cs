@@ -28,6 +28,11 @@ public class RewardManager : Singleton<RewardManager>
     }
     IEnumerator StartDailyRewardPopup()
     {
+        if(GameManager.Instance.gameData.FirstLogin == 1)
+        {
+            yield return new WaitUntil(() => DependencyManager.Instance.login.login);
+        }
+
         yield return new WaitForSeconds(popupTimer);
         this.gameObject.SetActive(true);
         RectTransform rect = this.gameObject.gameObject.GetComponent<RectTransform>();

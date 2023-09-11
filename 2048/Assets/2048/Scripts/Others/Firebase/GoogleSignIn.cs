@@ -49,6 +49,7 @@ public class GoogleSignInManager : MonoBehaviour
         {
             RequestIdToken = true,
             WebClientId = "599511966350-llmh0kh117jradp6hs2dkfs160pij8r5.apps.googleusercontent.com", // Replace with your web client ID
+            RequestEmail = true,
         };
 
         GoogleSignIn.DefaultInstance.SignIn().ContinueWithOnMainThread(task =>

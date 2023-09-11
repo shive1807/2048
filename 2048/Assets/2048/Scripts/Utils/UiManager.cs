@@ -14,8 +14,8 @@ public enum Panel
 public class UiManager : MonoBehaviour
 {
     public static UiManager Instance;
-    public GameObject LeaderBoard;
-    public GameObject Store;
+    [HideInInspector] public GameObject LeaderBoard;
+    [HideInInspector] public GameObject Store;
 
     protected void Awake()
     {

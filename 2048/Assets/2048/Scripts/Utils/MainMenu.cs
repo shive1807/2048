@@ -41,6 +41,8 @@ public class MainMenu : MonoBehaviour
     private Button SaveNameButton;
     private Button LoginBackButton;
     private Button ClearNameButton;
+    private Button RandomNameButton;
+
     private void OnEnable()
     {
         //UpdateCurrency();
@@ -74,20 +76,26 @@ public class MainMenu : MonoBehaviour
         SaveNameButton = transform.GetChild(4).GetChild(5).GetComponent<Button>();
         LoginBackButton = transform.GetChild(4).GetChild(7).GetComponent<Button>();
         ClearNameButton = transform.GetChild(4).GetChild(6).GetComponent<Button>();
+        RandomNameButton = transform.GetChild(4).GetChild(8).GetComponent<Button>();
 
         SaveNameButton.onClick.AddListener(() =>
         {
-            //DependencyManager.Instance.login.OnNewLogin();
+            DependencyManager.Instance.login.UsernameInput();
+        });
+
+        RandomNameButton.onClick.AddListener(() =>
+        {
+            DependencyManager.Instance.login.RandomUsername();
         });
 
         LoginBackButton.onClick.AddListener(() =>
         {
-            transform.GetChild(4).gameObject.SetActive(false);
+            UiManager.Instance.SetActive(transform.GetChild(4).GetComponent<RectTransform>());
         });
 
         ClearNameButton.onClick.AddListener(() =>
         {
-            //DependencyManager.Instance.login.OnClearInput();
+            DependencyManager.Instance.login.OnClearInput();
         });
     }
 

@@ -24,9 +24,6 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
                 return;
             }
 
-            // unique user id for every device
-            //UserID = SystemInfo.deviceUniqueIdentifier;
-
             UserID = GameManager.Instance.gameData.User.UserID;
 
             // Set up the database reference
@@ -42,13 +39,13 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
     public void CreateNewUser()
     {
         // Create a new data entry
-        User playerData = new User(UserData.GameData, UserData.Username, UserData.Email);
+        User playerData = new User(UserData.Username, UserData.Email);
 
         // Convert the data to JSON format
-        string json = JsonUtility.ToJson(playerData);
+        string json = JsonUtility.ToJson(GameManager.Instance.gameData);
 
         // Push the data to the database (creates a new child node with a unique key)
-        databaseReference.Child("Users").Child(UserID).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        databaseReference.Child("Users").Child(GameManager.Instance.gameData.User.UserID).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted)
             {
@@ -108,9 +105,9 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
                     if (snapshot.Exists)
                     {
                         // Deserialize the JSON data into a User object
-                        User userData = JsonUtility.FromJson<User>(snapshot.GetRawJsonValue());
+                        GameData userData = JsonUtility.FromJson<GameData>(snapshot.GetRawJsonValue());
 
-                        UserData = userData;
+                        GameManager.Instance.gameData = userData;
                     }
                     else
                     {
@@ -126,7 +123,7 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
         }
     }
 
-    public void UpdateUserData(User newData)
+    public void UpdateUserData(GameData newData)
     {
         if (databaseReference == null)
         {
@@ -149,5 +146,10 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
                 Debug.Log("User data updated successfully.");
             }
         });
+    }
+
+    public void UserNameCheck(string username)
+    {
+
     }
 }
