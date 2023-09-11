@@ -1,116 +1,117 @@
-using UnityEngine;
+using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
-using Firebase;
-using System.Threading.Tasks;
+using Google;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
-public class FirebaseUserAuth : MonoBehaviour
+public class GoogleSignInManager : MonoBehaviour
 {
-    private void Awake()
-    {
-        //InitializeFirebase();
-        CheckDependencies();
+    private FirebaseAuth auth;
+    private FirebaseUser user;
 
-    }
+    public TextMeshProUGUI infoText;
+    public Button signInButton;
+    public Button signOutButton;
 
-    public async Task InitializeFirebase()
+    private void Start()
     {
-        await FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
+            FirebaseApp app = FirebaseApp.DefaultInstance;
+            auth = FirebaseAuth.DefaultInstance;
+
             if (task.Result == DependencyStatus.Available)
             {
-                Debug.Log("Firebase correctly Initialized");
+                Debug.Log("Firebase is ready to use.");
+                InitializeUI();
             }
             else
             {
-                Debug.Log("Could not resolve all Firebase dependencies: " + task.Result);
+                Debug.LogError($"Could not resolve all Firebase dependencies: {task.Result}");
             }
         });
     }
 
-    private void CheckDependencies()
+    private void InitializeUI()
     {
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.Result == Firebase.DependencyStatus.Available)
-            {
-                Debug.Log("Firebase correctly Initialized");
-                AnonymousLogin();
-            }
-            else
-            {
-                Debug.Log("Could not resolve all Firebase dependencies: " + task.Result);
-            }
-        });
+        signInButton.onClick.AddListener(() => SignInWithGoogle());
+        signOutButton.onClick.AddListener(() => SignOut());
+
+        UpdateUI();
     }
 
-    private void AnonymousLogin()
+    private void SignInWithGoogle()
     {
-        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
-
-
-
-        //User loggin in for the first time.
-        if (GameManager.Instance.gameData.FirstLogin == 0)
+        GoogleSignIn.Configuration = new GoogleSignInConfiguration
         {
-            auth.SignOut();
+            RequestIdToken = true,
+            WebClientId = "599511966350-llmh0kh117jradp6hs2dkfs160pij8r5.apps.googleusercontent.com", // Replace with your web client ID
+        };
 
-            auth.SignInAnonymouslyAsync().ContinueWithOnMainThread(task =>
+        GoogleSignIn.DefaultInstance.SignIn().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
             {
-                if (task.IsCanceled)
+                Debug.LogError("Google Sign-In canceled.");
+                return;
+            }
+
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Google Sign-In error: {task.Exception}");
+                return;
+            }
+
+            Firebase.Auth.Credential credential = Firebase.Auth.GoogleAuthProvider.GetCredential(task.Result.IdToken, null);
+
+            auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(authTask =>
+            {
+                if (authTask.IsCanceled)
                 {
-                    Debug.LogError("SignInAnonymouslyAsync was canceled.");
-                    return;
-                }
-                if (task.IsFaulted)
-                {
-                    Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+                    Debug.LogError("Firebase Sign-In canceled.");
                     return;
                 }
 
-                FirebaseUser newUser = task.Result.User;
-                LoginSuccessful(newUser.UserId);
+                if (authTask.IsFaulted)
+                {
+                    Debug.LogError($"Firebase Sign-In error: {authTask.Exception}");
+                    return;
+                }
+
+                user = authTask.Result;
+                Debug.Log($"User signed in: {user.DisplayName} ({user.UserId})");
+
+                UpdateUI();
             });
+        });
+    }
+
+    private void SignOut()
+    {
+        auth.SignOut();
+        GoogleSignIn.DefaultInstance.SignOut();
+
+        Debug.Log("User signed out.");
+
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        if (user != null)
+        {
+            signInButton.interactable = false;
+            signOutButton.interactable = true;
+            infoText.text = $"Welcome, {user.DisplayName}!";
         }
         else
         {
-            string userID = GameManager.Instance.gameData.User.UserID;
-            GetData();
+            signInButton.interactable = true;
+            signOutButton.interactable = false;
+            infoText.text = "Sign in with Google";
         }
-    }
-
-    private void LoginSuccessful(string uid)
-    {
-        User user = new User();
-
-        string userName = "Guest" + Random.Range(11111, 99999).ToString();
-        user.Username = userName;
-        user.UserID = uid;
-
-        //set user in database.
-        //DataManager.myUser = user;
-
-        //login successful.
-        SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, 0, user);
-
-        //write a new user and destroy this object.
-        //GetComponent<FirebaseLeaderboardManager>().WriteNewUser();
-
-        Destroy(this);
-    }
-
-    private void GetData()
-    {
-        User user = new User();
-
-        Debug.Log("my player id is " + GameManager.Instance.gameData.User.UserID);
-
-        //user.Username = PlayerPrefs.GetString(PlayerPrefsConstants.userName);
-        //user.UserID = PlayerPrefs.GetString(PlayerPrefsConstants.userId);
-
-        //set the user in database.
-        //DataManager.myUser = user;
-
-        Destroy(this);
     }
 }

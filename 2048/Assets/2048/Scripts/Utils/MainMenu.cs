@@ -71,9 +71,9 @@ public class MainMenu : MonoBehaviour
 
     private void FirstLoginButtonsLogic()
     {
-        SaveNameButton = transform.GetChild(3).GetChild(5).GetComponent<Button>();
-        LoginBackButton = transform.GetChild(3).GetChild(7).GetComponent<Button>();
-        ClearNameButton = transform.GetChild(3).GetChild(6).GetComponent<Button>();
+        SaveNameButton = transform.GetChild(4).GetChild(5).GetComponent<Button>();
+        LoginBackButton = transform.GetChild(4).GetChild(7).GetComponent<Button>();
+        ClearNameButton = transform.GetChild(4).GetChild(6).GetComponent<Button>();
 
         SaveNameButton.onClick.AddListener(() =>
         {
@@ -82,7 +82,7 @@ public class MainMenu : MonoBehaviour
 
         LoginBackButton.onClick.AddListener(() =>
         {
-            transform.GetChild(3).gameObject.SetActive(false);
+            transform.GetChild(4).gameObject.SetActive(false);
         });
 
         ClearNameButton.onClick.AddListener(() =>
