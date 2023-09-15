@@ -43,10 +43,6 @@ public class MainMenu : MonoBehaviour
     private Button ClearNameButton;
     private Button RandomNameButton;
 
-    private void OnEnable()
-    {
-        //UpdateCurrency();
-    }
 
     private void Start()
     {
@@ -73,24 +69,26 @@ public class MainMenu : MonoBehaviour
 
     private void FirstLoginButtonsLogic()
     {
-        SaveNameButton = transform.GetChild(4).GetChild(5).GetComponent<Button>();
-        LoginBackButton = transform.GetChild(4).GetChild(7).GetComponent<Button>();
-        ClearNameButton = transform.GetChild(4).GetChild(6).GetComponent<Button>();
-        RandomNameButton = transform.GetChild(4).GetChild(8).GetComponent<Button>();
+        Transform loginPopup = transform.GetChild(4);
+
+        SaveNameButton = loginPopup.GetChild(5).GetComponent<Button>();
+        LoginBackButton = loginPopup.GetChild(7).GetComponent<Button>();
+        ClearNameButton = loginPopup.GetChild(6).GetComponent<Button>();
+        RandomNameButton = loginPopup.GetChild(8).GetComponent<Button>();
 
         SaveNameButton.onClick.AddListener(() =>
         {
-            DependencyManager.Instance.login.UsernameInput();
+            StartCoroutine(DependencyManager.Instance.login.UsernameInput());
         });
 
         RandomNameButton.onClick.AddListener(() =>
         {
-            DependencyManager.Instance.login.RandomUsername();
+            StartCoroutine(DependencyManager.Instance.login.RandomUsername());
         });
 
         LoginBackButton.onClick.AddListener(() =>
         {
-            UiManager.Instance.SetActive(transform.GetChild(4).GetComponent<RectTransform>());
+            UiManager.Instance.SetActive(transform.GetChild(4).GetComponent<RectTransform>(), false);
         });
 
         ClearNameButton.onClick.AddListener(() =>
@@ -125,7 +123,7 @@ public class MainMenu : MonoBehaviour
 
         DailyRewardCloseButton.onClick.AddListener(() =>
         {
-            UiManager.Instance.SetActive(dailyReward.GetComponent<RectTransform>());
+            UiManager.Instance.SetActive(dailyReward.GetComponent<RectTransform>(), false);
             transform.GetChild(2).gameObject.SetActive(false);
         });
     }
@@ -202,13 +200,6 @@ public class MainMenu : MonoBehaviour
         gameObject.SetActive(true);
         UiManager.Instance.PanelCloseAnimation(panel);
     };
-    private void UpdateCurrency()
-    {
-        if(GemsText == null)
-            StoreButtonLogic();
-
-        GemsText.text = DataManager.Gems.ToString();
-    }
 
     ///Supporting function;
     private void ButtonClickSound()

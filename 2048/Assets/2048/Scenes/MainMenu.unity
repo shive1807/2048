@@ -3562,17 +3562,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameData:
-    HighScore: 0
-    Gems: 0
-    SoundPref: 0
-    MusicPref: 0
-    VibrationPref: 0
-    RewardClaimStreak: 0
-    Collected: 0
+    HighScore: 16777016
+    Gems: 1710
+    SoundPref: 1
+    MusicPref: 1
+    VibrationPref: 1
+    RewardClaimStreak: 1
+    Collected: 1
     FirstLogin: 1
     User:
-      UserID: 
-      Username: 
+      UserID: 3JoYrZVJtfccRHCaPPMOD5Ijlfk2
+      Username: karan
       Email: 
 --- !u!4 &449247877
 Transform:
@@ -7081,53 +7081,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1243840339}
   m_CullTransparentMesh: 1
---- !u!1 &1257210333
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1257210335}
-  - component: {fileID: 1257210334}
-  m_Layer: 0
-  m_Name: GoogleSignIn
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1257210334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1257210333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac8f52e210231e4f879cf67470b90c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  infoText: {fileID: 666308526}
-  signInButton: {fileID: 573006620}
-  signOutButton: {fileID: 478129757}
---- !u!4 &1257210335
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1257210333}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.369548, y: 26.765709, z: -0.67407316}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1262225849
 GameObject:
   m_ObjectHideFlags: 0
@@ -7214,7 +7167,7 @@ GameObject:
   - component: {fileID: 1295567193}
   - component: {fileID: 1295567194}
   m_Layer: 0
-  m_Name: Database
+  m_Name: DatabaseManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7248,10 +7201,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UserID: 
-  UserData:
-    UserID: 
-    Username: 
-    Email: 
+  data:
+    HighScore: 0
+    Gems: 0
+    SoundPref: 1
+    MusicPref: 1
+    VibrationPref: 1
+    RewardClaimStreak: 0
+    Collected: 0
+    FirstLogin: 1
+    User:
+      UserID: 
+      Username: 
+      Email: 
 --- !u!1 &1301637353
 GameObject:
   m_ObjectHideFlags: 0
@@ -12064,7 +12026,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5985218c19f04d4aaa615668ab9f7be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userInput: {fileID: 1742181608}
+  userInput: {fileID: 0}
+  login: 0
   Username: 
 --- !u!1 &1948660883
 GameObject:
@@ -12995,4 +12958,3 @@ SceneRoots:
   - {fileID: 1497066140}
   - {fileID: 539127967}
   - {fileID: 1295567193}
-  - {fileID: 1257210335}

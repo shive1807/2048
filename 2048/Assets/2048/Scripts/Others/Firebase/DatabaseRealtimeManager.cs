@@ -8,7 +8,7 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
     private DatabaseReference databaseReference;
 
     public string UserID;
-    public User UserData;
+    public GameData data = new GameData();
 
     private void Start()
     {
@@ -28,18 +28,16 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
 
             // Set up the database reference
             databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-
-            //// Loading user data
-            //ReadDataFromFirebase();  // needs user id
-            UserDataSetup(UserID);
-
         });
     }
 
-    public void CreateNewUser()
+    public void WriteData()
     {
-        // Create a new data entry
-        User playerData = new User(UserData.Username, UserData.Email);
+        if (databaseReference == null)
+        {
+            Debug.LogError("Firebase is not initialized.");
+            return;
+        }
 
         // Convert the data to JSON format
         string json = JsonUtility.ToJson(GameManager.Instance.gameData);
@@ -58,38 +56,38 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
         });
     }
 
-    public void UserDataSetup(string userId)
-    {
-        if (databaseReference != null)
-        {
-            DatabaseReference userReference = databaseReference.Child("Users").Child(userId);
+    //public void UserDataSetup(string userId)
+    //{
+    //    if (databaseReference != null)
+    //    {
+    //        DatabaseReference userReference = databaseReference.Child("Users").Child(userId);
 
-            userReference.GetValueAsync().ContinueWithOnMainThread(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    Debug.LogError($"Error checking user existence: {task.Exception}");
-                }
-                else if (task.IsCompleted)
-                {
-                    DataSnapshot snapshot = task.Result;
-                    Debug.Log(snapshot.Key);
+    //        userReference.GetValueAsync().ContinueWithOnMainThread(task =>
+    //        {
+    //            if (task.IsFaulted)
+    //            {
+    //                Debug.LogError($"Error checking user existence: {task.Exception}");
+    //            }
+    //            else if (task.IsCompleted)
+    //            {
+    //                DataSnapshot snapshot = task.Result;
+    //                Debug.Log(snapshot.Key);
 
-                    if (snapshot.Exists)
-                    {
-                        Debug.Log($"User with ID {userId} exists!");
-                    }
-                    else
-                    {
-                        Debug.Log($"User with ID {userId} does not exist.");
-                        CreateNewUser();
-                    }
-                }
-            });
-        }
-    }
+    //                if (snapshot.Exists)
+    //                {
+    //                    Debug.Log($"User with ID {userId} exists!");
+    //                }
+    //                else
+    //                {
+    //                    Debug.Log($"User with ID {userId} does not exist.");
+    //                    CreateNewUser();
+    //                }
+    //            }
+    //        });
+    //    }
+    //}
 
-    public void ReadDataFromFirebase(string userId = default)
+    public void RetrieveData(string userId = default)
     {
         if (databaseReference != null)
         {
@@ -112,7 +110,7 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
                     else
                     {
                         Debug.LogWarning("User data not found in the database.");
-                        CreateNewUser();
+                        WriteData();
                     }
                 }
                 else if (task.IsFaulted)
@@ -121,31 +119,6 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
                 }
             });
         }
-    }
-
-    public void UpdateUserData(GameData newData)
-    {
-        if (databaseReference == null)
-        {
-            Debug.LogError("Firebase is not initialized.");
-            return;
-        }
-
-        // Create a reference to the user's data node
-        databaseReference = databaseReference.Child("Users").Child(UserID);
-
-        // Update the data
-        databaseReference.SetValueAsync(newData).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Error updating user data: " + task.Exception);
-            }
-            else if (task.IsCompleted)
-            {
-                Debug.Log("User data updated successfully.");
-            }
-        });
     }
 
     public void UserNameCheck(string username)

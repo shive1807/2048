@@ -54,8 +54,6 @@ public class AdManager : Singleton<AdManager>
             interstitialAd = null;
         }
 
-        Debug.Log("Loading the interstitial ad.");
-
         // create our request used to load the ad.
         var adRequest = new AdRequest();
         adRequest.Keywords.Add("unity-admob-sample");
@@ -71,9 +69,6 @@ public class AdManager : Singleton<AdManager>
                                    "with error : " + error);
                     return;
                 }
-
-                Debug.Log("Interstitial ad loaded with response : "
-                          + ad.GetResponseInfo());
 
                 interstitialAd = ad;
             });
@@ -163,8 +158,6 @@ public class AdManager : Singleton<AdManager>
             rewardedAd = null;
         }
 
-        Debug.Log("Loading the rewarded ad.");
-
         // create our request used to load the ad.
         var adRequest = new AdRequest();
         adRequest.Keywords.Add("unity-admob-sample");
@@ -180,9 +173,6 @@ public class AdManager : Singleton<AdManager>
                                    "with error : " + error);
                     return;
                 }
-
-                Debug.Log("Rewarded ad loaded with response : "
-                          + ad.GetResponseInfo());
 
                 rewardedAd = ad;
             });

@@ -87,9 +87,9 @@ public class UiManager : MonoBehaviour
             pos.DOAnchorPos(initialPos.anchoredPosition, .3f);
         }
     }
-    public void SetActive(RectTransform obj)
+    public void SetActive(RectTransform obj, bool on)
     {
-        if (obj.gameObject.activeSelf)
+        if (!on)
         {
             obj.DOScale(Vector2.zero, .5f).SetEase(Ease.OutBounce);
             obj.gameObject.SetActive(false);

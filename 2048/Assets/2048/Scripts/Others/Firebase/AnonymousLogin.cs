@@ -5,7 +5,6 @@ using Firebase;
 using System.Threading.Tasks;
 using TMPro;
 using System.Collections;
-using DG.Tweening;
 
 public class AnonymousLogin : MonoBehaviour
 {
@@ -54,9 +53,9 @@ public class AnonymousLogin : MonoBehaviour
         FirebaseAuth auth = FirebaseAuth.DefaultInstance;
 
         //User loggin in for the first time.
-        if (GameManager.Instance.gameData.FirstLogin == 0)
+        if (GameManager.Instance.gameData.FirstLogin == 1)
         {
-            OpenFirstLoginUI(transform.GetComponent<RectTransform>());
+            UiManager.Instance.SetActive(transform.GetComponent<RectTransform>(), true);
 
             auth.SignOut();
 
@@ -95,20 +94,25 @@ public class AnonymousLogin : MonoBehaviour
         //login successful.
         SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, 0, user);
 
-        DatabaseRealtimeManager.Instance.CreateNewUser();
+        DatabaseRealtimeManager.Instance.WriteData();
 
-        Destroy(this);
+        //Destroy(this);
     }
 
-    public void RandomUsername()
+    public IEnumerator RandomUsername()
     {
         string userName;
         userName = "Guest" + Random.Range(11111, 99999).ToString();
         Username = userName;
         login = true;
+
+        yield return new WaitForSeconds(.1f);
+
+        // UI
+        UiManager.Instance.SetActive(transform.GetComponent<RectTransform>(), false);
     }
 
-    public void UsernameInput()
+    public IEnumerator UsernameInput()
     {
         userInput = transform.GetChild(4).GetComponent<TMP_InputField>();
 
@@ -116,16 +120,15 @@ public class AnonymousLogin : MonoBehaviour
         {
             userInput.placeholder.GetComponent<TextMeshProUGUI>().text = new string("Please Enter Your Name First");
             userInput.placeholder.color = Color.red;
-            return;
+            yield return null;
         }
         Username = userInput.text;
         login = true;
-    }
 
-    public void OpenFirstLoginUI(RectTransform obj)
-    {
-        obj.gameObject.SetActive(true);
-        obj.DOScale(new Vector2(1, 1), .5f).SetEase(Ease.OutBounce);
+        yield return new WaitForSeconds(.1f);
+
+        // UI
+        UiManager.Instance.SetActive(transform.GetComponent<RectTransform>(), false);
     }
 
     public void OnClearInput()
@@ -139,6 +142,6 @@ public class AnonymousLogin : MonoBehaviour
 
         Debug.Log("my player id is " + GameManager.Instance.gameData.User.UserID);
 
-        Destroy(this);
+        //Destroy(this);
     }
 }

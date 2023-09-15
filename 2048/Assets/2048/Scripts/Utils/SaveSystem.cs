@@ -45,7 +45,6 @@ public static class SaveSystem
         BinaryFormatter formatter = new BinaryFormatter();
 
         string path = Application.persistentDataPath + "/GameData.data";
-        Debug.Log(path);
         FileStream stream = new FileStream(path, FileMode.Create);
 
         formatter.Serialize(stream, gameData);

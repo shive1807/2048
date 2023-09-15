@@ -165,9 +165,6 @@ public class IAP : Singleton<IAP>, IStoreListener
 
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
-        // Purchasing has succeeded initializing. Collect our Purchasing references.
-        Debug.Log("OnInitialized: PASS");
-
         // Overall Purchasing system, configured with products for this application.
         m_StoreController = controller;
         // Store specific subsystem, for accessing device-specific store features.
@@ -178,7 +175,7 @@ public class IAP : Singleton<IAP>, IStoreListener
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         // Purchasing set-up has not succeeded. Check error for reason. Consider sharing this reason with the user.
-        Debug.Log("OnInitializeFailed InitializationFailureReason:" + error);
+        Debug.LogError("OnInitializeFailed InitializationFailureReason:" + error);
     }
 
 

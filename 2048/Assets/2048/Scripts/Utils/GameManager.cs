@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,12 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         LoadGameData();
+        StartCoroutine(FetchDataFromDatabase());
+    }
+    IEnumerator FetchDataFromDatabase()
+    {
+        yield return new WaitForSeconds(.1f);
+        //DatabaseRealtimeManager.Instance.RetrieveData(gameData.User.UserID);
     }
     public void LoadGameData()
     {

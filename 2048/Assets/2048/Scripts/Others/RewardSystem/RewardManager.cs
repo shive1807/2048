@@ -8,17 +8,21 @@ public class RewardManager : Singleton<RewardManager>
 {
     public DailyReward[] Days;
 
+    //popup variables
     public float popupTimer = 2f;
     public float popupOpenDuration = .2f;
 
+    //reward variables
     public int rewardAmount = 30;
     public int rewardMultiplier = 10;
 
+    //collection check
     private DateTime lastClaimDate = DateTime.Now;
     public int currentStreak = 0;
-
     public int rewardCollected = 0;
-    void Start()
+
+    #region private functions
+    private void Start()
     {
         if(rewardCollected == 0)
         {
@@ -26,9 +30,9 @@ public class RewardManager : Singleton<RewardManager>
         }
         Setup();
     }
-    IEnumerator StartDailyRewardPopup()
+    private IEnumerator StartDailyRewardPopup()
     {
-        if(GameManager.Instance.gameData.FirstLogin == 1)
+        if (GameManager.Instance.gameData.FirstLogin == 1)
         {
             yield return new WaitUntil(() => DependencyManager.Instance.login.login);
         }
@@ -41,7 +45,7 @@ public class RewardManager : Singleton<RewardManager>
 
         transform.parent.GetChild(2).gameObject.SetActive(true);
     }
-    void Setup()
+    private void Setup()
     {
         GameData gamedata = GameManager.Instance.gameData;
         if(gamedata != null)
@@ -114,6 +118,10 @@ public class RewardManager : Singleton<RewardManager>
             }
         }
     }
+
+    #endregion
+
+    #region public functions
     public void ClaimDailyReward(DailyReward dailyReward)
     {
         if(dailyReward.isActive)
@@ -140,4 +148,6 @@ public class RewardManager : Singleton<RewardManager>
             }
         }
     }
+
+    #endregion
 }
