@@ -13,24 +13,23 @@ public class AnonymousLogin : MonoBehaviour
     public bool login = false;
 
     [HideInInspector] public string Username;
-    private void Awake()
+    private void Start()
     {
-        CheckDependencies();
+        InitializeFirebase();
     }
 
-    public async Task InitializeFirebase()
+    public void InitializeFirebase()
     {
-        await FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        //User loggin in for the first time.
+        if (GameManager.Instance.gameData.FirstLogin == 1)
         {
-            if (task.Result == DependencyStatus.Available)
-            {
-                Debug.Log("Firebase correctly Initialized");
-            }
-            else
-            {
-                Debug.Log("Could not resolve all Firebase dependencies: " + task.Result);
-            }
-        });
+            UiManager.Instance.SetActive(transform.GetComponent<RectTransform>(), true);
+        }
+        else
+        {
+            string userID = GameManager.Instance.gameData.User.UserID;
+            GetData();
+        }
     }
 
     private void CheckDependencies()
@@ -52,51 +51,34 @@ public class AnonymousLogin : MonoBehaviour
     {
         FirebaseAuth auth = FirebaseAuth.DefaultInstance;
 
-        //User loggin in for the first time.
-        if (GameManager.Instance.gameData.FirstLogin == 1)
+        auth.SignOut();
+
+        auth.SignInAnonymouslyAsync().ContinueWithOnMainThread(task =>
         {
-            UiManager.Instance.SetActive(transform.GetComponent<RectTransform>(), true);
-
-            auth.SignOut();
-
-            auth.SignInAnonymouslyAsync().ContinueWithOnMainThread(task =>
+            if (task.IsCanceled)
             {
-                if (task.IsCanceled)
-                {
-                    Debug.LogError("SignInAnonymouslyAsync was canceled.");
-                    return;
-                }
-                if (task.IsFaulted)
-                {
-                    Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
-                    return;
-                }
+                Debug.LogError("SignInAnonymouslyAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+                return;
+            }
 
-                FirebaseUser newUser = task.Result.User;
-                StartCoroutine(LoginSuccessful(newUser.UserId));
-            });
-        }
-        else
-        {
-            string userID = GameManager.Instance.gameData.User.UserID;
-            GetData();
-        }
-    }
+            FirebaseUser newUser = task.Result.User;
 
-    private IEnumerator LoginSuccessful(string uid)
-    {
-        User user = new User();
+            //creating new user
+            User user = new User();
 
-        yield return new WaitUntil(() => login);
-        user.UserID = uid;
-        user.Username = Username;
+            user.UserID = newUser.UserId;
+            user.Username = Username;
 
-        //login successful.
-        SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, 0, user);
+            //login successful.
+            SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, 0, user);
 
-        DatabaseRealtimeManager.Instance.WriteData();
-
-        //Destroy(this);
+            DatabaseRealtimeManager.Instance.WriteData();
+        });
     }
 
     public IEnumerator RandomUsername()
@@ -106,7 +88,9 @@ public class AnonymousLogin : MonoBehaviour
         Username = userName;
         login = true;
 
-        yield return new WaitForSeconds(.1f);
+        CheckDependencies();
+
+        yield return new WaitForSeconds(.2f);
 
         // UI
         UiManager.Instance.SetActive(transform.GetComponent<RectTransform>(), false);
@@ -125,7 +109,9 @@ public class AnonymousLogin : MonoBehaviour
         Username = userInput.text;
         login = true;
 
-        yield return new WaitForSeconds(.1f);
+        CheckDependencies();
+
+        yield return new WaitForSeconds(.2f);
 
         // UI
         UiManager.Instance.SetActive(transform.GetComponent<RectTransform>(), false);
