@@ -16,7 +16,7 @@ public class GridController : MonoBehaviour
     //Public variables.
     public bool         startingGrid = true;
     public float        ElementFallDuration = 3f;
-    public float        ElementDestroyDuration = .3f;
+    public float        ElementDestroyDuration = 100f;
     public Element[,]   grid;
     public Vector2      ElementfallOffset;
 
@@ -36,7 +36,7 @@ public class GridController : MonoBehaviour
 
     private void Update()
     {
-        BlockInputCheck();
+        //BlockInputCheck();
     }
 
     #region public functions
@@ -77,70 +77,102 @@ public class GridController : MonoBehaviour
         {
             index = chain.Count - 1;
         }
-        if(!DependencyManager.Instance.gameController.smashing)
+
+        if (!DependencyManager.Instance.gameController.smashing)
         {
-            int[,] deductions = GetDestroyedBlocks(chain);
-
-            for (int i = 0; i < index; i++)
+            if(chain.Count == 1)
             {
-
-                StartCoroutine(DestroyBlock(chain[i]));
-
-                //Pooler.Instance.DestroyBlock(chain[i].gameObject);
-                //Destroy(chain[i].gameObject);
-                //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
-
-                //Debug.Log("refil");
+                return;
             }
 
+            Element[,] copyGrid;
+
+            copyGrid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
                 for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
                 {
-                    int depth = deductions[i, j];
-
-                    if (depth == -1 || depth == 0)
-                        continue;
-
-                    Vector2 targetPos = grid[i, j - depth].GetComponent<RectTransform>().anchoredPosition;
-                    StartCoroutine(grid[i, j].MoveElement(targetPos, ElementFallSpeed));
+                    copyGrid[i, j] = grid[i, j].Copy();
                 }
             }
 
-            Element[,] temp = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
-            temp = grid;
-
-            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+            for (int b = 0; b < index; b++)
             {
-                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                int Y = chain[b].y;
+                int X = chain[b].x;
+
+                int blocksRequired = 0;
+
+
+                for (int y = 0; y < GameSettings.GRID_HEIGHT; y++)
                 {
-                    int depth = deductions[i, j];
+                    Element e = grid[X, y];
 
-                    if (depth == -1 || depth == 0)
-                        continue;
-
-                    temp[i, j - depth] = grid[i, j];
-                    //temp[i, j - depth].x = i;
-                    temp[i, j - depth].SetElementCoord(i, j - depth);
-                }
-            }
-
-            grid = temp;
-
-            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
-            {
-                int blocksToAdd = 0;
-                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
-                {
-                    if (deductions[i, j] == -1)
+                    if (y == 7 && e.selected)
                     {
-                        blocksToAdd++;
+                        blocksRequired++;
+                        Pooler.Instance.DestroyBlock(grid[X, y].gameObject);
+                        grid[X, y] = null;
+                        continue;
+                    }
+
+                    if (e.selected || y == 0)
+                    {
+                        continue;
+                    }
+
+                    for (int i = y - 1; i >= -1; i--)
+                    {
+                        if (i > -1)
+                        {
+                            if (grid[X, i] == null)
+                            {
+                                continue;
+                            }
+
+                            if (grid[X, i].selected)
+                            {
+                                blocksRequired++;
+                                Pooler.Instance.DestroyBlock(grid[X, i].gameObject);
+                                grid[X, i] = null;
+                                continue;
+                            }
+
+                            if (i == y - 1)
+                            {
+                                break;
+                            }
+                        }
+
+                        Element x = copyGrid[X, i + 1];
+
+                        // pos change
+                        Vector2 targetPos = x.GetComponent<RectTransform>().anchoredPosition;
+                        StartCoroutine(grid[X, y].MoveElement(targetPos, ElementFallSpeed));
+
+                        // co-ord change
+                        grid[X, i + 1] = grid[X, y];
+                        grid[X, y].SetElementCoord(X, i + 1);
+
+                        // emptying the older element pos
+                        grid[X, y] = null;
+                        break;
                     }
                 }
 
-                for (int j = GameSettings.GRID_HEIGHT - blocksToAdd; j < GameSettings.GRID_HEIGHT; j++)
+                // generating blocks for columns
+                for (int i = blocksRequired; i > 0; i--)
                 {
-                    GenerateBlock(i, j, j - (GameSettings.GRID_HEIGHT - blocksToAdd));
+                    GenerateBlock(X, GameSettings.GRID_HEIGHT - i);
+                }
+            }
+
+            // freeing the space
+            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+            {
+                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                {
+                    Destroy(copyGrid[i, j].gameObject);
                 }
             }
         }
@@ -158,7 +190,7 @@ public class GridController : MonoBehaviour
             }
             //Debug.Log("sw");
             Pooler.Instance.DestroyBlock(e.gameObject);
-            GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1, 0);
+            GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1);
         }
 
         StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
@@ -172,10 +204,13 @@ public class GridController : MonoBehaviour
     {
         foreach(Element element in grid)
         {
-            if (element.moving)
+            if (element != null)
             {
-                DependencyManager.Instance.gameController.BlockInput(true);
-                return;
+                if (element.moving)
+                {
+                    DependencyManager.Instance.gameController.BlockInput(true);
+                    return;
+                }
             }
         }
         DependencyManager.Instance.gameController.BlockInput(false);
@@ -217,7 +252,7 @@ public class GridController : MonoBehaviour
 
         if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset + (new Vector2(0, 1000) * BlocksBelow), ElementFallSpeed);
         }
         else 
         {
@@ -274,12 +309,18 @@ public class GridController : MonoBehaviour
         return deductions;
     }
    
-    private IEnumerator DestroyBlock(Element e)
+    private IEnumerator DestroyBlock(Element e1, Element e2)
     {
-        //DependencyManager.Instance.vfx.PlayBreakingFX(e);
-        e.rectTransform.DOScale(0, ElementDestroyDuration).SetEase(Ease.OutElastic);
+        Vector3 pos = e2.transform.position;
+
+        // Animation
+        e1.rectTransform.DOScale(0, ElementDestroyDuration).SetEase(Ease.OutElastic);
+        e1.rectTransform.DOMove(pos, ElementDestroyDuration * .3f).SetEase(Ease.Flash);
+
         yield return new WaitForSeconds(ElementDestroyDuration);
-        Pooler.Instance.DestroyBlock(e.gameObject);
+
+        // Destroying
+        Pooler.Instance.DestroyBlock(e1.gameObject);
     }
     
     private IEnumerator GameEndCheck()

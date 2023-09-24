@@ -16,7 +16,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public int x;
 
     [HideInInspector] public Vector3 elementPos;
-    [HideInInspector] public RectTransform rectTransform;
+    /*[HideInInspector]*/ public RectTransform rectTransform;
     [HideInInspector] public ParticleSystem breakEffect;
 
     [HideInInspector] public bool moving = false;
@@ -36,6 +36,8 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         // Convert anchored position to transform position
         elementPos = rectTransform.TransformPoint(anchoredPosition);
+
+        Debug.Log(rectTransform.anchoredPosition);
     }
 
     public void OnPointerEnter(PointerEventData eventData)  // to get element when mouse button is already pressed and being dragged on the other
@@ -151,5 +153,13 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     private void SetColor()
     {
         transform.GetComponent<Image>().color = DataManager.GetColor(num);
+    }
+
+    public Element Copy()
+    {
+        Element e = Instantiate(this, this.transform.parent);
+        e.rectTransform = this.rectTransform;
+        e.transform.position = this.transform.position;
+        return e;
     }
 }

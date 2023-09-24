@@ -401,6 +401,7 @@ public class GameController : MonoBehaviour
             {
                 Num num = ChangeNum();
                 chain[chain.Count - 1].SetNum(0, num);
+                chain[chain.Count - 1].selected = false;     // so that it wouldn't get destroyed by chain refill
                 HighScoreUpdate(num);
                 DestroyLine();
             }
