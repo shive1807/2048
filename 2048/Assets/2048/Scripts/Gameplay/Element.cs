@@ -20,11 +20,15 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
     [HideInInspector] public ParticleSystem breakEffect;
 
     [HideInInspector] public bool moving = false;
+
+    public Transform SpawnLinePos;
     private void Start()
     {
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
         image           = this.gameObject.GetComponent<Image>();
         breakEffect     = this.gameObject.GetComponent<ParticleSystem>();
+
+        SpawnLinePos = transform.parent.GetChild(0);
 
         rectTransform.sizeDelta = new Vector2(GameSettings.BLOCK_SIZE, GameSettings.BLOCK_SIZE);
     }
@@ -78,7 +82,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
                                         -GameSettings.GRID_SIZE.y / 2 + (2 * j + 1) * GameSettings.BLOCK_SIZE /2 + (j + 1) * GameSettings.GRID_SPACING);
         
         // spawning the element a bit up to make room for drop animation
-        rectTransform.anchoredPosition = new Vector2(targetPos.x + elementMoveOffset.x, targetPos.y + elementMoveOffset.y);  
+        rectTransform.anchoredPosition = new Vector2(SpawnLinePos.position.x + elementMoveOffset.x, SpawnLinePos.position.y + elementMoveOffset.y);  
         
         // naming according to in-matrix position
         SetElementCoord(i, j);  

@@ -1077,6 +1077,11 @@ MonoBehaviour:
     VibrationPref: 0
     RewardClaimStreak: 0
     Collected: 0
+    FirstLogin: 1
+    User:
+      UserID: 
+      Username: 
+      Email: 
 --- !u!4 &215764650
 Transform:
   m_ObjectHideFlags: 0
@@ -7346,7 +7351,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -493}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 100, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &602148825
 MonoBehaviour:

@@ -83,14 +83,7 @@ public class GridController : MonoBehaviour
 
             for (int i = 0; i < index; i++)
             {
-
                 StartCoroutine(DestroyBlock(chain[i]));
-
-                //Pooler.Instance.DestroyBlock(chain[i].gameObject);
-                //Destroy(chain[i].gameObject);
-                //DependencyManager.Instance.pooler.Deactivate(chain[i].gameObject);
-
-                //Debug.Log("refil");
             }
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -120,7 +113,6 @@ public class GridController : MonoBehaviour
                         continue;
 
                     temp[i, j - depth] = grid[i, j];
-                    //temp[i, j - depth].x = i;
                     temp[i, j - depth].SetElementCoord(i, j - depth);
                 }
             }
@@ -156,7 +148,7 @@ public class GridController : MonoBehaviour
                 grid[e.x, i - 1] = grid[e.x, i];
                 grid[e.x, i].SetElementCoord(e.x, i - 1);
             }
-            //Debug.Log("sw");
+
             Pooler.Instance.DestroyBlock(e.gameObject);
             GenerateBlock(e.x, GameSettings.GRID_HEIGHT - 1, 0);
         }
