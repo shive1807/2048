@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(Transform))]
 public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
@@ -21,14 +22,14 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
     [HideInInspector] public bool moving = false;
 
-    public Transform SpawnLinePos;
+    public RectTransform SpawnLinePos;
     private void Start()
     {
         rectTransform   = this.gameObject.GetComponent<RectTransform>();
         image           = this.gameObject.GetComponent<Image>();
         breakEffect     = this.gameObject.GetComponent<ParticleSystem>();
 
-        SpawnLinePos = transform.parent.GetChild(0);
+        SpawnLinePos = transform.parent.parent.GetChild(0).GetComponent<RectTransform>();
 
         rectTransform.sizeDelta = new Vector2(GameSettings.BLOCK_SIZE, GameSettings.BLOCK_SIZE);
     }
@@ -80,9 +81,9 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
 
         Vector2 targetPos = new Vector2(-GameSettings.GRID_SIZE.x / 2 + (2 * i + 1) * GameSettings.BLOCK_SIZE/2 + (i + 1) * GameSettings.GRID_SPACING,
                                         -GameSettings.GRID_SIZE.y / 2 + (2 * j + 1) * GameSettings.BLOCK_SIZE /2 + (j + 1) * GameSettings.GRID_SPACING);
-        
+
         // spawning the element a bit up to make room for drop animation
-        rectTransform.anchoredPosition = new Vector2(SpawnLinePos.position.x + elementMoveOffset.x, SpawnLinePos.position.y + elementMoveOffset.y);  
+        rectTransform.anchoredPosition = new Vector2(targetPos.x, 1375) + elementMoveOffset;
         
         // naming according to in-matrix position
         SetElementCoord(i, j);  
@@ -102,7 +103,7 @@ public class Element : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler
         transform.name = "(" + i + ", " + j + ")";
     }
 
-    public IEnumerator MoveElement(Vector2 targetPos, float speed = 4)
+    public IEnumerator MoveElement(Vector2 targetPos, float speed = 1000)
     {
         yield return null;
 

@@ -20,7 +20,7 @@ public class GridController : MonoBehaviour
     public Element[,]   grid;
     public Vector2      ElementfallOffset;
 
-    public float ElementFallSpeed = 3f;
+    public float ElementFallSpeed = 1000f;
 
     public bool gridMoving = false;
 
@@ -71,7 +71,7 @@ public class GridController : MonoBehaviour
     {
         if (reShuffling)
         {
-            index = chain.Count;
+            index = chain.Count - 1;
         }
         else
         {
@@ -83,7 +83,7 @@ public class GridController : MonoBehaviour
 
             for (int i = 0; i < index; i++)
             {
-                StartCoroutine(DestroyBlock(chain[i]));
+                StartCoroutine(DestroyBlock(chain[i], chain[index]));
             }
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
@@ -209,11 +209,11 @@ public class GridController : MonoBehaviour
 
         if (!startingGrid || GameManager.Instance.gameData.SavedGrid == null)
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset * BlocksBelow, ElementFallSpeed);
         }
         else 
         {
-            grid[i, j].ElementSetup(i, j, ElementfallOffset, ElementFallSpeed, GameManager.Instance.gameData.SavedGrid[i, j]);
+            grid[i, j].ElementSetup(i, j, ElementfallOffset * BlocksBelow, ElementFallSpeed, GameManager.Instance.gameData.SavedGrid[i, j]);
         }
     }
 
@@ -266,11 +266,20 @@ public class GridController : MonoBehaviour
         return deductions;
     }
    
-    private IEnumerator DestroyBlock(Element e)
+    private IEnumerator DestroyBlock(Element e, Element e2)
     {
+        float popTime = ElementDestroyDuration * .8f;
         //DependencyManager.Instance.vfx.PlayBreakingFX(e);
-        e.rectTransform.DOScale(0, ElementDestroyDuration).SetEase(Ease.OutElastic);
-        yield return new WaitForSeconds(ElementDestroyDuration);
+        e.rectTransform.DOScale(1.5f, popTime).SetEase(Ease.OutElastic);
+        yield return new WaitForSeconds(popTime);
+
+        if(!reShuffling)
+        {
+            e.rectTransform.DOMove(e2.transform.position, ElementDestroyDuration).SetEase(Ease.Flash);
+            e.rectTransform.DOScale(.2f, popTime).SetEase(Ease.OutElastic);
+            yield return new WaitForSeconds(ElementDestroyDuration);
+        }
+
         Pooler.Instance.DestroyBlock(e.gameObject);
     }
     
