@@ -2,8 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEditor;
-using Unity.VisualScripting;
 
 public class MainMenu : MonoBehaviour
 {
@@ -23,10 +21,11 @@ public class MainMenu : MonoBehaviour
     private Button LeaderBoardBackButton;
 
     // Main Buttons
-    private Button SettingsButton;
-
     private Button PlayButton;
 
+    // Settings Buttons
+    private Button SettingsButton;
+    private Button SettingsCloseButton;
 
     // Daily Reward
     private Button DailyRewardCloseButton;
@@ -43,6 +42,8 @@ public class MainMenu : MonoBehaviour
     private Button ClearNameButton;
     private Button RandomNameButton;
 
+    // Profile Buttons
+    private Button ProfileButton;
 
     private void Start()
     {
@@ -65,8 +66,14 @@ public class MainMenu : MonoBehaviour
         DailyRewardButtonsLogic();
 
         FirstLoginButtonsLogic();
+
+        ProfileButtonsLogic();
     }
 
+    private void ProfileButtonsLogic()
+    {
+        ProfileButton = ButtonsContainer.transform.GetChild(3).GetChild(0).GetComponent<Button>();
+    }
     private void FirstLoginButtonsLogic()
     {
         Transform loginPopup = transform.GetChild(4);
@@ -179,10 +186,33 @@ public class MainMenu : MonoBehaviour
     private void SettingsButtonLogic()
     {
         SettingsButton = ButtonsContainer.transform.GetChild(3).GetChild(3).GetComponent<Button>();
+        SettingsCloseButton = SettingsButton.gameObject.transform.GetChild(2).GetChild(3).GetComponent<Button>();
 
         SettingsButton.onClick.AddListener(() =>
         {
-            UiManager.Instance.ToggleRoll(SettingsButton.GetComponent<RectTransform>());
+            UiManager.Instance.ToggleRoll(SettingsButton.transform.position);
+
+            UiManager.Instance.SetActive(LeaderBoardButton.gameObject.GetComponent<RectTransform>(), false);
+            UiManager.Instance.SetActive(StoreButton.gameObject.GetComponent<RectTransform>(), false);
+            UiManager.Instance.SetActive(ProfileButton.gameObject.GetComponent<RectTransform>(), false);
+
+            SettingsButton.gameObject.GetComponent<Image>().enabled = false;
+            SettingsButton.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+
+            ButtonClickSound();
+        });
+
+        SettingsCloseButton.onClick.AddListener(() =>
+        {
+            UiManager.Instance.ToggleRoll(SettingsButton.transform.position);
+
+            UiManager.Instance.SetActive(LeaderBoardButton.gameObject.GetComponent<RectTransform>(), true);
+            UiManager.Instance.SetActive(StoreButton.gameObject.GetComponent<RectTransform>(), true);
+            UiManager.Instance.SetActive(ProfileButton.gameObject.GetComponent<RectTransform>(), true);
+
+            SettingsButton.gameObject.GetComponent<Image>().enabled = true;
+            SettingsButton.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+
             ButtonClickSound();
         });
     }

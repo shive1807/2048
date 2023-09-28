@@ -19,10 +19,10 @@ public class IAP : Singleton<IAP>, IStoreListener
     public static string unlock_all_items = "unlock_all_items";
     public static string unlock_inapp_item = "unlock_inapp_item";
 
-    public static string buy_50_gems = "buy_50_coins";
+    public static string buy_5_gems = "buy_5_coins";
+    public static string buy_10_gems = "buy_10_coins";
+    public static string buy_40_gems = "buy_40_coins";
     public static string buy_100_gems = "buy_100_coins";
-    public static string buy_300_gems = "buy_300_coins";
-    public static string buy_1000_gems = "buy_1000_coins";
 
     void Start()
     {
@@ -46,10 +46,10 @@ public class IAP : Singleton<IAP>, IStoreListener
         builder.AddProduct(Remove_ads, ProductType.NonConsumable);
         builder.AddProduct(unlock_all_items, ProductType.NonConsumable);
         builder.AddProduct(unlock_inapp_item, ProductType.NonConsumable);
-        builder.AddProduct(buy_50_gems, ProductType.Consumable);
+        builder.AddProduct(buy_5_gems, ProductType.Consumable);
+        builder.AddProduct(buy_10_gems, ProductType.Consumable);
+        builder.AddProduct(buy_40_gems, ProductType.Consumable);
         builder.AddProduct(buy_100_gems, ProductType.Consumable);
-        builder.AddProduct(buy_300_gems, ProductType.Consumable);
-        builder.AddProduct(buy_1000_gems, ProductType.Consumable);
 
         UnityPurchasing.Initialize(this, builder);
     }
@@ -65,21 +65,21 @@ public class IAP : Singleton<IAP>, IStoreListener
     {
         BuyProductID(Remove_ads);
     }
-    public void Buy50gems()
+    public void Buy5gems()
     {
-        BuyProductID(buy_50_gems);
+        BuyProductID(buy_5_gems);
+    }
+    public void Buy10Coins()
+    {
+        BuyProductID(buy_10_gems);
+    }
+    public void Buy40Coins()
+    {
+        BuyProductID(buy_40_gems);
     }
     public void Buy100Coins()
     {
         BuyProductID(buy_100_gems);
-    }
-    public void Buy300Coins()
-    {
-        BuyProductID(buy_300_gems);
-    }
-    public void Buy1000Coins()
-    {
-        BuyProductID(buy_1000_gems);
     }
 
     public string Getproductpricefromgoogle(string id)
@@ -192,10 +192,24 @@ public class IAP : Singleton<IAP>, IStoreListener
 
             m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(Remove_ads));
         }
-        if (String.Equals(args.purchasedProduct.definition.id, buy_50_gems, StringComparison.Ordinal))
+        if (String.Equals(args.purchasedProduct.definition.id, buy_5_gems, StringComparison.Ordinal))
         {
             Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-            GemsManager.Instance.AddGems(50);
+            GemsManager.Instance.AddGems(5);
+        }
+        if (String.Equals(args.purchasedProduct.definition.id, buy_10_gems, StringComparison.Ordinal))
+        {
+            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
+            GemsManager.Instance.AddGems(10);
+
+            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_10_gems));
+        }
+        if (String.Equals(args.purchasedProduct.definition.id, buy_40_gems, StringComparison.Ordinal))
+        {
+            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
+            GemsManager.Instance.AddGems(40);
+
+            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_40_gems));
         }
         if (String.Equals(args.purchasedProduct.definition.id, buy_100_gems, StringComparison.Ordinal))
         {
@@ -203,20 +217,6 @@ public class IAP : Singleton<IAP>, IStoreListener
             GemsManager.Instance.AddGems(100);
 
             m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_100_gems));
-        }
-        if (String.Equals(args.purchasedProduct.definition.id, buy_300_gems, StringComparison.Ordinal))
-        {
-            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-            GemsManager.Instance.AddGems(300);
-
-            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_300_gems));
-        }
-        if (String.Equals(args.purchasedProduct.definition.id, buy_1000_gems, StringComparison.Ordinal))
-        {
-            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-            GemsManager.Instance.AddGems(1000);
-
-            m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(buy_1000_gems));
         }
         else
         {

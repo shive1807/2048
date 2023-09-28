@@ -10,21 +10,28 @@ using DG.Tweening;
 
 public class GameController : MonoBehaviour
 {
+    // Chain variables
     private List<Element> chain;
     private bool upChain = false;
     private bool downChain = false;
 
+    // Connecting line variables
     private LineRenderer lineRenderer;
     private GameObject line;
     private List<GameObject> lines;
     public Material lineColor;
 
+    // Swap Abillity 
     public List<Element> swapElements;
     [HideInInspector] public bool swaping = false;
     public float swapSpeed = 1f;
+    private int swapAbilityCount = 0;
 
+    // Smash Ability
     [HideInInspector] public bool smashing = false;
+    private int smashAbilityCount = 0;
 
+    // Max Element and HighScore Check
     [HideInInspector] public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
     [HideInInspector] public Num minElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
 
@@ -33,6 +40,7 @@ public class GameController : MonoBehaviour
     private double tempHighScore = 0;
     public TextMeshProUGUI highScoreTxt;
 
+    // Ability refernces
     [SerializeField] RectTransform hammer;
     [SerializeField] float smashTime;
     [SerializeField] GameObject smashImg;
@@ -53,6 +61,9 @@ public class GameController : MonoBehaviour
         Debug.Log(minElement.txt);
 
         HighScore = GameManager.Instance.gameData.HighScore;
+
+        swapAbilityCount = GameManager.Instance.gameData.SwapAbilityCount;
+        smashAbilityCount = GameManager.Instance.gameData.SmashAbilityCount;
     }
 
     private void Update()
@@ -191,13 +202,7 @@ public class GameController : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("max");
         maxElement = Num.Max(maxElement, num);
-
-        //Action<Num, Num> action = DependencyManager.Instance.gridController.ElementReShuffle;
-
-        //StartCoroutine(DependencyManager.Instance.popup.PopupConfirmation(DependencyManager.Instance.gridController.ElementReShuffle,
-        //DependencyManager.Instance.newBlockPopup, maxElement, minElement));
 
         DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
     }
@@ -217,78 +222,94 @@ public class GameController : MonoBehaviour
     public IEnumerator SwapBlock(Element e)
     {
         swapElements.Add(e);
-        if(swapElements.Count == 1)
+
+        // check for ability count
+        if(GameManager.Instance.gameData.SwapAbilityCount != 0)
         {
-            Debug.Log("only 1 element");
-            yield return null;
+            if (swapElements.Count == 1)
+            {
+                Debug.Log("only 1 element");
+                yield return null;
+            }
+            else if (swapElements.Count == 2)
+            {
+
+                Element e1 = swapElements[0];
+                Element e2 = swapElements[1];
+
+                Debug.Log(e1.moving);
+
+
+                Vector2 e1Pos = e1.GetComponent<RectTransform>().anchoredPosition;
+                Vector2 e2Pos = e2.GetComponent<RectTransform>().anchoredPosition;
+
+                StartCoroutine(e1.MoveElement(e2Pos, DependencyManager.Instance.gridController.ElementFallSpeed));
+                StartCoroutine(e2.MoveElement(e1Pos, DependencyManager.Instance.gridController.ElementFallSpeed));
+
+                float duration = Vector2.Distance(e1Pos, e2Pos) / DependencyManager.Instance.gridController.ElementFallSpeed;
+
+                yield return new WaitForSeconds(duration + .1f);
+
+                e1.GetComponent<RectTransform>().anchoredPosition = e1Pos;
+                e2.GetComponent<RectTransform>().anchoredPosition = e2Pos;
+
+                // swaping Num
+                Num _temp;
+                _temp = e1.num;
+                e1.num = e2.num;
+                e2.num = _temp;
+                e1.SetNum(0, e1.num);
+                e2.SetNum(0, e2.num);
+
+                swapElements.Clear();
+                swaping = false;
+                swapAbilityCount--;
+                SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, -1, null, swapAbilityCount, -1);
+            }
         }
-        else if(swapElements.Count == 2)
+        else
         {
-
-            Element e1 = swapElements[0];
-            Element e2 = swapElements[1];
-
-            Debug.Log(e1.moving);
-
-
-            Vector2 e1Pos = e1.GetComponent<RectTransform>().anchoredPosition;
-            Vector2 e2Pos = e2.GetComponent<RectTransform>().anchoredPosition;
-
-            StartCoroutine(e1.MoveElement(e2Pos, swapSpeed));
-            StartCoroutine(e2.MoveElement(e1Pos, swapSpeed));
-
-            float duration = Vector2.Distance(e1Pos, e2Pos) / swapSpeed;
-
-            yield return new WaitForSeconds(duration + .1f);
-
-            e1.GetComponent<RectTransform>().anchoredPosition = e1Pos;
-            e2.GetComponent<RectTransform>().anchoredPosition = e2Pos;
-
-            // swaping Num
-            Num _temp ;
-            _temp = e1.num;
-            e1.num = e2.num;
-            e2.num = _temp;
-            e1.SetNum(0, e1.num);
-            e2.SetNum(0, e2.num);
-
-            swapElements.Clear();
-            swaping = false;
-            Debug.Log("swapping element");
+            // show some message
         }
     }
     public IEnumerator SmashBlock(Element e)
     {
-        //hammer animation
-        hammer.gameObject.SetActive(true);
+        // check for ability count
+        if (smashAbilityCount != 0)
+        {
+            //hammer animation
+            hammer.gameObject.SetActive(true);
 
-        //----------------Bug Here---------------------------
-        //can't get accurate position of the element
+            hammer.DOMove(e.gameObject.transform.position, smashTime);
+            yield return new WaitForSeconds(smashTime);
 
-        hammer.DOAnchorPos(e.gameObject.transform.position, smashTime);  
-        yield return new WaitForSeconds(smashTime);
+            hammer.DOLocalRotateQuaternion(Quaternion.Euler(0, 0, 60), .2f);
+            yield return new WaitForSeconds(.2f);
 
-        hammer.DOLocalRotateQuaternion(Quaternion.Euler(0, 0, 60), .2f);
-        yield return new WaitForSeconds(.2f);
+            smashImg.gameObject.SetActive(true);
+            yield return new WaitForSeconds(.2f);
 
-        smashImg.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.2f);
+            smashImg.gameObject.SetActive(false);
+            yield return new WaitForSeconds(.1f);
 
-        smashImg.gameObject.SetActive(false);
-        yield return new WaitForSeconds(.1f);
+            hammer.gameObject.SetActive(false);
 
-        hammer.gameObject.SetActive(false);
-        //---------------------------------------------------------
-        
-        // vibration
-        if(VibrationManager.Instance != null)
-            VibrationManager.Instance.Vibrate(5);
+            // vibration
+            if (VibrationManager.Instance != null)
+                VibrationManager.Instance.Vibrate(5);
 
-        //destroying block
-        chain.Add(e);
-        DependencyManager.Instance.gridController.GridRefill(chain);
-        chain.Clear();
-        smashing = false;
+            //destroying block
+            chain.Add(e);
+            StartCoroutine(DependencyManager.Instance.gridController.GridRefill(chain));
+            chain.Clear();
+            smashAbilityCount--;
+            SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, -1, null, -1, smashAbilityCount);
+            smashing = false;
+        }
+        else
+        {
+            // show some message
+        }
     }
     public void SetSmash()
     {
@@ -404,7 +425,7 @@ public class GameController : MonoBehaviour
                 HighScoreUpdate(num);
                 DestroyLine();
             }
-            DependencyManager.Instance.gridController.GridRefill(chain);
+            StartCoroutine(DependencyManager.Instance.gridController.GridRefill(chain));
 
             upChain = false;
             downChain = false;

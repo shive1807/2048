@@ -12,6 +12,7 @@ public class GridController : MonoBehaviour
     private bool            reShuffling     = false;
     private GameObject      block;
     private RectTransform   linesRectTransform;
+    private bool            destroyed = false;
 
     //Public variables.
     public bool         startingGrid = true;
@@ -67,7 +68,7 @@ public class GridController : MonoBehaviour
         }
     }
 
-    public void GridRefill(List<Element> chain)
+    public IEnumerator GridRefill(List<Element> chain)
     {
         if (reShuffling)
         {
@@ -85,6 +86,8 @@ public class GridController : MonoBehaviour
             {
                 StartCoroutine(DestroyBlock(chain[i], chain[index]));
             }
+
+            yield return new WaitForSeconds(ElementDestroyDuration * .8f);
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
@@ -156,6 +159,8 @@ public class GridController : MonoBehaviour
         StartCoroutine(DependencyManager.Instance.gameController.MaxElementCheck());
         SaveSystem.SaveGame(-1, true, grid, DependencyManager.Instance.gameController.HighScore);
         GameEndCheck();
+
+        reShuffling = false;
     }
     #endregion
 
@@ -281,6 +286,8 @@ public class GridController : MonoBehaviour
         }
 
         Pooler.Instance.DestroyBlock(e.gameObject);
+
+        destroyed = true;
     }
     
     private IEnumerator GameEndCheck()
@@ -346,9 +353,8 @@ public class GridController : MonoBehaviour
                 }
             }
         }
-        GridRefill(list);
+        StartCoroutine(GridRefill(list));
         DependencyManager.Instance.gameController.minElement = Num.Increment(MinNum, 1);
-        reShuffling = false;
     }
     #endregion
 }

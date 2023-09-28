@@ -3,21 +3,29 @@ using UnityEngine;
 [Serializable]
 public class GameData
 {
+    // Game values
     public Num[,] SavedGrid = null;
     public double HighScore = 0;
     public int Gems = 0;
+    public int SwapAbilityCount = 3;
+    public int SmashAbilityCount = 3;
 
+    // Settings info
     public int SoundPref = 1;
     public int MusicPref = 1;
     public int VibrationPref = 1;
 
+    // Daily Reward info
     public DateTime LastClaimRewardDate = DateTime.Now;
     public int RewardClaimStreak = 0;
     public int Collected = 0;
 
+    // User info
     public int FirstLogin = 1;
     public User User;
-    public GameData(int gems = 0, Num[,] Grid = null, double highScore = 0, int soundPref = 1, int musicPref = 1, int vibrationPref = 1, int rewardStreak = 0, DateTime date = default, int collected = 0, int firstLogin = 1, User user = default)
+    public GameData(int gems = 0, Num[,] Grid = null, double highScore = 0, int soundPref = 1, int musicPref = 1, int vibrationPref = 1, 
+        int rewardStreak = 0, DateTime date = default, int collected = 0, int firstLogin = 1, User user = default, int swapAbilityCount = 0, 
+        int smashAbilityCount = 0)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
         
@@ -26,6 +34,10 @@ public class GameData
         HighScore = highScore;
 
         Gems = gems;
+
+        SwapAbilityCount = swapAbilityCount;
+
+        SmashAbilityCount = smashAbilityCount;
 
         MusicPref = musicPref;
 

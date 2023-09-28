@@ -7,7 +7,7 @@ public static class SaveSystem
 {
     public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, 
         int soundPref = -1, int musicPref = -1, int vibrationPref = -1, int rewardStreak = -1, DateTime date = default, int collected = -1,
-        int firstLogin = -1, User user = default)
+        int firstLogin = -1, User user = default, int swapAbilityCount = -1, int smashAbilityCount = -1)
     {
         GameData gameData = GameManager.Instance.gameData;
 
@@ -33,6 +33,8 @@ public static class SaveSystem
 
         gameData.HighScore = (highScore == -1) ? gameData.HighScore : highScore;
         gameData.Gems = (gems == -1) ? gameData.Gems : gems;
+        gameData.SmashAbilityCount = (smashAbilityCount == -1) ? gameData.SmashAbilityCount : smashAbilityCount;
+        gameData.SwapAbilityCount = (swapAbilityCount == -1) ? gameData.SwapAbilityCount : swapAbilityCount;
         gameData.SoundPref = (soundPref == -1) ? gameData.SoundPref : soundPref;
         gameData.MusicPref = (musicPref == -1) ? gameData.MusicPref : musicPref;
         gameData.VibrationPref = (vibrationPref == -1) ? gameData.VibrationPref : vibrationPref;

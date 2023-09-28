@@ -51,7 +51,7 @@ public class UiManager : MonoBehaviour
         RectTransform rect = objectToMove.GetComponent<RectTransform>();
         DOTweenModuleUI.DOAnchorPosX(rect, 1000, .1f);
     }
-    public void ToggleRoll(RectTransform pos)
+    public void ToggleRoll(Vector2 pos)
     {
         if (rolledOut)
         {
@@ -64,19 +64,19 @@ public class UiManager : MonoBehaviour
             rolledOut = true;
         }
     }
-    void RollOut(GameObject[] settings, RectTransform initialPos)
+    void RollOut(GameObject[] settings, Vector2 initialPos)
     {
         for (int i = 0; i < settings.Length; i++)
         {
             RectTransform pos = settings[i].GetComponent<RectTransform>();
 
-            Vector2 targetPosition = initialPos.anchoredPosition - Vector2.right * (i + 1) * 250;
-            pos.DOAnchorPos(targetPosition, .3f);
+            Vector2 targetPosition = initialPos - Vector2.right * (i) * Screen.width / 4.1f;
+            pos.DOMove(targetPosition, .3f);
 
             pos.DOScale(1, 0.5f).SetEase(Ease.OutBounce);
         }
     }
-    public void RollIn(GameObject[] settings, RectTransform initialPos)
+    public void RollIn(GameObject[] settings, Vector2 initialPos)
     {
         for (int i = 0; i < settings.Length; i++)
         {
@@ -84,20 +84,36 @@ public class UiManager : MonoBehaviour
 
             pos.DOScale(0, 0.5f).SetEase(Ease.OutBounce);
 
-            pos.DOAnchorPos(initialPos.anchoredPosition, .3f);
+            pos.DOMove(initialPos, .3f);
         }
     }
-    public void SetActive(RectTransform obj, bool on)
+    public void SetActive(RectTransform obj, bool on, bool auto = false)
     {
-        if (!on)
+        if (!auto)
         {
-            obj.DOScale(Vector2.zero, .5f).SetEase(Ease.OutBounce);
-            obj.gameObject.SetActive(false);
+            if (!on)
+            {
+                obj.DOScale(Vector2.zero, .5f).SetEase(Ease.OutBounce);
+                obj.gameObject.SetActive(false);
+            }
+            else
+            {
+                obj.gameObject.SetActive(true);
+                obj.DOScale(new Vector2(1, 1), .5f).SetEase(Ease.OutBounce);
+            }
         }
         else
         {
-            obj.gameObject.SetActive(true);
-            obj.DOScale(new Vector2(1, 1), .5f).SetEase(Ease.OutBounce);
+            if (obj.gameObject.activeSelf)
+            {
+                obj.DOScale(Vector2.zero, .5f).SetEase(Ease.OutBounce);
+                obj.gameObject.SetActive(false);
+            }
+            else
+            {
+                obj.gameObject.SetActive(true);
+                obj.DOScale(new Vector2(1, 1), .5f).SetEase(Ease.OutBounce);
+            }
         }
     }
 }

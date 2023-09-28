@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AudioManager : Singleton<AudioManager>
@@ -24,8 +22,8 @@ public class AudioManager : Singleton<AudioManager>
 
         if(gamedata != null)
         {
-            muteSound = GameManager.Instance.gameData.SoundPref;
-            muteMusic = GameManager.Instance.gameData.MusicPref;
+            muteSound = gamedata.SoundPref;
+            muteMusic = gamedata.MusicPref;
         }
 
         ToggleSound(true, muteSound);
@@ -39,14 +37,14 @@ public class AudioManager : Singleton<AudioManager>
         {
             if (pref == 0)
             {
-                soundSource.mute = true;
+                soundSource.mute = false;
                 UnMutedImage.SetActive(true);
                 mutedImage.SetActive(false);
                 muteSound = 0;
             }
             else if (pref == 1)
             {
-                soundSource.mute = false;
+                soundSource.mute = true;
                 mutedImage.SetActive(true);
                 UnMutedImage.SetActive(false);
                 muteSound = 1;
