@@ -20,6 +20,7 @@ public class DependencyManager : MonoBehaviour
     public GameObject       newBlockPopup;
     public VFX              vfx;
     public PauseMenu        pauseMenu;
+    public AbilityPurchase   abilityPurchase;
     private void Awake()
     {
         if (Instance != null && Instance != this)

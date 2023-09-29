@@ -5,25 +5,39 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.Purchasing;
 
 public class GamePlay : MonoBehaviour
 {
     private GameObject ButtonsContainer;
 
+    // Main Buttons
     private Button StoreButton;
     private Button PauseButton;
     private Button SmashButton;
     private Button SwapButton;
 
+    // Store Buttons
     private Button PlusButton;
     private Button StoreBackButton;
 
+    // Rank Buttons
     private Button RankButton;
     private Button RankBackButton;
 
+    // Pause Menu Buttons
     private Button ResumeButton;
     private Button RestartButton;
     private Button HomeButton;
+
+    // Ability Buy Buttons
+    private Button SmashPlusButton;
+    private Button SwapPlusButton;
+    private Button SelectSwapButton;
+    private Button SelectSmashButton;
+    private Button IncQuantButton;
+    private Button DecQuantButton;
+    private Button AbilityBuyButton;
 
     private Button newBlockRewardClaimButton;
     private void Start()
@@ -66,6 +80,66 @@ public class GamePlay : MonoBehaviour
         SwapButtonLogic();
 
         newBlockUnlockRewardClaimButtonLogic();
+
+        AbilityBuyButtonLogic();
+    }
+
+    private void AbilityBuyButtonLogic()
+    {
+        Transform AbilityBuyPopup = transform.GetChild(4);
+
+        SwapPlusButton = ButtonsContainer.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Button>();
+        SmashPlusButton = ButtonsContainer.transform.GetChild(0).GetChild(1).GetChild(2).GetComponent<Button>();
+
+        SelectSmashButton = AbilityBuyPopup.GetChild(2).GetComponent<Button>();
+        SelectSwapButton = AbilityBuyPopup.GetChild(3).GetComponent<Button>();
+        IncQuantButton = AbilityBuyPopup.GetChild(4).GetComponent<Button>();
+        DecQuantButton = AbilityBuyPopup.GetChild(6).GetComponent<Button>();
+        AbilityBuyButton = AbilityBuyPopup.GetChild(7).GetComponent<Button>();
+
+        AbilityPurchase abilityPurchase = DependencyManager.Instance.abilityPurchase;
+
+        UnityAction openBuyPopup = () =>
+        {
+            //UiManager.Instance.SetActive(abilityPurchase.gameObject.GetComponent<RectTransform>(), true);
+            abilityPurchase.gameObject.SetActive(true);
+        };
+
+        SwapPlusButton.onClick.AddListener(openBuyPopup);
+        SmashPlusButton.onClick.AddListener(openBuyPopup);
+
+        SelectSwapButton.onClick.AddListener(() =>
+        {
+            abilityPurchase.swapSelect = true;
+            abilityPurchase.smashSelect = false;
+            abilityPurchase.amount = 0;
+            abilityPurchase.UpdateQuantTxt();
+        });
+
+        SelectSmashButton.onClick.AddListener(() =>
+        {
+            abilityPurchase.smashSelect = true;
+            abilityPurchase.swapSelect = false;
+            abilityPurchase.amount = 0;
+            abilityPurchase.UpdateQuantTxt();
+        });
+
+        IncQuantButton.onClick.AddListener(() =>
+        {
+            abilityPurchase.amount++;
+            abilityPurchase.UpdateQuantTxt();
+        });
+
+        DecQuantButton.onClick.AddListener(() =>
+        {
+            abilityPurchase.amount--;
+            abilityPurchase.UpdateQuantTxt();
+        });
+
+        AbilityBuyButton.onClick.AddListener(() =>
+        {
+            abilityPurchase.Buy();
+        });
     }
 
     private void newBlockUnlockRewardClaimButtonLogic()

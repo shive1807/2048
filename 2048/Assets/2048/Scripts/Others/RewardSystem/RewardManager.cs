@@ -24,11 +24,12 @@ public class RewardManager : Singleton<RewardManager>
     #region private functions
     private void Start()
     {
-        if(rewardCollected == 0)
+        Setup();
+
+        if (rewardCollected == 0)
         {
             StartCoroutine(StartDailyRewardPopup());
         }
-        Setup();
     }
     private IEnumerator StartDailyRewardPopup()
     {

@@ -82,12 +82,26 @@ public class GridController : MonoBehaviour
         {
             int[,] deductions = GetDestroyedBlocks(chain);
 
+            Element[,] temp = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+            temp = grid;
+
+            Element[,] copyGrid = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
+
+            for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
+            {
+                for (int j = 0; j < GameSettings.GRID_HEIGHT; j++)
+                {
+                    copyGrid[i, j] = new Element();
+                    copyGrid[i, j] = grid[i, j];
+                }
+            }
+
             for (int i = 0; i < index; i++)
             {
                 StartCoroutine(DestroyBlock(chain[i], chain[index]));
             }
 
-            yield return new WaitForSeconds(ElementDestroyDuration * .8f);
+            yield return new WaitForSeconds(ElementDestroyDuration * 2);
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
@@ -98,13 +112,10 @@ public class GridController : MonoBehaviour
                     if (depth == -1 || depth == 0)
                         continue;
 
-                    Vector2 targetPos = grid[i, j - depth].GetComponent<RectTransform>().anchoredPosition;
+                    Vector2 targetPos = copyGrid[i, j - depth].GetComponent<RectTransform>().anchoredPosition;
                     StartCoroutine(grid[i, j].MoveElement(targetPos, ElementFallSpeed));
                 }
             }
-
-            Element[,] temp = new Element[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
-            temp = grid;
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
@@ -318,10 +329,10 @@ public class GridController : MonoBehaviour
 
         if(AudioManager.Instance != null)
             AudioManager.Instance.PlaySound("GameOver");
-
+        transform.parent.parent.GetChild(5).gameObject.SetActive(true);
         yield return new WaitForSeconds(GameSettings.GAME_END_TIME);
         DependencyManager.Instance.gameManager.LoadScene("MainMenu");
-        SaveSystem.DeleteGameData();
+        SaveSystem.ResetGrid();
         //return true; // No match found, game has ended
     }
 

@@ -25,11 +25,11 @@ public class GameController : MonoBehaviour
     public List<Element> swapElements;
     [HideInInspector] public bool swaping = false;
     public float swapSpeed = 1f;
-    private int swapAbilityCount = 0;
+    public int swapAbilityCount = 0;
 
     // Smash Ability
     [HideInInspector] public bool smashing = false;
-    private int smashAbilityCount = 0;
+    public int smashAbilityCount = 0;
 
     // Max Element and HighScore Check
     [HideInInspector] public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
@@ -64,6 +64,8 @@ public class GameController : MonoBehaviour
 
         swapAbilityCount = GameManager.Instance.gameData.SwapAbilityCount;
         smashAbilityCount = GameManager.Instance.gameData.SmashAbilityCount;
+        DependencyManager.Instance.abilityPurchase.UpdateSwapAbilityCount();
+        DependencyManager.Instance.abilityPurchase.UpdateSmashAbilityCount();
     }
 
     private void Update()
@@ -224,7 +226,7 @@ public class GameController : MonoBehaviour
         swapElements.Add(e);
 
         // check for ability count
-        if(GameManager.Instance.gameData.SwapAbilityCount != 0)
+        if(swapAbilityCount != 0)
         {
             if (swapElements.Count == 1)
             {
