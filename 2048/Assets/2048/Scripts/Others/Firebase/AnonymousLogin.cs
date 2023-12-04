@@ -76,8 +76,6 @@ public class AnonymousLogin : MonoBehaviour
 
             //login successful.
             SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, 0, user);
-
-            DatabaseRealtimeManager.Instance.WriteData();
         });
     }
 

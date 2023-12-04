@@ -38,6 +38,7 @@ public class GamePlay : MonoBehaviour
     private Button IncQuantButton;
     private Button DecQuantButton;
     private Button AbilityBuyButton;
+    private Button AbilityPopupBackButton;
 
     private Button newBlockRewardClaimButton;
     private void Start()
@@ -96,6 +97,7 @@ public class GamePlay : MonoBehaviour
         IncQuantButton = AbilityBuyPopup.GetChild(4).GetComponent<Button>();
         DecQuantButton = AbilityBuyPopup.GetChild(6).GetComponent<Button>();
         AbilityBuyButton = AbilityBuyPopup.GetChild(7).GetComponent<Button>();
+        AbilityPopupBackButton = AbilityBuyPopup.GetChild(9).GetComponent<Button>();
 
         AbilityPurchase abilityPurchase = DependencyManager.Instance.abilityPurchase;
 
@@ -140,6 +142,11 @@ public class GamePlay : MonoBehaviour
         {
             abilityPurchase.Buy();
         });
+
+        AbilityPopupBackButton.onClick.AddListener(() =>
+        {
+            abilityPurchase.gameObject.SetActive(false);
+        });
     }
 
     private void newBlockUnlockRewardClaimButtonLogic()
@@ -179,10 +186,11 @@ public class GamePlay : MonoBehaviour
         var topUiPanel = ButtonsContainer.transform.GetChild(1);
         RankButton = topUiPanel.GetChild(0).GetComponent<Button>();
 
-        RankBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(1).GetComponent<Button>();
+        RankBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(6).GetComponent<Button>();
 
         UnityAction OpenLeaderBoard = () =>
         {
+            Leaderboard.Instance.FetchData();
             UiManager.Instance.PanelOpenAnimation(Panel.LeaderBoard);
             ButtonClickSound();
             gameObject.SetActive(false);

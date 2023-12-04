@@ -26,7 +26,7 @@ public class GridController : MonoBehaviour
     public bool gridMoving = false;
 
     //Public hidden variables.
-    [HideInInspector] public int ElementMaxLimit = 8;
+    [HideInInspector] public int ElementMaxLimit = 4;
     [HideInInspector] public int ElementMinLimit = 1;
     [HideInInspector] public int DecInd = 0;
 
@@ -101,7 +101,7 @@ public class GridController : MonoBehaviour
                 StartCoroutine(DestroyBlock(chain[i], chain[index]));
             }
 
-            yield return new WaitForSeconds(ElementDestroyDuration * 2);
+            yield return new WaitForSeconds(ElementDestroyDuration * .8f);
 
             for (int i = 0; i < GameSettings.GRID_WIDTH; i++)
             {
@@ -346,7 +346,7 @@ public class GridController : MonoBehaviour
         if (ElementMinLimit < 10)
         {
             ElementMinLimit++;
-            ElementMaxLimit = ElementMinLimit + 7;
+            ElementMaxLimit = ElementMinLimit + 3;
         }
         else if (ElementMinLimit >= 10)
         {

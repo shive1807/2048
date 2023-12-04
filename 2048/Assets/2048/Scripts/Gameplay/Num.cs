@@ -14,6 +14,7 @@ public class Num
     {
         this.numVal = val;
         this.dec = dec;
+        this.txt = $"{val}{dec}";
     }
     public static int CurrentDec(Num num)
     {

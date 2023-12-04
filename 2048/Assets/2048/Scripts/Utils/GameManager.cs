@@ -9,7 +9,11 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         LoadGameData();
-        StartCoroutine(FetchDataFromDatabase());
+
+        if(gameData.FirstLogin != 1)
+        {
+            StartCoroutine(FetchDataFromDatabase());
+        }
     }
     IEnumerator FetchDataFromDatabase()
     {

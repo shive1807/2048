@@ -8,7 +8,8 @@ using Unity.VisualScripting;
 public enum Panel
 {
     LeaderBoard,
-    Store
+    Store,
+    Profile
 }
 
 public class UiManager : MonoBehaviour
@@ -16,12 +17,14 @@ public class UiManager : MonoBehaviour
     public static UiManager Instance;
     [HideInInspector] public GameObject LeaderBoard;
     [HideInInspector] public GameObject Store;
+    [HideInInspector] public GameObject Profile;
 
     protected void Awake()
     {
         Instance = this;
         LeaderBoard = transform.GetChild(1).gameObject;
         Store       = transform.GetChild(2).gameObject;
+        Profile     = transform.GetChild(3).gameObject;
     }
 
     bool rolledOut = false;
@@ -40,6 +43,8 @@ public class UiManager : MonoBehaviour
         {
             case Panel.LeaderBoard:
                 return LeaderBoard;
+            case Panel.Profile:
+                return Profile;
             default:
                 return Store;
         }

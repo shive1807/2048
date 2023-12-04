@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
     public int smashAbilityCount = 0;
 
     // Max Element and HighScore Check
-    [HideInInspector] public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
+    [HideInInspector] public Num maxElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}{" "}" };
     [HideInInspector] public Num minElement = new Num() { numVal = 2, dec = ' ', txt = $"{2}" };
 
     [HideInInspector] public int maxPower = 0;
@@ -206,6 +206,7 @@ public class GameController : MonoBehaviour
 
         maxElement = Num.Max(maxElement, num);
 
+        SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, -1, null, -1, -1, maxElement);
         DependencyManager.Instance.gridController.ElementReShuffle(maxElement, minElement);
     }
 

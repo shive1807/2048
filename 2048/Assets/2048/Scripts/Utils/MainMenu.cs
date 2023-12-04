@@ -44,6 +44,11 @@ public class MainMenu : MonoBehaviour
 
     // Profile Buttons
     private Button ProfileButton;
+    private TextMeshProUGUI Username;
+    private TextMeshProUGUI MaxBlock;
+    private TextMeshProUGUI HighScore;
+    private TextMeshProUGUI Rank;
+    private Button ProfileBackButton;
 
     private void Start()
     {
@@ -68,11 +73,38 @@ public class MainMenu : MonoBehaviour
         FirstLoginButtonsLogic();
 
         ProfileButtonsLogic();
+
+        //Leaderboard.Instance.FetchData();
     }
 
     private void ProfileButtonsLogic()
     {
+        Transform Profile = UiManager.Instance.Profile.transform;
+
         ProfileButton = ButtonsContainer.transform.GetChild(3).GetChild(0).GetComponent<Button>();
+
+        Username = Profile.GetChild(0).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
+        MaxBlock = Profile.GetChild(3).GetChild(0).GetComponent<TextMeshProUGUI>();
+        HighScore = Profile.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
+        Rank = Profile.GetChild(2).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>();
+
+        ProfileBackButton = Profile.GetChild(5).GetComponent<Button>();
+
+        ProfileButton.onClick.AddListener(() =>
+        {
+            UiManager.Instance.PanelOpenAnimation(Panel.Profile);
+            ButtonClickSound();
+            gameObject.SetActive(false);
+
+            GameData gamedata = GameManager.Instance.gameData;
+
+            Username.text = gamedata.User.Username;
+            MaxBlock.text = gamedata.MaxBlock.txt;
+            HighScore.text = gamedata.HighScore.ToString();
+            Rank.text = "512K";
+        });
+
+        ProfileBackButton.onClick.AddListener(() => Back(Panel.Profile, gameObject));
     }
     private void FirstLoginButtonsLogic()
     {
@@ -168,10 +200,11 @@ public class MainMenu : MonoBehaviour
         LeaderBoardButton = ButtonsContainer.transform.GetChild(3).GetChild(2).GetComponent<Button>();
         RankButton = ButtonsContainer.transform.GetChild(2).GetChild(0).GetComponent<Button>();
 
-        LeaderBoardBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(1).GetComponent<Button>();
+        LeaderBoardBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(6).GetComponent<Button>();
 
         UnityAction OpenLeaderBoard = () =>
         {
+            Leaderboard.Instance.FetchData();
             UiManager.Instance.PanelOpenAnimation(Panel.LeaderBoard);
             ButtonClickSound();
             gameObject.SetActive(false);
@@ -229,10 +262,11 @@ public class MainMenu : MonoBehaviour
     {
         gameObject.SetActive(true);
         UiManager.Instance.PanelCloseAnimation(panel);
+        ButtonClickSound();
     };
 
     ///Supporting function;
-    private void ButtonClickSound()
+    public static void ButtonClickSound()
     {
         if(AudioManager.Instance != null)
             AudioManager.Instance.PlaySound("ButtonClick");
