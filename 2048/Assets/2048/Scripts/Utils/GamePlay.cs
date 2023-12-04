@@ -48,6 +48,8 @@ public class GamePlay : MonoBehaviour
         ButtonsLogic();
 
         SetBottomButtonPanelSize();
+
+        Leaderboard.Instance.FetchData();
     }
 
     private void SetBottomButtonPanelSize()
@@ -183,6 +185,8 @@ public class GamePlay : MonoBehaviour
 
     private void LeaderBoardButtonLogic()
     {
+        GetScoresUI();
+
         var topUiPanel = ButtonsContainer.transform.GetChild(1);
         RankButton = topUiPanel.GetChild(0).GetComponent<Button>();
 
@@ -190,7 +194,7 @@ public class GamePlay : MonoBehaviour
 
         UnityAction OpenLeaderBoard = () =>
         {
-            Leaderboard.Instance.FetchData();
+            //Leaderboard.Instance.FetchData();
             UiManager.Instance.PanelOpenAnimation(Panel.LeaderBoard);
             ButtonClickSound();
             gameObject.SetActive(false);
@@ -199,6 +203,17 @@ public class GamePlay : MonoBehaviour
         RankButton.onClick.AddListener(OpenLeaderBoard);
 
         RankBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
+    }
+
+    public void GetScoresUI()
+    {
+
+        Transform leaderboard = UiManager.Instance.LeaderBoard.transform;
+
+        for (int i = 0; i < Leaderboard.Instance.users.Length; i++)
+        {
+            Leaderboard.Instance.scores[i] = leaderboard.GetChild(i).GetComponent<Score>();
+        }
     }
 
     private UnityAction<Panel, GameObject> Back = (panel, gameObject) =>

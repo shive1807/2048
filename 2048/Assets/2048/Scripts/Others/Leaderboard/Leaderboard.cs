@@ -13,20 +13,8 @@ public class Leaderboard : Singleton<Leaderboard>
     {
         users = new GameData[leaderboardSize];
         scores = new Score[leaderboardSize];
-
-        GetScoresUI();
     }
 
-    public void GetScoresUI()
-    {
-
-        Transform Leaderboard = UiManager.Instance.LeaderBoard.transform;
-
-        for (int i = 0; i < users.Length; i++)
-        {
-            scores[i] = Leaderboard.GetChild(i).GetComponent<Score>();
-        }
-    }
 
     public async void FetchData()
     {

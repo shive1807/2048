@@ -56,6 +56,8 @@ public class MainMenu : MonoBehaviour
 
         PlayButton = ButtonsContainer.transform.GetChild(0).GetComponent<Button>();
         ButtonsClickLogic();
+
+        Leaderboard.Instance.FetchData();
     }
     
     private void ButtonsClickLogic()
@@ -197,6 +199,8 @@ public class MainMenu : MonoBehaviour
 
     private void LeaderBoardButtonLogic()
     {
+        GetScoresUI();
+
         LeaderBoardButton = ButtonsContainer.transform.GetChild(3).GetChild(2).GetComponent<Button>();
         RankButton = ButtonsContainer.transform.GetChild(2).GetChild(0).GetComponent<Button>();
 
@@ -204,7 +208,7 @@ public class MainMenu : MonoBehaviour
 
         UnityAction OpenLeaderBoard = () =>
         {
-            Leaderboard.Instance.FetchData();
+            //Leaderboard.Instance.FetchData();
             UiManager.Instance.PanelOpenAnimation(Panel.LeaderBoard);
             ButtonClickSound();
             gameObject.SetActive(false);
@@ -215,7 +219,18 @@ public class MainMenu : MonoBehaviour
 
         LeaderBoardBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
     }
-    
+
+    public void GetScoresUI()
+    {
+
+        Transform leaderboard = UiManager.Instance.LeaderBoard.transform;
+
+        for (int i = 0; i < Leaderboard.Instance.users.Length; i++)
+        {
+            Leaderboard.Instance.scores[i] = leaderboard.GetChild(i).GetComponent<Score>();
+        }
+    }
+
     private void SettingsButtonLogic()
     {
         SettingsButton = ButtonsContainer.transform.GetChild(3).GetChild(3).GetComponent<Button>();
