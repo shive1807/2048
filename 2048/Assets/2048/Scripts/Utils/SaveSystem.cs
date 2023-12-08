@@ -7,7 +7,7 @@ public static class SaveSystem
 {
     public static void SaveGame(int gems = -1, bool gridChanged = false, Element[,] gameGrid = default, double highScore = -1, 
         int soundPref = -1, int musicPref = -1, int vibrationPref = -1, int rewardStreak = -1, DateTime date = default, int collected = -1,
-        int firstLogin = -1, User user = default, int swapAbilityCount = -1, int smashAbilityCount = -1, Num maxBlock = null)
+        int firstLogin = -1, User user = default, int swapAbilityCount = -1, int smashAbilityCount = -1, Num maxBlock = null, int removeAds = -1)
     {
         GameData gameData = GameManager.Instance.gameData;
 
@@ -44,6 +44,7 @@ public static class SaveSystem
         gameData.FirstLogin = (firstLogin == -1) ? gameData.FirstLogin : firstLogin;
         gameData.User = (user == null) ? gameData.User : user;
         gameData.MaxBlock = (maxBlock == null) ? gameData.MaxBlock : maxBlock;
+        gameData.RemoveAds = (removeAds == -1) ? gameData.RemoveAds : removeAds;
 
         BinaryFormatter formatter = new BinaryFormatter();
 

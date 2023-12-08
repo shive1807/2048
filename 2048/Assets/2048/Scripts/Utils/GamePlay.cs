@@ -188,7 +188,7 @@ public class GamePlay : MonoBehaviour
         GetScoresUI();
 
         var topUiPanel = ButtonsContainer.transform.GetChild(1);
-        RankButton = topUiPanel.GetChild(0).GetComponent<Button>();
+        //RankButton = topUiPanel.GetChild(0).GetChild(0).GetComponent<Button>();
 
         RankBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(6).GetComponent<Button>();
 
@@ -200,7 +200,7 @@ public class GamePlay : MonoBehaviour
             gameObject.SetActive(false);
         };
 
-        RankButton.onClick.AddListener(OpenLeaderBoard);
+        //RankButton.onClick.AddListener(OpenLeaderBoard);
 
         RankBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
     }

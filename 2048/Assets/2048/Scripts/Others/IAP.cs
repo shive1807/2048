@@ -191,6 +191,7 @@ public class IAP : Singleton<IAP>, IStoreListener
             print("Purcahse Remove ads");
 
             m_StoreController.ConfirmPendingPurchase(m_StoreController.products.WithID(Remove_ads));
+            AdManager.Instance.RemoveAds();
         }
         if (String.Equals(args.purchasedProduct.definition.id, buy_5_gems, StringComparison.Ordinal))
         {

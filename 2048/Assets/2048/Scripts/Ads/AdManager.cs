@@ -1,5 +1,6 @@
 using GoogleMobileAds.Api;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 public class AdManager : Singleton<AdManager>
 {
@@ -23,6 +24,23 @@ public class AdManager : Singleton<AdManager>
     {
         MobileAds.RaiseAdEventsOnUnityMainThread = true;
         MobileAds.Initialize(InitStatus => { });
+
+        if (GameManager.Instance.gameData.RemoveAds == 1)
+        {
+            showAD = false;
+        }
+        else
+        {
+            showAD = true;
+        }
+    }
+
+    public void RemoveAds()
+    {
+        if (GameManager.Instance.gameData.RemoveAds != 1)
+        {
+            SaveSystem.SaveGame(-1, false, null, -1, -1, -1, -1, -1, default, -1, -1, null, -1, -1, null, 1);
+        }
     }
 
     private AdRequest CreateAdRequest()
@@ -187,7 +205,7 @@ public class AdManager : Singleton<AdManager>
             rewardedAd.Show((Reward reward) =>
             {
                 // TODO: Reward the user.
-                Debug.Log(String.Format(rewardMsg, reward.Type, reward.Amount));
+                GemsManager.Instance.AddGems(2);
             });
         }
     }

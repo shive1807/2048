@@ -144,7 +144,7 @@ public class DatabaseRealtimeManager : Singleton<DatabaseRealtimeManager>
             {
                 DataSnapshot snapshot = await databaseReference.Child("Users").OrderByChild("HighScore").GetValueAsync();
                 userCount = snapshot.ChildrenCount;
-                int rank = 0;
+                int rank = 1;
 
                 for (int i = 1; i < users.Length; i++)
                 {

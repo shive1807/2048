@@ -26,6 +26,9 @@ public class MainMenu : MonoBehaviour
     // Settings Buttons
     private Button SettingsButton;
     private Button SettingsCloseButton;
+    private Button SoundToggleButton;
+    private Button VibrationToggleButton;
+    private Button RemoveAds;
 
     // Daily Reward
     private Button DailyRewardCloseButton;
@@ -50,14 +53,20 @@ public class MainMenu : MonoBehaviour
     private TextMeshProUGUI Rank;
     private Button ProfileBackButton;
 
+    // HighScore 
+    private TextMeshProUGUI HomeHighScore;
+
     private void Start()
     {
+        Leaderboard.Instance.FetchData();
+
         ButtonsContainer = transform.GetChild(1).gameObject;
 
         PlayButton = ButtonsContainer.transform.GetChild(0).GetComponent<Button>();
         ButtonsClickLogic();
 
-        Leaderboard.Instance.FetchData();
+        HomeHighScore = ButtonsContainer.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>();
+        HomeHighScore.text = GameManager.Instance.gameData.HighScore.ToString();
     }
     
     private void ButtonsClickLogic()
@@ -75,8 +84,6 @@ public class MainMenu : MonoBehaviour
         FirstLoginButtonsLogic();
 
         ProfileButtonsLogic();
-
-        //Leaderboard.Instance.FetchData();
     }
 
     private void ProfileButtonsLogic()
@@ -103,7 +110,7 @@ public class MainMenu : MonoBehaviour
             Username.text = gamedata.User.Username;
             MaxBlock.text = gamedata.MaxBlock.txt;
             HighScore.text = gamedata.HighScore.ToString();
-            Rank.text = "512K";
+            Rank.text = Leaderboard.Instance.rank.ToString();
         });
 
         ProfileBackButton.onClick.AddListener(() => Back(Panel.Profile, gameObject));
@@ -202,7 +209,7 @@ public class MainMenu : MonoBehaviour
         GetScoresUI();
 
         LeaderBoardButton = ButtonsContainer.transform.GetChild(3).GetChild(2).GetComponent<Button>();
-        RankButton = ButtonsContainer.transform.GetChild(2).GetChild(0).GetComponent<Button>();
+        //RankButton = ButtonsContainer.transform.GetChild(2).GetChild(0).GetComponent<Button>();
 
         LeaderBoardBackButton = UiManager.Instance.LeaderBoard.transform.GetChild(6).GetComponent<Button>();
 
@@ -215,7 +222,7 @@ public class MainMenu : MonoBehaviour
         };
 
         LeaderBoardButton.onClick.AddListener(OpenLeaderBoard);
-        RankButton.onClick.AddListener(OpenLeaderBoard);
+        //RankButton.onClick.AddListener(OpenLeaderBoard);
 
         LeaderBoardBackButton.onClick.AddListener(() => Back(Panel.LeaderBoard, gameObject));
     }
@@ -235,6 +242,9 @@ public class MainMenu : MonoBehaviour
     {
         SettingsButton = ButtonsContainer.transform.GetChild(3).GetChild(3).GetComponent<Button>();
         SettingsCloseButton = SettingsButton.gameObject.transform.GetChild(2).GetChild(3).GetComponent<Button>();
+        SoundToggleButton = SettingsButton.gameObject.transform.GetChild(2).GetChild(0).GetComponent<Button>();
+        VibrationToggleButton = SettingsButton.gameObject.transform.GetChild(2).GetChild(1).GetComponent<Button>();
+        RemoveAds = SettingsButton.gameObject.transform.GetChild(2).GetChild(2).GetComponent<Button>();
 
         SettingsButton.onClick.AddListener(() =>
         {
@@ -262,6 +272,28 @@ public class MainMenu : MonoBehaviour
             SettingsButton.gameObject.transform.GetChild(0).gameObject.SetActive(true);
 
             ButtonClickSound();
+        });
+
+        SoundToggleButton.onClick.AddListener(() =>
+        {
+            AudioManager.Instance.AutoToggleSound();
+
+            AudioManager.Instance.PlaySound("ButtonClick");
+        });
+
+        VibrationToggleButton.onClick.AddListener(() =>
+        {
+            VibrationManager.Instance.ToggleVibration();
+            //VibrationManager.Instance.Vibrate(500);
+
+            AudioManager.Instance.PlaySound("ButtonClick");
+        });
+
+        RemoveAds.onClick.AddListener(() =>
+        {
+            IAP.Instance.BuyConsumableRemove_Ads();
+
+            AudioManager.Instance.PlaySound("ButtonClick");
         });
     }
 

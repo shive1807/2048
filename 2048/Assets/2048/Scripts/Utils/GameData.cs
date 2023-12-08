@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using UnityEngine;
 [Serializable]
@@ -10,6 +11,7 @@ public class GameData
     public int SwapAbilityCount = 3;
     public int SmashAbilityCount = 3;
     public Num MaxBlock = new Num(2);
+    public int RemoveAds = 0;
 
     // Settings info
     public int SoundPref = 1;
@@ -27,7 +29,7 @@ public class GameData
 
     public GameData(int gems = 0, Num[,] Grid = null, double highScore = 0, int soundPref = 1, int musicPref = 1, int vibrationPref = 1, 
         int rewardStreak = 0, DateTime date = default, int collected = 0, int firstLogin = 1, User user = default, int swapAbilityCount = 0, 
-        int smashAbilityCount = 0, Num maxBlock = null)
+        int smashAbilityCount = 0, Num maxBlock = null, int removeAds = 0)
     {
         SavedGrid = new Num[GameSettings.GRID_WIDTH, GameSettings.GRID_HEIGHT];
         
@@ -58,6 +60,8 @@ public class GameData
         FirstLogin = firstLogin;
 
         User = user;
+
+        RemoveAds = removeAds;
     }
 }
 
